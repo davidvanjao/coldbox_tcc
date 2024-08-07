@@ -1,0 +1,31 @@
+.header {
+  width:  100%;
+  padding: 1rem 32rem;
+  align-items: center;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.link {
+  color: black;
+  margin: 0 0.15rem;
+  text-decoration: none;
+
+}
+
+.link:hover{
+  color: purple;
+}
+
+.loginButton {
+  color: rgb(255, 255, 255); 
+  background-color: black;
+  padding: 0.5rem 3rem;
+  border: 1px solid black;
+  cursor: pointer;
+  margin-left: 2rem;
+}

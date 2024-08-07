@@ -2,12 +2,15 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
 // Certifique-se de ajustar o caminho conforme a estrutura do seu projeto
-import Login from './src/Login';
+//import Login from './src/Login';
+//import Home from './src/home';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Login></Login>
+      {/* <Login/> */}
+      {/* <Home/> */}
+      <Text style={styles.title}>Bem vindo</Text>      
       <StatusBar style="auto" />
     </View>
   );

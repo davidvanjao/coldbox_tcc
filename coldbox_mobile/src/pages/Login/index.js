@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity} from 'react-native';
 
 import styles from './styles';
 
@@ -8,14 +8,14 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-    if (email === '' || password === '') {
-        Alert.alert('Erro', 'Por favor, preencha todos os campos.');
-    } else {
-        // Aqui você pode adicionar a lógica de autenticação
-        Alert.alert('Sucesso', `Bem-vindo, ${email}!`);
+    function handleLogin() {
+        if (email === '' || password === '') {
+            alert('Erro. Por favor, preencha todos os campos.');
+        } else {
+            // Aqui você pode adicionar a lógica de autenticação
+            alert(`Bem-vindo, ${email}!`);
+        }
     }
-    };
 
     return (
         <View style={styles.container}>

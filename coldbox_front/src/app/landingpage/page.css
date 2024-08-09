@@ -38,11 +38,10 @@
 }
 
 .imagemFundo {
-  background-image: url(./mao.png), url(./gradiente.png);
+  background-image: url(./cell.png), url(./gradiente.png);
   background-repeat: no-repeat, no-repeat;
-  background-size: contain, cover;
-  background-position: right 20% bottom 10%, center;
+  background-size: auto, cover;
+  background-position: right 20% bottom 0%, center;
   height: 750px;
   width: 100vw;
 }
-

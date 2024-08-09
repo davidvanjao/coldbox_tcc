@@ -17,7 +17,7 @@ export default function LandingPage() {
       </header>
 
       <div className="imagemFundo">
-        fawsewfewef
+        fawsewfewef        
       </div>
       
     </>

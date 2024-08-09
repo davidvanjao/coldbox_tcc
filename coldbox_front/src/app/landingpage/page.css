@@ -2,12 +2,19 @@
   width:  100%;
   padding: 1rem 32rem;
   align-items: center;
+  position: fixed;
+  top: 0%;
+  background-color: rgb(255, 255, 255);
+  z-index: 1000;
 }
+
 
 .nav {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 55px; /* Ajuste este valor para aumentar ou diminuir o espaço entre os itens */
+  padding: 10px;
 }
 
 .link {
@@ -29,3 +36,13 @@
   cursor: pointer;
   margin-left: 2rem;
 }
+
+.imagemFundo {
+  background-image: url(./mao.png), url(./gradiente.png);
+  background-repeat: no-repeat, no-repeat;
+  background-size: contain, cover;
+  background-position: right 20% bottom 10%, center;
+  height: 750px;
+  width: 100vw;
+}
+

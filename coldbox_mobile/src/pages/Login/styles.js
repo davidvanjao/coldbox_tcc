@@ -1,37 +1,58 @@
-import { StyleSheet } from 'react-native';
+import { Button, StyleSheet } from 'react-native';
 
 //exporta estilizacao
 export default styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 16,
+        backgroundColor: '#38a69d'
+    },
+    containerHeader: {
+        marginTop: '14%',
+        marginBottom: '8%',
+        paddingStart: '5%',
+    },
+    message: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#fff'
+    },   
+    containerForm: {
+        backgroundColor: '#fff',
+        flex:1,
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
+        paddingStart: '5%',
+        paddingEnd: '5%'
     },
     title: {
-        fontSize: 32,
-        marginBottom: 24,
+        fontSize: 20,
+        marginTop: 28,
     },
     input: {
-        width: '100%',
+        borderBottomWidth: 1,
         height: 40,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 4,
-        padding: 8,
-        marginBottom: 16,
-        backgroundColor: '#fff',
+        marginBottom: 12,
+        fontSize: 16,
     },
     button: {
+        backgroundColor: '#38a69d',
         width: '100%',
-        height: 40,
-        backgroundColor: '#007BFF',
+        borderRadius: 4,
+        paddingVertical: 8,
+        marginTop: 14,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 4,
     },
-        buttonText: {
-        color: '#fff',
-        fontSize: 16,
-    },    
+    buttonText: {
+        color:'#fff',
+        fontSize: 18,
+        fontWeight: 'bold'
+    },
+    buttonRegister: {
+        marginTop: 14,
+        alignSelf: 'center',
+    },
+    registerText: {
+        color:'#a1a1a1'
+    }
 }); 

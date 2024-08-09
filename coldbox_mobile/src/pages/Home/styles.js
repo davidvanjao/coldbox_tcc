@@ -8,7 +8,6 @@ export default styles = StyleSheet.create({
 
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 16,
     },
     containerLogo: {
         flex:2,

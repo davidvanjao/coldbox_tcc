@@ -17,7 +17,11 @@ export default function LandingPage() {
       </header>
 
       <div className="imagemFundo">
-        fawsewfewef        
+          <div className="textoSobreImagem">
+            <h2 className='negrito'>Garanta sua <span class="degrade">Eficiência <br />Operacional</span> e <br /> monitore em tempo <br />real a temperatura de <br />seus equipamentos</h2>
+            <p> Fale com um de nossos consultores <br />e agende uma Visita Técnica</p>
+          <button className="ctaButton">TENHO INTERESSE</button>
+        </div>     
       </div>
       
     </>

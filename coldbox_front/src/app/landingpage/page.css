@@ -44,4 +44,57 @@
   background-position: right 20% bottom 0%, center;
   height: 750px;
   width: 100vw;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.textoSobreImagem {
+  position: absolute;
+  left: 10%;
+  color: white;
+  text-align: left;
+  max-width: 500px;
+}
+
+.textoSobreImagem h2 {
+  font-size: 2.7rem;
+  margin-bottom: 1rem;
+  margin-left: 80px; 
+}
+
+.textoSobreImagem p {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  line-height: 1.4;
+  margin-left: 80px; 
+}
+
+.ctaButton {
+  background-color: #00ADEF;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  font-size: 1.4rem;  
+  cursor: pointer;
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  font-weight: 600;
+  margin-left: 80px; 
+}
+
+.ctaButton:hover {
+  background-color: #008BB5;
+}
+
+.degrade {
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.negrito {
+  font-weight:600;
+  line-height: 1.2;
 }

@@ -1,6 +1,9 @@
-import styles from "./login.css";
-import Image from "next/image";
+import styles from './page.css'
+import Image from 'next/image';
 
-export default function Login() {
-  return <section className="container"></section>;
+
+export default function LandingPage() {
+  return (
+      <h1>tesdte    </h1>
+  );
 }

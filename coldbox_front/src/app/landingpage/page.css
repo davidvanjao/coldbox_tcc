@@ -1,5 +1,5 @@
 .header {
-  width:  100%;
+  width: 100%;
   padding: 1rem 32rem;
   align-items: center;
   position: fixed;
@@ -7,7 +7,6 @@
   background-color: rgb(255, 255, 255);
   z-index: 1000;
 }
-
 
 .nav {
   display: flex;
@@ -19,17 +18,16 @@
 
 .link {
   color: black;
-  margin: 0 0.15rem;
+  margin: 0 27px;
   text-decoration: none;
-
 }
 
-.link:hover{
+.link:hover {
   color: purple;
 }
 
 .loginButton {
-  color: rgb(255, 255, 255); 
+  color: rgb(255, 255, 255);
   background-color: black;
   padding: 0.5rem 3rem;
   border: 1px solid black;
@@ -50,7 +48,6 @@
   align-items: center;
 }
 
-
 .textoSobreImagem {
   position: absolute;
   left: 10%;
@@ -62,39 +59,45 @@
 .textoSobreImagem h2 {
   font-size: 2.7rem;
   margin-bottom: 1rem;
-  margin-left: 80px; 
+  margin-left: 80px;
 }
 
 .textoSobreImagem p {
   font-size: 1.5rem;
   margin-bottom: 2rem;
   line-height: 1.4;
-  margin-left: 80px; 
+  margin-left: 80px;
 }
 
 .ctaButton {
-  background-color: #00ADEF;
   color: white;
-  padding: 10px 20px;
   border: none;
-  font-size: 1.4rem;  
+  font-size: 1.5rem;
   cursor: pointer;
-  background: linear-gradient(90deg, #00c6ff, #0072ff);
-  font-weight: 600;
-  margin-left: 80px; 
+  background: linear-gradient(90deg, #0886b2 0%, #8bf7fe 100%);
+  font-weight: 500;
+  margin-left: 80px;
+  width: 204px;
+  height: 42px;
+  flex-shrink: 0;
 }
 
 .ctaButton:hover {
-  background-color: #008BB5;
+  background-color: #008bb5;
 }
 
 .degrade {
-  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  background: linear-gradient(264deg, #0886b2 8.34%, #8bf7fe 67.98%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .negrito {
-  font-weight:600;
+  color: #fff;
+  font-size: 38px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 48px;
+  font-weight: 600;
   line-height: 1.2;
 }

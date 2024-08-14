@@ -4,8 +4,14 @@ import Image from 'next/image';
 
 export default function Login() {
   return (
-    <div className='container2'>
-      <h1>teste</h1>
+    <div className='body'>
+      <div className='fundo'>
+        <div className='retanguloContainer '>
+        
+            <h1>teste</h1>
+       
+        </div>
+      </div>
     </div>
   );
 }

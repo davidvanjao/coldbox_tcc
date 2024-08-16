@@ -9,6 +9,7 @@ export default function Login() {
         <div className='retanguloContainer '>
         
             <h1>teste</h1>
+            <h2>teste2</h2>
        
         </div>
       </div>

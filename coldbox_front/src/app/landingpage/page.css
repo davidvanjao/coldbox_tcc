@@ -101,3 +101,53 @@
   font-weight: 600;
   line-height: 1.2;
 }
+
+/* SEGUNDA SEÇÃO */
+
+.secao2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  margin-top: 2rem;
+  padding: 8rem; 
+  width: 100%;
+  padding: 1 32rem; /* Mantém o mesmo padding horizontal usado na seção superior */
+  margin-top: 50px; /* Ajuste conforme necessário para alinhar verticalmente */
+  /* background-color: #008bb5; */
+}
+
+.monitoramentoImagem {
+  margin-right: 24rem;
+}
+
+.monitoramentoTexto {
+  max-width: 500px;
+}
+
+.monitoramentoTexto h2 {
+  /* margin-bottom: 1rem; */
+  color: #0886B2;
+  font-size: 25px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 48px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.monitoramentoTexto p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: black;
+}
+
+.negrito2 {
+  color: black;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 48px;
+  font-weight: 600;
+  line-height: 1.2;
+}

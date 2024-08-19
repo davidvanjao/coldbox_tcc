@@ -26,7 +26,7 @@ export default function LandingPage() {
       </div> 
 
       <div className='secao2'>
-        <Image src="/telas.png" alt="Monitoramento" className='monitoramentoImagem' width={400} height={300}/>
+        <Image src="/telas.png" alt="Monitoramento" className='monitoramentoImagem' width={400} height={300}/>  
         <div className='monitoramentoTexto'>
           <h2>Monitoramento em tempo <br /> real garantindo sua <br />segurança e qualidade</h2>
           <p>Para cada equipamento monitorado, pode-se <br />

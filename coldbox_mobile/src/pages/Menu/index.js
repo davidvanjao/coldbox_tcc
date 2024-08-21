@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import styles from './styles';
 
-export default function Logoff(props) {
+export default function Menu(props) {
 
     const handleLogout = async () => {
         // Remove o token ao fazer logout
@@ -30,6 +30,15 @@ export default function Logoff(props) {
             <View>
                 <TouchableOpacity
                     style={styles.viewDrawer}
+                    onPress={() => props.navigation.navigate('Configuracao')}
+                    >
+                    <Text style={styles.txtDrawer}>Configuração</Text>
+                </TouchableOpacity>
+            </View>
+
+            <View>
+                <TouchableOpacity
+                    style={styles.viewDrawer}
                     onPress={() => props.navigation.navigate('Sobre')}
                     >
                     <Text style={styles.txtDrawer}>Sobre</Text>
@@ -44,9 +53,6 @@ export default function Logoff(props) {
                     <Text style={styles.txtDrawer}>Logoff</Text>
                 </TouchableOpacity>
             </View>
-
-
-
         </View>
     );
 };

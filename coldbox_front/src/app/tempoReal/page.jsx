@@ -7,7 +7,9 @@ export default function tempoReal() {
    <div className='sidebar'>
        <div className='logo'>
             <img src="/logo.png" alt="ColdBox Logo" />
-            <span>ColdBox</span>
+            <span>
+                <span className='textoBold'>Cold</span>Box
+            </span>
        </div>
         <nav>
             <ul>
@@ -19,9 +21,15 @@ export default function tempoReal() {
                 <li> <a>Suporte ColdBox</a></li>
             </ul>
         </nav>
+        <div className='logout'>
+            <img src="/logout.png" alt="Sair" />
+            <a>Logout</a>
+        </div>
+        <div className='gradienteBG'></div>
    </div>
   );
 }
+
 
 // const Sidebar = () => {
 //   return (

@@ -9,33 +9,65 @@
     position: fixed; /* Fixar a barra lateral na posição */
     left: 0; /* Alinhar a barra lateral ao canto esquerdo */
     top: 0; /* Alinhar a barra lateral ao topo */
+    align-items: center;
+    overflow: hidden; 
   }
   
+  .logout {
+    display: flex; /* Usa flexbox para alinhar a imagem e o texto do logo */
+    align-items: center; /* Centraliza verticalmente a imagem e o texto */
+    margin-bottom: 5px; /* Adiciona margem inferior para espaçar o logo dos próximos elementos */
+  }
+
+  .logout img {
+    width: 25px;    /* Define a largura da imagem do logo */
+    margin-right: 10px; /* Adiciona espaço à direita da imagem para afastá-la do texto */
+  }
+
   .logo {
-    /* background-image: url(.logo); */
     display: flex; /* Usa flexbox para alinhar a imagem e o texto do logo */
     align-items: center; /* Centraliza verticalmente a imagem e o texto */
     margin-bottom: 50px; /* Adiciona margem inferior para espaçar o logo dos próximos elementos */
   }
   
   .logo img {
-    width: 50px;    /* Define a largura da imagem do logo */
+    width: 50px; /* Define a largura da imagem do logo */
     margin-right: 10px; /* Adiciona espaço à direita da imagem para afastá-la do texto */
   }
   
   .logo span {
     font-size: 24px; /* Define o tamanho da fonte do texto do logo */
-    color: #FFF;    /* Define a cor do texto do logo como branco */
-    font-weight: bold; /* Define o peso da fonte como negrito */
+    color: #FFF;    /* Define a cor do texto do logo como branco */  }
+
+  .textoBold {
+    font-weight: bold;
   }
-  
+
+  nav {
+    margin-top: -150px; /* Mover o bloco de navegação para cima */
+  }
+
+  .gradienteBG {
+    width: 150%;
+    background-image: url('/gradiente.png'); /* Imagem de fundo do gradiente */
+    background-size: cover;
+    background-position: bottom;
+    position: absolute;
+    bottom: 0; /* Alinha o gradiente ao fundo da barra lateral */
+    height: 100vh;
+  }
+
   nav ul {
     list-style-type: none; /* Remove os marcadores padrão da lista */
     padding: 0; /* Remove o padding padrão da lista para alinhar o conteúdo à esquerda */
+    text-align: center;
+    margin: 0;
+    z-index: 1; /* Garante que os itens de navegação fiquem sobre o gradiente */
   }
   
   nav ul li {    
     margin: 20px 0; /* Adiciona margem acima e abaixo de cada item da lista */
+    text-align: center;
   }
   
   nav ul li a {
@@ -58,6 +90,9 @@
   }
   
   .logout a:hover {
+    color: #E57373; /* Muda a cor do link de logout ao passar o mouse sobre ele */
+  }
+    .logout img:hover {
     color: #E57373; /* Muda a cor do link de logout ao passar o mouse sobre ele */
   }
   

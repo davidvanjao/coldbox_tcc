@@ -1,4 +1,5 @@
 import styles from './page.module.css'
+import Link from 'next/link';
 import Image from 'next/image';
 
 
@@ -11,7 +12,28 @@ export default function Login() {
         </div>
         <div className={styles.logo}>
           <img src="/logo.png" alt="ColdBox Logo" />
-          <span>ColdBox</span>
+          <span>ColdBox</span>          
+        </div>
+        <div className={styles.formulario}>
+          <input
+            type="text"
+            placeholder="Número do celular ou email"
+            className={styles.inputCaixa}
+          />
+          <input
+            type="password"
+            placeholder="Senha"
+            className={styles.inputCaixa}
+          />
+          <button className={styles.botaoEntrar}>Entrar</button>
+          <Link href="/esqueceuSenha" className={styles.esqueceuSenha}>
+            Esqueceu a Senha?
+          </Link>
+        </div>
+        <div className={styles.extras}>
+            <span>Ajuda</span>
+            <span>Sobre</span>
+            <span>Mais</span>
         </div>
       </div>
     </div>

@@ -13,7 +13,6 @@
   .retanguloContainer {
     background-image: url(./retangulo2.png);
     background-position: center;
-    /* background-size: 100%;  */
     width: 400px; /* Define uma largura menor */
     height: 600px;
     background-repeat: no-repeat;
@@ -26,24 +25,82 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
     padding-top: 20px;
     overflow: hidden; /* Evita que o conteúdo transborde fora do container */
-    /* justify-content: flex-start; */
-
-    /* position: relative; */
-
 }
 
 /* Estilo para o texto "Português (Brasil)" */
 .idioma {
-  /* position: absolute; */
- /* top: 50px; /* Define a distância do topo */
- /* left: 0px; /* Define a distância da esquerda */
   font-size: 10px; /* Define o tamanho da fonte */
   color: #FFF; /* Define a cor do texto como branco */
 }
 
+.extras {
+  display: flex;
+  justify-content: space-between; /* Distribui os itens horizontalmente com espaço igual entre eles */
+  width: 40%; /* Controla a largura da seção */
+  margin-top: auto; /* Empurra a seção de extras para o final do contêiner */
+  padding-bottom: 50px; /* Ajusta a distância do final do contêiner */
+}
+
+.extras span {
+  font-size: 12px; /* Ajuste o tamanho da fonte */
+  color: #FFF;
+  cursor: pointer; /* Indica que os itens são clicáveis */
+}
+
+.esqueciSenha {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.esqueciSenha:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  margin-bottom: 20px; /* Espaçamento abaixo do formulário */
+}
+
+.inputCaixa {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px; /* Espaçamento entre os campos */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f0f0f0; /* Fundo cinza claro */
+  font-size: 14px;
+}
+
+.inputCaixa::placeholder {
+  color: #888; /* Cor do placeholder */
+}
+
+.botaoEntrar {
+  width: 60%; /* Reduz a largura do botão */
+  padding: 8px; /* Ajusta o padding para diminuir a altura */
+  background-color: #007bff; /* Cor azul */
+  color: black;
+  font-size: 14px; /* Diminui o tamanho da fonte */
+  font-weight: bold;
+  border: none;
+  border-radius: 25px; /* Deixa o botão mais arredondado */
+  cursor: pointer;
+  text-align: center; /* Centraliza o texto dentro do botão */
+
+}
+
+.botaoEntrar:hover {
+  background-color: #0056b3; /* Azul mais escuro ao passar o mouse */
+}
+
 
   .logo {
-    /* background-image: url(.logo); */
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -61,7 +118,7 @@
     font-size: 20px; /* Diminui o tamanho da fonte */
     color: #FFF;
     font-weight: bold;
-    margin-top: 10px; /* Pequena distância adicional entre o logo e o texto */
+    margin-top: 5px; /* Pequena distância adicional entre o logo e o texto */
   }
 
 

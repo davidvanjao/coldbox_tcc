@@ -1,23 +1,14 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-
-
 import Login from '../pages/Login'
-import Home from '../pages/Home'
-import Inicio from "../pages/Inicio";
+import RoutesDrawer from "./drawer";
 
 const  Stack = createNativeStackNavigator();
 
 export default function Routes() {
+
     return(
         <Stack.Navigator>    
-
-            <Stack.Screen
-                name="Home"
-                component={Home}
-                options={{headerShown: false}}
-                
-            />
 
             <Stack.Screen
                 name="Login"
@@ -26,11 +17,14 @@ export default function Routes() {
             />
 
             <Stack.Screen
-                name="Inicio"
-                component={Inicio}
+                name="Home"
+                component={RoutesDrawer}
+                options={{headerShown: false}}
+                
             />
-
 
         </Stack.Navigator>
     )
 }
+
+

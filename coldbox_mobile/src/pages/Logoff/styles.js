@@ -2,14 +2,16 @@ import { Button, StyleSheet } from 'react-native';
 
 //exporta estilizacao
 export default styles = StyleSheet.create({
-    container: {
+    viewDrawer: {
         flex: 1,
-        backgroundColor:'#38a69d',
-
         justifyContent: 'center',
-        alignItems: 'center',
+        padding: 8,
     },
-    text: {
-        color: '#fff'
+    txtDrawer: {
+        margin: 6,
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign:'center',
+        color: '#000'
     },
 }); 

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, alert} from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import styles from './styles';
 
@@ -11,6 +12,18 @@ export default function Login() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    useEffect(() => {
+        //Verifica se já existe um token armazenado ao carregar o componente
+        const checkSession = async () => {
+            const token = await AsyncStorage.getItem('userToken');
+            if (token) {
+                // Se houver um token, navegue diretamente para a tela principal
+                navigation.navigate('Home');
+            }
+        };
+        checkSession();
+    }, []);
     
     const handleLogin = async () => {
         
@@ -36,10 +49,15 @@ export default function Login() {
             }
     
             const data = await response.json();
-            // Aqui você pode adicionar a lógica para salvar o token de autenticação e navegar para outra tela
-            alert(`Sucesso Bem-vindo, ${email}!`);
+            //Aqui você pode adicionar a lógica para salvar o token de autenticação e navegar para outra tela
+            //alert(`Sucesso Bem-vindo, ${email}!`);
+            const token = data.token;
 
-            navigation.navigate('Inicio');
+            //Armazena o token no AsyncStorage
+            await AsyncStorage.setItem('userToken', token);
+
+            //Navega para a tela principal
+            navigation.navigate('Home');
             
         } catch(error) {
             alert('Erro Credenciais inválidas');
@@ -47,6 +65,11 @@ export default function Login() {
     
     };
 
+    const handleLogout = async () => {
+        // Remove o token ao fazer logout
+        await AsyncStorage.removeItem('userToken');
+        navigation.navigate('LoginScreen');
+    };
 
     return (
         <View style={styles.container}>

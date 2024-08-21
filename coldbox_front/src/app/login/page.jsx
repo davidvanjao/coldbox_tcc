@@ -1,17 +1,17 @@
-import styles from './page.css'
+import styles from './page.module.css'
 import Image from 'next/image';
 
 
 export default function Login() {
   return (
-    <div className='body'>
-      <div className='fundo'>
-        <div className='retanguloContainer '>
-        
-            <h1>teste</h1>
-            <h2>teste2</h2>
-
-      
+    <div className={styles.fundo}>
+      <div className={styles.retanguloContainer}>
+        <div className={styles.idioma}>
+          <span>Português (Brasil)</span>
+        </div>
+        <div className={styles.logo}>
+          <img src="/logo.png" alt="ColdBox Logo" />
+          <span>ColdBox</span>
         </div>
       </div>
     </div>

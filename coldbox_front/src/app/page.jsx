@@ -5,6 +5,8 @@ export default function Home() {
   return (
     <div className='container'>
 
+      
+
       <div className={styles.containerTitulo}>
         <h1 className={styles.txtTitulo}>Aula next</h1>  
       </div>

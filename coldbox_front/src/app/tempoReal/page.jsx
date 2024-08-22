@@ -1,33 +1,25 @@
-import styles from './page.css'
 import Image from 'next/image';
+import Head from 'next/head';
+import NavBar from '../../components/NavBar/NavBar';
+import dynamic from 'next/dynamic';
 
+// Importa o GoogleChart dinamicamente e desativa o SSR
+const GoogleChart = dynamic(() => import('../../components/GoogleChart/GoogleChart'), {
+  ssr: false
+});
 
 export default function tempoReal() {
-  return (
-   <div className='sidebar'>
-       <div className='logo'>
-            <img src="/logo.png" alt="ColdBox Logo" />
-            <span>
-                <span className='textoBold'>Cold</span>Box
-            </span>
-       </div>
-        <nav>
-            <ul>
-                <li> <a>Tempo Real</a></li>
-                <li> <a>Relatórios</a></li>
-                <li> <a>Dispositivos</a></li>
-                <li> <a>Parâmetros</a></li>
-                <li> <a>Usuários</a></li>
-                <li> <a>Suporte ColdBox</a></li>
-            </ul>
-        </nav>
-        <div className='logout'>
-            <img src="/logout.png" alt="Sair" />
-            <a>Logout</a>
-        </div>
-        <div className='gradienteBG'></div>
-   </div>
-  );
+    return (
+        <>
+          <Head>
+            <script src="https://www.gstatic.com/charts/loader.js"></script>
+          </Head>
+          <NavBar />
+          <div style={{ marginLeft: '250px' }}> {/* Ajuste esse estilo conforme necessário */}
+            <GoogleChart />
+          </div>
+        </>
+      );
 }
 
 

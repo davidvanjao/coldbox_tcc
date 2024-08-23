@@ -6,6 +6,8 @@ export default styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         padding: 8,
+
+        backgroundColor: '#f5f5f5',
     },
     txtDrawer: {
         margin: 6,

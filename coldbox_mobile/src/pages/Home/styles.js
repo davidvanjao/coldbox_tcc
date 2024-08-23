@@ -4,12 +4,12 @@ import { Button, StyleSheet } from 'react-native';
 export default styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor:'#38a69d',
+        backgroundColor: '#f5f5f5',
 
-        justifyContent: 'center',
-        alignItems: 'center',
+        padding:10
+
     },
     text: {
-        color: '#fff'
+        color: '#000'
     },
 }); 

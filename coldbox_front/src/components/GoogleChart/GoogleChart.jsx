@@ -1,42 +1,54 @@
+// components/GoogleChart.jsx
+"use client"; // Marca o componente como um Client Component
+
 import { useEffect } from 'react';
 
-function GoogleChart() {
-  const [isClient, setIsClient] = useState(false);
-
+const GoogleChart = () => {
   useEffect(() => {
-    setIsClient(true); // Ativa o estado de cliente quando o componente monta
-  }, []);
+    // Carrega o script do Google Charts
+    const script = document.createElement('script');
+    script.src = 'https://www.gstatic.com/charts/loader.js';
+    script.async = true;
+    script.onload = () => {
+      // Configura e desenha o gráfico
+      window.google.charts.load('current', { packages: ['corechart'] });
+      window.google.charts.setOnLoadCallback(drawChart);
+    };
+    document.body.appendChild(script);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      google.charts.load('current', { packages: ['corechart'] });
-      google.charts.setOnLoadCallback(drawChart);
-    }
-
-    function drawChart() {
-      var data = google.visualization.arrayToDataTable([
-        ['Hora', 'Temperatura'],
-        ['00h', 20],
-        ['06h', 22],
-        ['12h', 28],
-        ['18h', 24],
-        ['24h', 21],
+    const drawChart = () => {
+      const data = window.google.visualization.arrayToDataTable([
+        ['a', 'Câmara Principal', 'Câmara Frios', 'Câmara Bebidas','Câmara Congelados'],
+        ['00h', 1000, 450, 900, 100],
+        ['06h', 1170, 460, 750, 170],
+        ['12h', 800, 1120, 850, 660],
+        ['18h', 1030, 540, 400, 500],
       ]);
 
-      var options = {
-        title: 'Temperatura ao Longo do Dia',
+      const options = {
+        title: 'Temperatura',
         curveType: 'function',
         legend: { position: 'bottom' },
-        hAxis: { title: 'Hora do Dia' },
-        vAxis: { title: 'Temperatura (°C)' }
       };
 
-      var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+      const chart = new window.google.visualization.LineChart(
+        document.getElementById('curve_chart')
+      );
+
       chart.draw(data, options);
-    }
+    };
   }, []);
 
-  return <div id="curve_chart" style={{ width: '100%', height: '500px' }}></div>;
-}
-
+  // Define o tamanho do gráfico com base no viewport
+  return (
+    <div
+      id="curve_chart"
+      style={{
+        width: '80vw', // 80% da largura da janela
+        height: '70vh', // 70% da altura da janela
+        marginLeft: '6vw', // Centraliza o gráfico
+      }}
+    ></div>
+  );
+};
 export default GoogleChart;

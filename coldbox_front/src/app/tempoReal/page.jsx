@@ -1,12 +1,7 @@
 import Image from 'next/image';
 import Head from 'next/head';
 import NavBar from '../../components/NavBar/NavBar';
-import dynamic from 'next/dynamic';
-
-// Importa o GoogleChart dinamicamente e desativa o SSR
-const GoogleChart = dynamic(() => import('../../components/GoogleChart/GoogleChart'), {
-  ssr: false
-});
+import GoogleChart from '../../components/GoogleChart/GoogleChart';
 
 export default function tempoReal() {
     return (

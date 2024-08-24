@@ -1,7 +1,7 @@
-import styles from './page.css'; // Caminho correto para o CSS dessa página
+import styles from './page.module.css';
 import Link from 'next/link';
 
-export default function EsqueceuSenha() {
+export default function esqueceuSenha() {
   return (
     <div className={styles.fundo}>
       <div className={styles.retanguloContainer}>
@@ -10,27 +10,24 @@ export default function EsqueceuSenha() {
         </div>
         <div className={styles.logo}>
           <img src="/logo.png" alt="ColdBox Logo" />
-          <span>ColdBox</span>
+          <span>ColdBox</span>          
         </div>
         <div className={styles.formulario}>
-          <h2 className={styles.titulo}>Esqueceu a Senha?</h2>
-          <p className={styles.descricao}>
-            Insira seu email ou número de celular para redefinir sua senha.
-          </p>
+          {/* Conteúdo da página de recuperação de senha */}
           <input
-            type="text"
-            placeholder="Email ou número do celular"
+            type="email"
+            placeholder="Digite seu email"
             className={styles.inputCaixa}
           />
           <button className={styles.botaoEntrar}>Enviar</button>
-          <Link href="/login" className={styles.voltarLogin}>
-            Voltar para o Login
+          <Link href="/login" className={styles.esqueceuSenha}>
+            Voltar para Login
           </Link>
         </div>
         <div className={styles.extras}>
-          <span>Ajuda</span>
-          <span>Sobre</span>
-          <span>Mais</span>
+            <span>Ajuda</span>
+            <span>Sobre</span>
+            <span>Mais</span>
         </div>
       </div>
     </div>

@@ -13,7 +13,7 @@
   overflow: hidden; 
   background-image: url('/gradiente.png'); /* Imagem de fundo do gradiente */
   background-size: cover;
-  background-position: -330px 120px;
+  background-position: -330px 180px;
   background-repeat: no-repeat;
 }
 

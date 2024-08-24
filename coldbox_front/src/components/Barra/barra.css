@@ -1,0 +1,87 @@
+
+  /* Estiliza o container principal da barra superior */
+.barraSuperior {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f5f5f5;
+    width: calc(100% - 280px); /* Considera a largura da barra lateral e a margem */
+    height: 100px;
+    position: fixed;
+    top: 15px; /* Adiciona margem superior */
+    left: 265px; /* Considera a largura da barra lateral mais a margem */
+    z-index: 1;
+    border-radius: 10px; /* Para bordas arredondadas*/
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Para adicionar uma leve sombra */
+  }
+  
+  .nomeEmpresa {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .nomeEmpresa h1 {
+    font-size: 28px;
+    margin: 0; 
+    margin-bottom: 8px; /* Adiciona espaço entre o nome e as tags */ 
+  }
+
+  .tagsInformacao {
+    display: flex;
+    gap: 10px; /* Espaço entre as tags */
+  }
+  
+  .tagsInformacao .tag {
+    background-color: #5733DA; /* Cor do fundo da tag */
+    color: rgb(0, 0, 0); /* Cor do texto */
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 14px;
+  }
+
+  .nomeEmpresa p {
+    font-size: 19px;
+    color: #000000; /* Cor do texto de atualização */
+    margin-top: 4px;
+  }
+  
+  .user-profile {
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    margin-right: 15px; /* Espaço entre a imagem e o botão */
+  }
+  
+  .user-info img {
+    width: 50px; /* Tamanho da imagem do usuário */
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .user-info h3 {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  .user-info span {
+    font-size: 14px;
+    color: #666; /* Cor do texto "Administrador" */
+  }
+  
+  .settings-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .settings-button img {
+    width: 25px; /* Tamanho do ícone de configurações */
+    height: 25px;
+  }
+  

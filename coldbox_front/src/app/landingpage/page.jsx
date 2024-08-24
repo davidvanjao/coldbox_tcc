@@ -1,5 +1,6 @@
 import styles from './page.css'
 import Image from 'next/image';
+import Link from 'next/link';
 
 
 export default function LandingPage() {
@@ -13,7 +14,9 @@ export default function LandingPage() {
           <a href="#" className="link">Recursos</a>
           <a href="#" className="link">Aplicativo</a>
           <a href="#" className="link">SAC</a>
-          <button className="loginButton">Login</button>
+          <Link href="/login">
+            <button className="loginButton">Login</button>
+          </Link>
         </nav>
       </header>
 

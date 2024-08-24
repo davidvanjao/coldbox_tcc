@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Head from 'next/head';
 import NavBar from '../../components/NavBar/NavBar';
 import GoogleChart from '../../components/GoogleChart/GoogleChart';
+import Barra from '../../components/Barra/barra';
 
 export default function tempoReal() {
     return (
@@ -10,36 +11,15 @@ export default function tempoReal() {
             <script src="https://www.gstatic.com/charts/loader.js"></script>
           </Head>
           <NavBar />
+          <Barra />
           <div style={{ marginLeft: '250px' }}> {/* Ajuste esse estilo conforme necessário */}
             <GoogleChart />
           </div>
+          
         </>
       );
 }
 
 
-// const Sidebar = () => {
-//   return (
-//     <div className="sidebar">
-//       <div className="logo">
-//         <img src="/logo.png" alt="ColdBox Logo" />
-//         <span>ColdBox</span>
-//       </div>
-//       <nav>
-//         <ul>
-//           <li><Link href="#"><a>Tempo Real</a></Link></li>
-//           <li><Link href="#"><a>Relatórios</a></Link></li>
-//           <li><Link href="#"><a>Dispositivos</a></Link></li>
-//           <li><Link href="#"><a>Parâmetros</a></Link></li>
-//           <li><Link href="#"><a>Usuários</a></Link></li>
-//           <li><Link href="#"><a>Suporte ColdBox</a></Link></li>
-//         </ul>
-//       </nav>
-//       <div className="logout">
-//         <Link href="#"><a>Logout</a></Link>
-//       </div>
-//     </div>
-//   );
-// };
 
 

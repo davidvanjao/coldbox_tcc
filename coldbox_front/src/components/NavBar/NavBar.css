@@ -45,7 +45,7 @@
 }
 
 nav {
-  margin-top: -150px; /* Mover o bloco de navegação para cima */
+  margin-top: -100px; /* Mover o bloco de navegação para cima */
 }
 
 nav ul {
@@ -56,9 +56,26 @@ nav ul {
   z-index: 1; /* Garante que os itens de navegação fiquem sobre o gradiente */
 }
 
-nav ul li {    
-  margin: 20px 0; /* Adiciona margem acima e abaixo de cada item da lista */
+nav ul li {
+  position: relative; /* Necessário para posicionar a pseudo-elemento */
+  margin: 20px 0; /* Espaço acima e abaixo de cada item */
+  padding: 13px 0; /* Padding superior e inferior ajustado */
   text-align: center;
+}
+
+nav ul li:not(:last-child)::after {
+  content: '';  /* Necessário para exibir o pseudo-elemento */
+  position: absolute;
+  left: 50%; /* Centraliza horizontalmente */
+  transform: translateX(-50%); /* Ajuste fino da posição horizontal */
+  height: 1px; /* Altura da linha */
+  bottom: -10px; /* Posiciona a linha na parte inferior do item */
+  width: 90%; /* Aumenta a largura para ser mais visível */
+  border-bottom: 1px solid #FFF; /* Define a borda como uma linha */
+}
+
+nav ul li:last-child::after {
+  display: none; /* Remove a linha do último item */
 }
 
 nav ul li a {
@@ -72,27 +89,42 @@ nav ul li a:hover {
   color: #A4A4D1; /* Muda a cor do link ao passar o mouse sobre ele */
 }
 
+.logout {
+  padding: 10px; /* Adiciona um pouco de espaço interno */
+  cursor: pointer;    /* Muda o cursor para indicar que é clicável */
+  transition: all 0.3s; /* Suaviza a transição de cores e outros efeitos */
+}
+
+.logout svg {
+  width: 18px; /* Define a largura do ícone */
+  height: 18px; /* Define a altura do ícone */
+  color: white; /* Define a cor do ícone */
+  margin-right: 5px; /* Espaço entre o ícone e o texto */
+}
+
 .logout a {
-  text-decoration: none; /* Remove o sublinhado padrão do link */
-  color: #FFF; /* Define a cor do texto do link como branco */
-  font-size: 18px; /* Define o tamanho da fonte do link */
-  display: flex; /* Usa flexbox para organizar o conteúdo do link */
-  align-items: center;  /* Centraliza verticalmente qualquer conteúdo dentro do link */
+  font-size: 18px;
+  color: white; /* Cor do texto */
+  text-decoration: none; /* Remove sublinhado */
 }
 
-.logout:hover a{
-  color: #E57373; /* Muda a cor do link de logout ao passar o mouse sobre ele */
+.logoutLink, logoutLink svr {
+  color: white; /* Cor inicial do texto */
+  text-decoration: none; /* Remove o sublinhado do link */
+  transition: color 0.3s; /* Suaviza a transição de cores */
+  display: flex;      /* Ativa o layout flexível */
+  align-items: center; /* Centraliza verticalmente os itens dentro do contêiner */
+  justify-content: center; /* Centraliza horizontalmente os itens */
 }
 
-.logout:hover div{
-  background-image: url('/logoutredpng');
-  background-repeat: no-repeat; /* Muda a cor do link de logout ao passar o mouse sobre ele */
+.logoutLink:hover, .logoutLink:hover svg {
+  color: red; /* Muda a cor do texto e do ícone para vermelho ao passar o mouse */
 }
 
-.logoutIcon{
-  width: 22px;
-  height: 21px;
-  background-image: url('/logout.png');
-  background-size: cover;
-  background-repeat: no-repeat;
+.activeMenuItem {
+  background-color: #575757; /* Cor de fundo para o item ativo */
+  color: white; /* Cor do texto */
+  border-radius: 10px; /* Bordas arredondadas */
 }
+
+

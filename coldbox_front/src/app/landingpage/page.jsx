@@ -2,18 +2,17 @@ import styles from './page.css'
 import Image from 'next/image';
 import Link from 'next/link';
 
-
 export default function LandingPage() {
   return (
     <>
       <div className='container'>
       <header className="header">
         <nav className="nav">
-          <a href="#" className="link">Início</a>
-          <a href="#" className="link">Soluções</a>
-          <a href="#" className="link">Recursos</a>
-          <a href="#" className="link">Aplicativo</a>
-          <a href="#" className="link">SAC</a>
+          <Link href="/inicio" className="link">Início</Link>
+          <Link href="/solucoes" className="link">Soluções</Link>
+          <Link href="/recursos" className="link">Recursos</Link>
+          <Link href="/aplicativo" className="link">Aplicativo</Link>
+          <Link href="/SAC" className="link">SAC</Link>
           <Link href="/login">
             <button className="loginButton">Login</button>
           </Link>

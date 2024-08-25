@@ -4,22 +4,20 @@ import styles from './NavBar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
-// Importa useRouter apenas no lado cliente
+
+// Importa useRouter apenas no lado cliente de forma dinâmica
 const useRouter = dynamic(() => import('next/router').then(mod => mod.useRouter), {
-  ssr: false
-});
-  
-const NavBar = () => {
-  const router = useRouter(); // Hook para acessar informações da rota
+    ssr: false
+  });
+    
+const NavBarComponent = () => {
+  const router = useRouter();
+  console.log("Current path:", router.pathname); // Isso vai ajudar a verificar o que está sendo retornado
 
-    const isActive = (pathname) => {
-    // Certifique-se de que o hook esteja disponível
-    if (router && router.pathname) {
-      return router.pathname === pathname;
-    }
-    return false;
+  const isActive = (pathname) => {
+    return router.pathname === pathname;
   };
-
+  
   return (
    <div className='sidebar'>
        <div className='logo'>
@@ -60,7 +58,7 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default NavBarComponent;
 
 // const Sidebar = () => {
 //   return (

@@ -121,5 +121,52 @@
     margin-top: 5px; /* Pequena distância adicional entre o logo e o texto */
   }
 
+  /* Estilo para a caixa de mensagem */
+.caixaMensagem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0; /* Cinza claro */
+  padding: 10px;
+  border-radius: 5px;
+  color: black; /* Texto em preto */
+  font-size: 14px;
+  margin-bottom: 20px; /* Espaço abaixo da caixa de mensagem */
+  text-align: center;
+  width: 90%;
+  position: relative;
+}
+
+/* Estilo para o ícone de visto */
+.iconeVisto {
+  color: green; /* Visto em verde */
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+/* Ajuste o texto do email em negrito */
+.caixaMensagem strong {
+  font-weight: bold;
+}
+
+/* Estilo para o botão Criar Conta */
+.botaoCriarConta {
+  width: 60%; /* Igual ao botão Entrar */
+  padding: 8px; /* Igual ao botão Entrar */
+  background-color: #007bff; /* Igual ao botão Entrar */
+  color: black;
+  font-size: 14px; /* Igual ao botão Entrar */
+  font-weight: bold;
+  border: none;
+  border-radius: 25px; /* Igual ao botão Entrar */
+  cursor: pointer;
+  text-align: center; /* Centraliza o texto dentro do botão */
+  margin-top: 80px; /* Ajuste este valor para posicionar o botão mais para baixo */
+}
+
+.botaoCriarConta:hover {
+  background-color: #0056b3; /* Igual ao botão Entrar */
+}
+
 
   

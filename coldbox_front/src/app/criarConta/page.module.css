@@ -1,0 +1,125 @@
+.fundo {
+    background-image: url(./Fundo.png); /* Substitua pelo caminho correto */
+    background-size: cover; /* Faz a imagem cobrir toda a tela */
+    background-repeat: no-repeat; /* Evita a repetição da imagem */
+    background-position: center; /* Centraliza a imagem */
+    width: 100%;
+    min-height: 100vh; /* Define a altura como 100% da viewport */
+    display: flex; /* Usado para centralizar o container */
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center;
+  }
+  
+  .retanguloContainer {
+    background-image: url(./retangulo2.png);
+    background-position: center;
+    width: 400px; /* Define uma largura menor */
+    height: 600px;
+    background-repeat: no-repeat;
+    display: flex; /* Adiciona flexbox para centralizar o conteúdo */
+    flex-direction: column;
+    justify-content: start; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    border-radius: 20px; 
+    border: solid 2px #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    padding-top: 20px;
+    overflow: hidden; /* Evita que o conteúdo transborde fora do container */
+  }
+  
+  .mensagemRecuperacao {
+    text-align: center;
+    margin-bottom: 20px; /* Espaçamento abaixo da mensagem */
+  }
+  
+  .mensagemRecuperacao p {
+    color: #FFF;
+    font-size: 16px;
+  }
+  
+  .formulario {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    margin-bottom: 20px; /* Espaçamento abaixo do formulário */
+  }
+  
+  .inputCaixa {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px; /* Espaçamento entre os campos */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f0f0f0; /* Fundo cinza claro */
+    font-size: 14px;
+  }
+  
+  .inputCaixa::placeholder {
+    color: #888; /* Cor do placeholder */
+  }
+  
+  .botaoEntrar {
+    width: 60%; /* Reduz a largura do botão */
+    padding: 8px; /* Ajusta o padding para diminuir a altura */
+    background-color: #007bff; /* Cor azul */
+    color: black;
+    font-size: 14px; /* Diminui o tamanho da fonte */
+    font-weight: bold;
+    border: none;
+    border-radius: 25px; /* Deixa o botão mais arredondado */
+    cursor: pointer;
+    text-align: center; /* Centraliza o texto dentro do botão */
+  }
+  
+  .botaoEntrar:hover {
+    background-color: #0056b3; /* Azul mais escuro ao passar o mouse */
+  }
+  
+  .voltarLogin {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .voltarLogin:hover {
+    text-decoration: underline;
+    color: #0056b3;
+  }
+  
+  .extras {
+    display: flex;
+    justify-content: space-between; /* Distribui os itens horizontalmente com espaço igual entre eles */
+    width: 40%; /* Controla a largura da seção */
+    margin-top: auto; /* Empurra a seção de extras para o final do contêiner */
+    padding-bottom: 50px; /* Ajusta a distância do final do contêiner */
+  }
+  
+  .extras span {
+    font-size: 12px; /* Ajuste o tamanho da fonte */
+    color: #FFF;
+    cursor: pointer; /* Indica que os itens são clicáveis */
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 60px; /* Ajusta a posição do logo para mais perto do topo */
+  
+    }
+  
+    .logo img {
+      width: 80px;
+      margin-bottom: 10px; /* Pequena distância adicional entre o logo e o texto */
+    
+    }
+    
+    .logo span {
+      font-size: 20px; /* Diminui o tamanho da fonte */
+      color: #FFF;
+      font-weight: bold;
+      margin-top: 5px; /* Pequena distância adicional entre o logo e o texto */
+    }
+  

@@ -10,18 +10,13 @@ export default function tempoReal() {
       <div className='body'>
         <>
           <NavBar />
-          <Barra />
-          <div className='retanguloGrafico'>
-            <div className='graficoContainer'>
-              <GoogleChart />
-            </div>
-          </div>
-          {/* <GoogleChart /> */}
+          {/* <Barra /> */}
+        
+          <h1>Tela de Usuários</h1>
+        
         </>
         </div>
       );
 }
-
-
 
 

@@ -13,7 +13,7 @@ export default function tempoReal() {
           <Barra />
           <div className='retanguloGrafico'>
             <div className='graficoContainer'>
-              <GoogleChart />
+              {/* <GoogleChart /> */}
             </div>
           </div>
           {/* <GoogleChart /> */}

@@ -4,7 +4,6 @@ import { Button, StyleSheet } from 'react-native';
 export default styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#38a69d'
     },
     containerHeader: {
         marginTop: '14%',
@@ -54,5 +53,13 @@ export default styles = StyleSheet.create({
     },
     registerText: {
         color:'#a1a1a1'
+    },
+    image: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    tinyLogo: {
+        width: 50,
+        height: 50,
     }
 }); 

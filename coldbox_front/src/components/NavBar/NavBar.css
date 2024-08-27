@@ -124,7 +124,6 @@ nav ul li a:hover {
 .activeMenuItem {
   background-color: #575757; /* Cor de fundo para o item ativo */
   color: white; /* Cor do texto */
-  border-radius: 10px; /* Bordas arredondadas */
+  border-radius: 25px; /* Bordas arredondadas */
+  width: 180px;
 }
-
-

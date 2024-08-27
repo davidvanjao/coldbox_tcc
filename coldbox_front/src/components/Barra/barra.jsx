@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import styles from './barra.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGear } from '@fortawesome/free-solid-svg-icons';
 
 export default function BarraSuperior() {
   return (
@@ -13,11 +15,18 @@ export default function BarraSuperior() {
                 </div>
                 <p>Atualizado agora mesmo</p>
         </div>
-
-
-
-
-
+        <div className='perfilUsuario'>
+          <div className='informacaoUsuario'>
+            <img src="/user.png" alt="Usuario" />
+            <div>
+              <h3>Pedro Lima</h3>
+              <span>Administrador</span>
+            </div>
+          </div>
+          <button className='botaoConfiguracao'>
+            <FontAwesomeIcon icon={faGear} className='iconeConfig'/>
+          </button>
+        </div>
 
 
 
@@ -25,26 +34,3 @@ export default function BarraSuperior() {
     </div>
   );
 }
-//  <div className="top-bar">
-//   <div className="company-name">
-//     <h1>Super. Gaspar</h1>
-//     <div className="info-tags">
-//       <span className="tag">Ambiente Refrigerado</span>
-//       <span className="tag">MEGA2560</span>
-//       <span className="tag">ESP8266</span>
-//     </div>
-//     <p>Atualizado agora mesmo</p>
-//   </div>
-//   <div className="user-profile">
-//     <div className="user-info">
-//       <img src="/path-to-user-image" alt="User" />
-//       <div>
-//         <h3>Pedro Lima</h3>
-//         <span>Administrador</span>
-//       </div>
-//     </div>
-//     <button className="settings-button">
-//       <img src="/path-to-settings-icon.png" alt="Settings" />
-//     </button>
-//   </div>
-// </div>

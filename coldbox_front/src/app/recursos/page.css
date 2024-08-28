@@ -1,0 +1,164 @@
+/* Estilo do cabeçalho */
+.header {
+  width: 100%;
+  padding: 1rem 32rem;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  background-color: rgb(255, 255, 255);
+  z-index: 1000;
+}
+
+/* Navegação no cabeçalho */
+.nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 55px;
+  padding: 10px;
+}
+
+.link {
+  color: black;
+  margin: 0 27px;
+  text-decoration: none;
+}
+
+.link:hover {
+  color: purple;
+}
+
+.loginButton {
+  color: rgb(255, 255, 255);
+  background-color: black;
+  padding: 0.5rem 3rem;
+  border: 1px solid black;
+  cursor: pointer;
+  margin-left: 2rem;
+}
+
+/* Estilo da seção de fundo com gradiente */
+.imagemFundo {
+  background-color: white;
+  background-image: url(./gradiente.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  margin-top: 5rem; /* Espaço para não sobrepor o cabeçalho */
+  padding: 2rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 800px; /* Aumenta a altura do fundo */
+  width: 100vw; /* Ocupa toda a largura da tela */
+}
+
+/* Estilo do container de recursos */
+.recursosContainer {
+  background-color: rgba(128, 128, 128, 0.9); /* Cinza com opacidade */
+  padding: 2rem;
+  border-radius: 8px;
+  color: white;
+  max-width: 600px;
+  text-align: left;
+}
+
+.recursosContainer h2 {
+  font-size: 38px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.recursosContainer p,
+.recursosContainer ul {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.recursosContainer ul li {
+  margin-bottom: 0.5rem;
+}
+
+/* Outras seções, se necessário */
+.secao2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  margin-top: 2rem;
+  padding: 8rem;
+  width: 100%;
+  margin-top: 50px;
+}
+
+.monitoramentoImagem {
+  margin-right: 24rem;
+}
+
+.monitoramentoTexto {
+  max-width: 500px;
+}
+
+.monitoramentoTexto h2 {
+  color: #0886B2;
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.monitoramentoTexto p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: black;
+}
+
+.negrito2 {
+  color: black;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.ctaButton {
+  color: white;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  background: linear-gradient(90deg, #0886b2 0%, #8bf7fe 100%);
+  font-weight: 500;
+  margin-left: 80px;
+  width: 204px;
+  height: 42px;
+}
+
+.ctaButton:hover {
+  background-color: #008bb5;
+}
+
+.degrade {
+  background: linear-gradient(264deg, #0886b2 8.34%, #8bf7fe 67.98%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.negrito {
+  color: #fff;
+  font-size: 38px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.textoSobreImagem h2 {
+  font-size: 2.7rem;
+  margin-bottom: 1rem;
+  margin-left: 80px;
+}
+
+.textoSobreImagem p {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  line-height: 1.4;
+  margin-left: 80px;
+}

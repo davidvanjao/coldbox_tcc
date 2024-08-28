@@ -1,35 +1,33 @@
 #curve_chart {
-  width: calc(100% - 250px); /* Subtrai a largura da barra lateral */
-  height: 500px; /* Altura fixa */
-  margin-left: 250px; /* Ajuste para a barra lateral */
-  overflow: hidden; /* Esconde qualquer conteúdo que ultrapasse o contêiner */
-}
-
-.chartContainer {
-  margin-top: 20px; /* Adicione uma margem superior para evitar sobreposição */
-  margin-left: 250px; /* Ajustar conforme a largura da barra lateral */
-  padding: 20px;
-  width: calc(100% - 250px); /* Ajustar a largura subtraindo a barra lateral */
-  height: 70vh; /* Ajustar a altura conforme necessário */
-  background-color: #cc2323; /* Fundo branco para o contêiner */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra opcional para estilo */
-  position: relative; /* Garante que o contêiner tenha um contexto de posicionamento */
-  z-index: 1; /* Eleva o z-index para evitar que outros elementos sobreponham */
+  width: 100%; /* Garante que o gráfico ocupe toda a largura */
+  height: 100%; /* Garante que o gráfico ocupe toda a altura */
 }
 
 .retanguloGrafico {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  background-color: #f5f5f5;
+  position: absolute;
+  top: 140px; /* Considera a barra superior */
+  left: 265px; /* Considera a barra lateral */
   width: calc(100% - 280px); /* Considera a largura da barra lateral e a margem */
-  height: 350px;
-  position: fixed;
-  margin-top: -25px;
-  top: 150px; /* Adiciona margem superior */
-  left: 265px; /* Considera a largura da barra lateral mais a margem */
-  z-index: 1;
-  border-radius: 10px; /* Para bordas arredondadas*/
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Para adicionar uma leve sombra */
+  height: calc(100vh - 600px); /* A altura total menos a barra superior */
+  border-radius: 10px;
+  display: flex;
+  justify-content: center; /* Centraliza o gráfico horizontalmente */
+  align-items: center; /* Centraliza o gráfico verticalmente */
+  padding: 0px;
+  top: 280px;  /* Margem superior */
 }
+
+
+.graficoContainer {
+  margin: 0;
+  padding: 0;
+  /* width: calc(100% - 0px); Considera a largura da barra lateral e a margem */
+  width: 100%; /* Considera a largura da barra lateral e a margem */
+  height: calc(100vh - 300px); /* Ajuste para a altura total menos a barra superior */
+  display: flex;
+  justify-content: center; /* Centraliza o gráfico horizontalmente */
+  align-items: center; /* Centraliza o gráfico verticalmente */
+  border-radius: 10px;
+  overflow: hidden; /* Garante que o gráfico fique dentro da borda */
+}
+

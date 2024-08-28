@@ -6,21 +6,23 @@ import Barra from '../../components/Barra/barra';
 import styles from './page.css'
 
 export default function tempoReal() {
-    return (
-      <div className='body'>
-        <>
-          <NavBar />
-          <Barra />
-          <div className='retanguloGrafico'>
-            <div className='graficoContainer'>
-              {/* <GoogleChart /> */}
-            </div>
+  return (
+    <div className='body'>
+      <>
+        <NavBar />
+        <Barra />
+        <div className='retanguloGrafico'>
+          <div className='graficoContainer'>
+            <GoogleChart />
           </div>
-          {/* <GoogleChart /> */}
-        </>
         </div>
-      );
+      </>
+    </div>
+  );
 }
+  
+
+
 
 
 

@@ -3,10 +3,4 @@
     background-color: #C0C0C0; /* Cor cinza claro como no Figma */
   }
     
-  .graficoContainer {
-    margin-top: 120px; /* Ajustar baseado na altura da barra superior */
-    margin-left: 270px; /* Ajustar baseado na largura da barra lateral */
-    padding: 20px;
-    width: calc(100% - 270px); /* Ajustar baseado na largura da barra lateral */
-    height: calc(100vh - 140px); /* Subtrair a altura da barra superior */
-  }
+  

@@ -1,0 +1,7 @@
+.paiRetangulos {
+  display: flex;
+  width: calc(100% - 280px); /* Considera a largura da barra lateral */
+  justify-content: space-between; /* Mantém os retângulos separados */
+  margin-top: 20px; /* Espaçamento em relação ao gráfico */
+  padding: 0 10px; /* Espaçamento lateral */
+}

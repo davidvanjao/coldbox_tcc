@@ -1,0 +1,19 @@
+.graficoInformacoes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 280px); /* Largura dinâmica respeitando a barra lateral */
+  min-height: 200px; /* Altura mínima para garantir que o conteúdo seja visível */
+  max-height: calc(100vh - 320px); /* Altura máxima para evitar que o retângulo ultrapasse a tela */
+  overflow: auto; /* Para garantir que o conteúdo fique visível e não vaze */
+  position: fixed;
+  top: 585px; /* Adiciona margem superior */
+  left: 265px; /* Considera a largura da barra lateral mais a margem */
+  width: calc(70% - 280px); /* Ocupa toda a largura menos a barra lateral */
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Para adicionar uma leve sombra */
+  margin-top: 0px; /* Espaçamento em relação ao conteúdo superior */
+}
+

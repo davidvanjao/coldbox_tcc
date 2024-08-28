@@ -1,6 +1,7 @@
 #curve_chart {
-  width: 100%; /* Garante que o gráfico ocupe toda a largura */
-  height: 100%; /* Garante que o gráfico ocupe toda a altura */
+  width: 100%;
+  height: 100%; /* Garante que o gráfico ocupe toda a altura disponível */
+  margin: 0; /* Remove qualquer margem */
 }
 
 .retanguloGrafico {
@@ -8,22 +9,21 @@
   top: 140px; /* Considera a barra superior */
   left: 265px; /* Considera a barra lateral */
   width: calc(100% - 280px); /* Considera a largura da barra lateral e a margem */
-  height: calc(100vh - 600px); /* A altura total menos a barra superior */
+  height: 450px; /* Define uma altura fixa menor */
   border-radius: 10px;
   display: flex;
   justify-content: center; /* Centraliza o gráfico horizontalmente */
   align-items: center; /* Centraliza o gráfico verticalmente */
   padding: 0px;
-  top: 280px;  /* Margem superior */
+  top: 125px;  /* Margem superior */
 }
 
-
 .graficoContainer {
+  width: calc(100% - 280px); /* Largura dinâmica respeitando a barra lateral */
   margin: 0;
   padding: 0;
-  /* width: calc(100% - 0px); Considera a largura da barra lateral e a margem */
   width: 100%; /* Considera a largura da barra lateral e a margem */
-  height: calc(100vh - 300px); /* Ajuste para a altura total menos a barra superior */
+  height: 100%; /* Preenche o contêiner pai */
   display: flex;
   justify-content: center; /* Centraliza o gráfico horizontalmente */
   align-items: center; /* Centraliza o gráfico verticalmente */

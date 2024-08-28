@@ -29,19 +29,25 @@ const GoogleChart = () => {
       const options = {
         title: 'Temperatura',
         curveType: 'function',
-        legend: { position: 'right' , alignment: 'center'  },  // Posiciona a legenda à direita do gráfico
+        legend: { position: 'right' , alignment: 'center', legend: 'none' },  // Posiciona a legenda à direita do gráfico
         colors: ['#4285F4', '#DB4437', '#F4B400', '#0F9D58'],
+        
+        //Estilização das bolinhas do grafico
+        hAxis: { minValue: 0, maxValue: 9 },
+        curveType: 'function',
+        pointSize: 5,
+
         chartArea: {
           left: 70,  // Ajusta a margem esquerda para aproximar o gráfico da borda
           width: '75%',  // Ajusta a largura da área do gráfico
-          height: '80%',  // Ajusta a altura da área do gráfico
-          right: 160,  // Adiciona um espaço entre o gráfico e a legenda
+          height: '70%',  // Ajusta a altura da área do gráfico
+          right: 180,  // Adiciona um espaço entre o gráfico e a legenda
         },
         // hAxis: {
         //   title: 'Horário do Dia',
         // },
         // vAxis: {
-        //   title: 'Temperatura (°C)',
+        //   title: 'Temperatura (°C)', 
         // },
         // Outras opções de configuração...
       };

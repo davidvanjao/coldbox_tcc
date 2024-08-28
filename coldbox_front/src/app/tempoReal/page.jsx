@@ -3,6 +3,7 @@ import Head from 'next/head';
 import NavBar from '../../components/NavBar/NavBar';
 import GoogleChart from '../../components/GoogleChart/GoogleChart';
 import Barra from '../../components/Barra/barra';
+import PaiRetangulos from '../../components/PaiRetangulos/PaiRetangulos'
 import styles from './page.css'
 
 export default function tempoReal() {
@@ -16,6 +17,13 @@ export default function tempoReal() {
             <GoogleChart />
           </div>
         </div>
+
+        <div className='paiRetangulos'>
+        <div className='graficoInformacoes'>
+          Retângulo Maior
+        </div>
+
+      </div>
       </>
     </div>
   );

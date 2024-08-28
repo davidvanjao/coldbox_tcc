@@ -20,6 +20,7 @@ export default function tempoReal() {
 
         <div className='paiRetangulos'>
         <div className='graficoInformacoes'>
+          {/* <PaiRetangulos/> */}
           Retângulo Maior
         </div>
 

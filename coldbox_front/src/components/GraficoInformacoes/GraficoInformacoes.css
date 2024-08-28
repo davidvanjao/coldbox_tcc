@@ -1,11 +1,13 @@
 .graficoInformacoes {
+  flex: 1 1 auto; /* O gráfico ocupa o espaço restante proporcionalmente */
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: calc(100% - 280px); /* Largura dinâmica respeitando a barra lateral */
-  min-height: 200px; /* Altura mínima para garantir que o conteúdo seja visível */
-  max-height: calc(100vh - 320px); /* Altura máxima para evitar que o retângulo ultrapasse a tela */
+  /* width: calc(100% - 280px); Largura dinâmica respeitando a barra lateral */
+  min-height: calc(100% - 600px); /* Altura mínima para garantir que o conteúdo seja visível */
+  max-height: calc(100% - 220px); /* Altura máxima para evitar que o retângulo ultrapasse a tela */
   overflow: auto; /* Para garantir que o conteúdo fique visível e não vaze */
   position: fixed;
   top: 585px; /* Adiciona margem superior */
@@ -15,5 +17,16 @@
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Para adicionar uma leve sombra */
   margin-top: 0px; /* Espaçamento em relação ao conteúdo superior */
+  height: auto; /* A altura automática permite que o conteúdo do gráfico defina a altura */
 }
 
+.teste{
+flex-grow: 1; /* Faz o retângulo ocupar todo o espaço disponível restante */
+background-color: #ffffff;
+border-radius: 10px;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra leve */
+margin: 10px; /* Espaço ao redor */
+display: flex;
+justify-content: center;
+align-items: center;
+}

@@ -1,7 +1,11 @@
 .paiRetangulos {
   display: flex;
-  width: calc(100% - 280px); /* Considera a largura da barra lateral */
-  justify-content: space-between; /* Mantém os retângulos separados */
-  margin-top: 20px; /* Espaçamento em relação ao gráfico */
-  padding: 0 10px; /* Espaçamento lateral */
+  flex-direction: column;
+  height: 100vh; /* Garante que o contêiner principal ocupe toda a altura da tela */
+  padding-left: 280px; /* Largura da barra lateral */
+  padding-top: 20px; /* Espaçamento superior */
+  box-sizing: border-box; /* Inclui padding e bordas na altura total */
 }
+
+
+

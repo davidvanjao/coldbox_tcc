@@ -27,7 +27,7 @@ const GoogleChart = () => {
       ]);
 
       const options = {
-        title: 'Temperatura',
+        // title: 'Temperatura',
         curveType: 'function',
         legend: { position: 'right' , alignment: 'center', legend: 'none' },  // Posiciona a legenda à direita do gráfico
         colors: ['#4285F4', '#DB4437', '#F4B400', '#0F9D58'],
@@ -63,8 +63,8 @@ const GoogleChart = () => {
   // Define o tamanho do gráfico com base no viewport
   return (
     <div
-  id="curve_chart"
-  style={{
+    id="curve_chart"
+    style={{
     width: '100%',
     height: '100%',
     margin: '0', // Removendo margens para centralização completa
@@ -75,7 +75,5 @@ const GoogleChart = () => {
   );
 };
 export default GoogleChart;
-
-
 
 

@@ -1,33 +1,38 @@
 #curve_chart {
   width: 100%;
-  height: 100%; /* Garante que o gráfico ocupe toda a altura disponível */
-  margin: 0; /* Remove qualquer margem */
+  height: 100%;
+  /* Garante que o gráfico ocupe toda a altura disponível */
+  margin: 0;
+  /* Remove qualquer margem */
 }
 
 .retanguloGrafico {
-  position: absolute;
-  top: 140px; /* Considera a barra superior */
-  left: 265px; /* Considera a barra lateral */
-  width: calc(100% - 280px); /* Considera a largura da barra lateral e a margem */
-  height: 450px; /* Define uma altura fixa menor */
   border-radius: 10px;
   display: flex;
-  justify-content: center; /* Centraliza o gráfico horizontalmente */
-  align-items: center; /* Centraliza o gráfico verticalmente */
-  padding: 0px;
-  top: 125px;  /* Margem superior */
+  justify-content: center;
+  align-items: center;
+  background-color: red;
+}
+
+.headerGrafico {
+  background-color: lightgray;
+  padding: 1rem .5rem;
 }
 
 .graficoContainer {
-  width: calc(100% - 280px); /* Largura dinâmica respeitando a barra lateral */
+  width: 100%;
   margin: 0;
   padding: 0;
-  width: 100%; /* Considera a largura da barra lateral e a margem */
-  height: 100%; /* Preenche o contêiner pai */
-  display: flex;
-  justify-content: center; /* Centraliza o gráfico horizontalmente */
-  align-items: center; /* Centraliza o gráfico verticalmente */
+  width: 100%;
+  /* Considera a largura da barra lateral e a margem */
   border-radius: 10px;
-  overflow: hidden; /* Garante que o gráfico fique dentro da borda */
+  overflow: hidden;
+  /* Garante que o gráfico fique dentro da borda */
 }
 
+.containerGrafico {
+  display: grid;
+  width: 100%;
+  grid-template: repeat(6, 1fr) / repeat(4, 1fr);
+  background-color: blue;
+}

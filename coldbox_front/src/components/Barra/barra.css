@@ -6,17 +6,11 @@
     align-items: center;
     padding: 20px;
     background-color: #ffffff;
-    width: calc(100% - 280px); /* Considera a largura da barra lateral e a margem */
     height: 100px;
-    position: fixed;
-    top: 15px; /* Adiciona margem superior */
-    left: 265px; /* Considera a largura da barra lateral mais a margem */
     z-index: 1;
     border-radius: 10px; /* Para bordas arredondadas*/
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Para adicionar uma leve sombra */
     /* flex: 0 1 auto; O primeiro retângulo terá uma altura fixa ou automática */
-    flex: 0 0 100px; /* Altura fixa para o primeiro retângulo */
-    margin: 0;
   }
   
   .nomeEmpresa {

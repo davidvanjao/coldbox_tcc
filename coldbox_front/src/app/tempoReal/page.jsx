@@ -9,27 +9,23 @@ import styles from './page.css'
 export default function tempoReal() {
   return (
     <div className='body'>
-      <>
-        <NavBar />
+      <NavBar />
+      <div className='containerGrafico'>
         <Barra />
-        <div className='retanguloGrafico'>
-          <div className='graficoContainer'>
-            <GoogleChart />
+        <div className='graficoContainer'>
+          <div className='headerGrafico'>Temperatura</div>
+          <GoogleChart />
+        </div>
+        <div className='paiRetangulos'>
+          <div className='graficoInformacoes'>
+            Retângulo Maior
           </div>
         </div>
-
-        <div className='paiRetangulos'>
-        <div className='graficoInformacoes'>
-          {/* <PaiRetangulos/> */}
-          Retângulo Maior
-        </div>
-
       </div>
-      </>
     </div>
   );
 }
-  
+
 
 
 

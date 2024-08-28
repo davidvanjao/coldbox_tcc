@@ -23,6 +23,7 @@ const GoogleChart = () => {
         ['06h', 1170, 460, 750, 170],
         ['12h', 800, 1120, 850, 660],
         ['18h', 1030, 540, 400, 500],
+        ['23h59', 584, 198, 300, 400],
       ]);
 
       const options = {
@@ -30,6 +31,12 @@ const GoogleChart = () => {
         curveType: 'function',
         legend: { position: 'right' , alignment: 'center'  },  // Posiciona a legenda à direita do gráfico
         colors: ['#4285F4', '#DB4437', '#F4B400', '#0F9D58'],
+        chartArea: {
+          left: 70,  // Ajusta a margem esquerda para aproximar o gráfico da borda
+          width: '75%',  // Ajusta a largura da área do gráfico
+          height: '80%',  // Ajusta a altura da área do gráfico
+          right: 160,  // Adiciona um espaço entre o gráfico e a legenda
+        },
         // hAxis: {
         //   title: 'Horário do Dia',
         // },
@@ -50,13 +57,15 @@ const GoogleChart = () => {
   // Define o tamanho do gráfico com base no viewport
   return (
     <div
-      id="curve_chart"
-      style={{
-        width: '80vw', // 80% da largura da janela
-        height: '70vh', // 70% da altura da janela
-        marginLeft: '6vw', // Centraliza o gráfico
-      }}
-    ></div>
+  id="curve_chart"
+  style={{
+    width: '100%',
+    height: '100%',
+    margin: '0', // Removendo margens para centralização completa
+    position: 'relative', // Garantir que preencha o contêiner pai
+  }}
+></div>
+
   );
 };
 export default GoogleChart;

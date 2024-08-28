@@ -139,7 +139,7 @@
 
 .degrade {
   background: linear-gradient(264deg, #0886b2 8.34%, #8bf7fe 67.98%);
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

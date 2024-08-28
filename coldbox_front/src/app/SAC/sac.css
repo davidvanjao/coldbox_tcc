@@ -1,0 +1,102 @@
+/* Estilos gerais */
+.container {
+    padding: 1rem 32rem;
+  }
+  
+  .header {
+    width: 100%;
+    padding: 1rem 32rem;
+    align-items: center;
+    position: fixed;
+    top: 0%;
+    background-color: rgb(255, 255, 255);
+    z-index: 1000;
+  }
+  
+  .nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 55px;
+    padding: 10px;
+  }
+  
+  .link {
+    color: black;
+    margin: 0 27px;
+    text-decoration: none;
+  }
+  
+  .link:hover {
+    color: purple;
+  }
+  
+  .loginButton {
+    color: rgb(255, 255, 255);
+    background-color: black;
+    padding: 0.5rem 3rem;
+    border: 1px solid black;
+    cursor: pointer;
+    margin-left: 2rem;
+  }
+  
+/* Estilos específicos da página SAC */
+.sacContainer {
+    margin-top: 2rem;  /* Ajustado para aproximar ainda mais do cabeçalho */
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .titulo {
+    color: #0886B2;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .infoContainer {
+    margin-bottom: 2rem;
+    text-align: left;
+    width: 100%;
+  }
+  
+  .infoItem {
+    margin-bottom: 1rem;
+  }
+  
+  .infoItem h3 {
+    font-size: 1.2rem;
+    color: #0886B2;
+  }
+  
+  .infoItem p {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .sacImagem {
+    margin-top: 2rem;
+  }
+
+  /* Estilo da seção de fundo com gradiente */
+.imagemFundo {
+    background-color: white;
+    background-image: url(./gradiente.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    margin-top: 5rem; /* Espaço para não sobrepor o cabeçalho */
+    padding: 2rem;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 800px; /* Aumenta a altura do fundo */
+    width: 100vw; /* Ocupa toda a largura da tela */
+  }
+  

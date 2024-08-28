@@ -73,57 +73,51 @@ export default function Login() {
         navigation.navigate('LoginScreen');
     };
 
-    return (
+    return (       
+        <View style={styles.container}>
+            <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
+                <Text style={styles.message}>Bem-vindo!!</Text>
+            </Animatable.View>
 
+            <Animatable.View animation="fadeInUp" style={styles.containerForm}>
 
-        <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+                <Text style={styles.title}>Email</Text>
+                <TextInput
+                    placeholder="Digite seu email..."
+                    style={styles.input}
+                    value={email}
+                    onChangeText={setEmail}
+                    autoCapitalize="none"
+                />
 
-            <View style={styles.container}>
-                <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
-                    <Text style={styles.message}>Bem-vindo!!</Text>
-                </Animatable.View>
+                <Text style={styles.title}>Senha</Text>
+                <TextInput
+                    placeholder="Digite sua senha"
+                    style={styles.input}
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry
+                    autoCapitalize="none"
+                />
 
-                <Animatable.View animation="fadeInUp" style={styles.containerForm}>
+                <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                    <Text style={styles.buttonText}>Acessar</Text>
+                </TouchableOpacity>
 
-                    <Text style={styles.title}>Email</Text>
-                    <TextInput
-                        placeholder="Digite seu email..."
-                        style={styles.input}
-                        value={email}
-                        onChangeText={setEmail}
-                        autoCapitalize="none"
+                <TouchableOpacity style={styles.buttonRegister}>
+                    <Text style={styles.registerText}>Não possui uma conta? Cadastre-se</Text>
+                </TouchableOpacity>
+
+                <View style={styles.campoImagem}>
+                    <Image
+                        style={styles.tinyLogo}
+                        source={{
+                        uri: './assets/logo.png',
+                        }}
                     />
+                </View>
 
-                    <Text style={styles.title}>Senha</Text>
-                    <TextInput
-                        placeholder="Digite sua senha"
-                        style={styles.input}
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry
-                        autoCapitalize="none"
-                    />
-
-                    <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                        <Text style={styles.buttonText}>Acessar</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.buttonRegister}>
-                        <Text style={styles.registerText}>Não possui uma conta? Cadastre-se</Text>
-                    </TouchableOpacity>
-
-                    <View style={styles.}>
-                        <Image
-                            style={styles.tinyLogo}
-                            source={{
-                            uri: './assets/logo.png',
-                            }}
-                        />
-                    </View>
-
-                </Animatable.View>
-            </View>
-
-        </ImageBackground>
+            </Animatable.View>
+        </View>
     );
 };

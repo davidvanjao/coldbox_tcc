@@ -6,11 +6,12 @@
     align-items: center;
     padding: 20px;
     background-color: #ffffff;
-    height: 100px;
     z-index: 1;
     border-radius: 10px; /* Para bordas arredondadas*/
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Para adicionar uma leve sombra */
     /* flex: 0 1 auto; O primeiro retângulo terá uma altura fixa ou automática */
+    grid-row: 1 / 1;
+    grid-column: 1 / -1;
   }
   
   .nomeEmpresa {

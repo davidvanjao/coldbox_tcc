@@ -1,9 +1,6 @@
 .paiRetangulos {
-  display: flex;
-  flex-direction: column;
-  height: 100vh; /* Garante que o contêiner principal ocupe toda a altura da tela */
-  padding-left: 280px; /* Largura da barra lateral */
-  padding-top: 20px; /* Espaçamento superior */
+  grid-row: 5/ span 2;
+  grid-column: 1 / span 3;
   box-sizing: border-box; /* Inclui padding e bordas na altura total */
 }
 

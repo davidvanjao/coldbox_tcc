@@ -4,7 +4,7 @@ import styles from './GraficoInformacoes.css';
 const GraficoInformacoes = () => {
   return (
     <div className='graficoInformacoes'>
-      <h1>Retangulo Maior</h1>
+      <span className='tag'>Informações</span>
     </div>
   );
 };

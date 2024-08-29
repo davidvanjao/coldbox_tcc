@@ -1,9 +1,6 @@
 #curve_chart {
   width: 100%;
   height: 100%;
-  /* Garante que o gráfico ocupe toda a altura disponível */
-  margin: 0;
-  /* Remove qualquer margem */
 }
 
 .retanguloGrafico {
@@ -15,24 +12,29 @@
 }
 
 .headerGrafico {
-  background-color: lightgray;
-  padding: 1rem .5rem;
+  background-color: #E6E6E6;
+  padding: 1.5rem .5rem;
 }
 
-.graficoContainer {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  /* Considera a largura da barra lateral e a margem */
+.headerGrafico .tag{
+  padding: 5px 10px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.contentGrafico{
   border-radius: 10px;
+  grid-row: 2 / span 3;
+  grid-column: 1 / -1;
   overflow: hidden;
-  /* Garante que o gráfico fique dentro da borda */
+  display: flex;
+  flex-direction: column;
 }
 
 .containerGrafico {
   display: grid;
+  grid-template: repeat(6, 1fr) / repeat(5, 1fr);
+  padding: 1rem;
   width: 100%;
-  grid-template: repeat(6, 1fr) / repeat(4, 1fr);
-  background-color: blue;
+  gap: 1.5rem;
 }

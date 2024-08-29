@@ -64,12 +64,6 @@ const GoogleChart = () => {
   return (
     <div
     id="curve_chart"
-    style={{
-    width: '100%',
-    height: '100%',
-    margin: '0', // Removendo margens para centralização completa
-    position: 'relative', // Garantir que preencha o contêiner pai
-  }}
 ></div>
 
   );

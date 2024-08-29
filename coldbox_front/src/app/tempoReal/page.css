@@ -1,9 +1,9 @@
-  
-  body {
-    background-color: #C0C0C0; /* Cor cinza claro como no Figma */
+  .bodyGrafico{
+    background-color: #C0C0C0;
+    height: 100vh;
+    overflow: hidden;
     display: flex;
-    height: 100vh; /* Garante que ocupe toda a altura da tela */
-    box-sizing: border-box; /* Garante que padding e bordas sejam incluídos na altura total */
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 250px ;
   }
-    
-  

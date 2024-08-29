@@ -17,7 +17,5 @@ export default function RoutesDrawer() {
         <Drawer.Screen name="Sobre" component={Sobre} />
       </Drawer.Navigator>
 
-      
-
   );
 }

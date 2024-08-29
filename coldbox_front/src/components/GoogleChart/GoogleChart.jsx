@@ -63,9 +63,8 @@ const GoogleChart = () => {
   // Define o tamanho do gráfico com base no viewport
   return (
     <div
-    id="curve_chart"
-></div>
-
+      id="curve_chart">
+    </div>
   );
 };
 export default GoogleChart;

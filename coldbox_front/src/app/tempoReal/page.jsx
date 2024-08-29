@@ -14,9 +14,9 @@ import GraficoInformacoes from '@/components/GraficoInformacoes/GraficoInformaco
 export default function tempoReal() {
   return (
     <div className='bodyGrafico'>
-      <NavBar />
+        <NavBar />
       <div className='containerGrafico'>
-        <Barra />
+          <Barra />
         <div className='contentGrafico'>
           <div className='headerGrafico'>
             <span className='tag'>Temperatura</span>

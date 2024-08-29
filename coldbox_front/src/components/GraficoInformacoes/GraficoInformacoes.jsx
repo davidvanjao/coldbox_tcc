@@ -3,8 +3,10 @@ import styles from './GraficoInformacoes.css';
 
 const GraficoInformacoes = () => {
   return (
-    <div className='graficoInformacoes'>
-      <span className='tag'>Informações</span>
+    <div className='painelInformacoes'>
+      <div className='barraCamarasAtivos'>
+        <span className='tag'>Câmaras e Ativos</span>
+      </div>
     </div>
   );
 };

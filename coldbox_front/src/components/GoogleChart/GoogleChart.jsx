@@ -1,6 +1,5 @@
 "use client"; // Marca o componente como um Client Component
 import styles from './GoogleChart.css' 
-
 import { useEffect } from 'react';
 
 const GoogleChart = () => {
@@ -57,6 +56,16 @@ const GoogleChart = () => {
       );
 
       chart.draw(data, options);
+
+      // Adiciona um event listener para redimensionar o gráfico
+      window.addEventListener('resize', () => {
+        chart.draw(data, options);
+      });
+    };
+
+    // Limpa o event listener ao desmontar o componente
+    return () => {
+      window.removeEventListener('resize', drawChart);
     };
   }, []);
 

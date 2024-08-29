@@ -8,6 +8,8 @@ import React, { useState } from 'react';
 // Função para a edição do perfil do usuario
 const BarraSuperior = () => {
   const [showModal, setShowModal] = useState(false);
+  const [profilePicture, setProfilePicture] = useState('/user.png'); // Caminho inicial para a imagem de perfil
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -16,6 +18,24 @@ const BarraSuperior = () => {
   const handleCloseModal = () => {
     setShowModal(false);
   };
+
+  //Edição da foto de perfil do usuario
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(URL.createObjectURL(file)); // Cria um URL temporário para a imagem selecionada
+    }
+  };
+
+  const handleSave = () => {
+    // Atualiza a foto de perfil com a nova imagem selecionada
+    if (selectedFile) {
+      setProfilePicture(selectedFile);
+      setSelectedFile(null); // Limpa o estado temporário após salvar
+    }
+    handleCloseModal(); // Fecha o modal após salvar
+  };
+
 
   return (
     <div className='barraSuperior'>
@@ -47,14 +67,25 @@ const BarraSuperior = () => {
           <div className="modal-overlay" onClick={handleCloseModal}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <h2>Editar Perfil</h2>
-               
-              <form>
-              {/* Campo para alterar a foto de perfil */}
-              <div className="form-group">
-                <label htmlFor="profilePicture">Foto de Perfil:</label>
-                <input type="file" id="profilePicture" name="profilePicture" accept="image/*" />
+
+              {/* Área da foto de perfil */}
+              <div className="profile-picture">
+                  <img src={selectedFile || profilePicture} alt="Foto de Perfil" className="profile-image" />
+                <div className="edit-icon-overlay">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }} // Esconde o input de arquivo
+                    id="file-input"
+                  />
+                  <label htmlFor="file-input" className="edit-profile-pic-button">
+                    Alterar foto do perfil
+                  </label>
+                </div>
               </div>
 
+              <form>
               {/* Campo para alterar o nome */}
               <div className="form-group">
                 <label htmlFor="name">Nome:</label>
@@ -76,7 +107,16 @@ const BarraSuperior = () => {
               {/* Campo para alterar o número de telefone */}
               <div className="form-group">
                 <label htmlFor="phone">Número de Telefone:</label>
-                <input type="tel" id="phone" name="phone" placeholder="Seu número de telefone" />
+                {/* input com validação para que só seja digitado números */}
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  placeholder="Seu número de telefone"
+                  pattern="\d*"
+                  inputMode="numeric"
+                  onInput={(e) => e.target.value = e.target.value.replace(/\D/g, '')}
+                />
               </div>
 
               {/* Botões para fechar e salvar */}

@@ -119,6 +119,15 @@
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   z-index: 1001;
+  width: 20%; /* Aumenta a largura do modal para 60% da tela */
+  margin: 0 auto; /* Centraliza o modal horizontalmente */
+  transition: all 0.3s ease-in-out;
+}
+
+.modal-content h2{
+  font-weight: bold;
+  margin-bottom: 20px; /* Adiciona um espaço de 20px abaixo do título */
+
 }
 
 .form-group {
@@ -158,4 +167,104 @@
 .form-actions button[type="button"] {
   background-color: #f44336;
   color: white;
+}
+
+/* ---------------------------------- */
+
+.profile-picture {
+  position: relative;
+  width: 150px; /* Defina o tamanho desejado */
+  height: 150px;
+  margin: 0 auto 20px auto; /* Centraliza a foto horizontalmente */
+  border-radius: 50%; /* Deixa a imagem redonda */
+  overflow: hidden;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Garante que a imagem cubra toda a área */
+}
+
+.edit-icon-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
+  color: white;
+  opacity: 0; /* Começa invisível */
+  transition: opacity 0.3s;
+}
+
+.profile-picture:hover .edit-icon-overlay {
+  opacity: 1; /* Exibe o overlay quando o mouse passa sobre a foto */
+}
+
+.edit-profile-pic-button {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+}
+
+
+/* Media queries para responsividade */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 80%; /* Reduz a largura do modal em telas menores */
+    padding: 15px; /* Reduz o padding para aproveitar melhor o espaço */
+  }
+
+  .profile-picture {
+    width: 120px;
+    height: 120px; /* Reduz o tamanho da imagem de perfil em telas menores */
+  }
+
+  .edit-profile-pic-button {
+    font-size: 14px; /* Reduz o tamanho da fonte do botão em telas menores */
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%; /* Botões ocupam a largura total em telas menores */
+    margin-bottom: 10px; /* Adiciona margem inferior entre os botões */
+  }
+
+  .form-actions button:last-child {
+    margin-bottom: 0; /* Remove a margem do último botão */
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    width: 95%; /* Aumenta a largura em telas muito pequenas */
+    padding: 10px; /* Ajusta o padding para telas pequenas */
+  }
+
+  .profile-picture {
+    width: 100px;
+    height: 100px; /* Ajusta o tamanho da imagem de perfil para telas pequenas */
+  }
+
+  .edit-profile-pic-button {
+    font-size: 12px; /* Reduz ainda mais o tamanho da fonte do botão */
+  }
+
+  .form-group label {
+    font-size: 14px; /* Ajusta o tamanho da fonte do label para telas pequenas */
+  }
+
+  .form-group input {
+    padding: 6px; /* Reduz o padding dos inputs para telas pequenas */
+  }
 }

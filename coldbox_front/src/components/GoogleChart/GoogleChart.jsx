@@ -2,7 +2,7 @@
 import styles from './GoogleChart.css' 
 import { useEffect } from 'react';
 
-const GoogleChart = () => {
+const GoogleChart = ({ selecionados }) => {
   useEffect(() => {
     // Carrega o script do Google Charts
     const script = document.createElement('script');
@@ -16,13 +16,18 @@ const GoogleChart = () => {
     document.body.appendChild(script);
 
     const drawChart = () => {
+      if (!selecionados) {
+        // Se selecionados estiver indefinido, não tenta desenhar o gráfico
+        return;
+      }
+
       const data = window.google.visualization.arrayToDataTable([
-        ['a', 'Principal', 'Frios', 'Bebidas','Congelados'],
-        ['00h', 1000, 450, 900, 100],
-        ['06h', 1170, 460, 750, 170],
-        ['12h', 800, 1120, 850, 660],
-        ['18h', 1030, 540, 400, 500],
-        ['23h59', 584, 198, 300, 400],
+        ['Hora', 'Principal', 'Frios', 'Bebidas', 'Congelados'],
+        ['00h', selecionados.Principal ? 1000 : null, selecionados.Frios ? 450 : null, selecionados.Bebidas ? 900 : null, selecionados.Congelados ? 100 : null],
+        ['06h', selecionados.Principal ? 1170 : null, selecionados.Frios ? 460 : null, selecionados.Bebidas ? 750 : null, selecionados.Congelados ? 170 : null],
+        ['12h', selecionados.Principal ? 800 : null, selecionados.Frios ? 1120 : null, selecionados.Bebidas ? 850 : null, selecionados.Congelados ? 660 : null],
+        ['18h', selecionados.Principal ? 1030 : null, selecionados.Frios ? 540 : null, selecionados.Bebidas ? 400 : null, selecionados.Congelados ? 500 : null],
+        ['23h59', selecionados.Principal ? 584 : null, selecionados.Frios ? 198 : null, selecionados.Bebidas ? 300 : null, selecionados.Congelados ? 400 : null],
       ]);
 
       const options = {
@@ -67,7 +72,7 @@ const GoogleChart = () => {
     return () => {
       window.removeEventListener('resize', drawChart);
     };
-  }, []);
+  }, [selecionados]);
 
   // Define o tamanho do gráfico com base no viewport
   return (

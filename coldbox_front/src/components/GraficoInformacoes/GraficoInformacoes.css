@@ -3,16 +3,18 @@
   height: 100%;
   background-color: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Para adicionar uma leve sombra */
-  overflow-y: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
 }
 
 .barraCamarasAtivos {
-  padding: 5px 10px;
   background-color: #E6E6E6;
   padding: 1.5rem .5rem;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  position: sticky; /* Mantém a barra fixa no topo do painel */
+  top: 0; /* Fixa no topo */
 }
 
 .barraCamarasAtivos .tag {
@@ -22,17 +24,19 @@
   font-weight: 600;
 } 
 
-
-/* ------------------------------------------- */
-/* CÂMARAS E ATIVOS */
+/* Estilo do conteúdo da tabela */
+.conteudoTabela {
+  overflow-y: auto;
+  flex-grow: 1; /* Permite que o conteúdo cresça conforme necessário */
+  padding: 10px;
+}
 
 /* Fundo branco para a tabela inteira */
 .tabelaCamaras {
   width: 100%;
-  margin-top: 20px;
-  border-collapse: collapse; /* Garante que as bordas não se sobreponham */
-  background-color: #ffffff; /* Define o fundo branco para a tabela inteira */
-  border-radius: 10px;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  /* border-radius: 10px; */
   overflow: hidden;
 }
 
@@ -45,7 +49,7 @@ table {
 
 /* Cabeçalho sem fundo */
 thead {
-  background-color: #ffffff; /* Fundo branco para o cabeçalho */
+  background-color: #ffffff;
 }
 
 th, td {
@@ -53,18 +57,50 @@ th, td {
   border-bottom: 1px solid #ddd;
 }
 
+/* Estilo para as células de dados */
+td {
+  vertical-align: middle; /* Centraliza verticalmente o conteúdo das células */
+  border-bottom: 1px solid #ddd; /* Linha horizontal */
+  border-right: 1px solid #ddd;  /* Linha vertical */
+  text-align: left;
+}
+
+td:last-child {
+  border-right: none; /* Remove a borda da última célula de cada linha */
+}
+
+/* Remove a borda inferior da última linha */
+tr:last-child td {
+  border-bottom: none;
+}
+
 /* Define o fundo cinza claro para as linhas da tabela */
 tbody tr {
-  background-color: #f5f5f5; /* Leve tom de cinza */
+  background-color: #f5f5f5;
 }
 
 tbody tr:nth-child(even) {
-  background-color: #eeeeee; /* Tom de cinza um pouco mais escuro nas linhas pares para contraste */
+  background-color: #eeeeee;
 }
 
 /* Estilo do cabeçalho */
 th {
   font-weight: bold;
+  text-align: left;
+  border-bottom: 1px solid #ddd; /* Linha horizontal */
+  border-right: 1px solid #ddd;  /* Linha vertical */
+  vertical-align: middle; /* Centraliza verticalmente o texto no cabeçalho */
+}
+
+th:last-child {
+  border-right: none; /* Remove a borda do último cabeçalho */
+}
+.thCentro {
+  text-align: center;
+}
+
+.tdCentro {
+  text-align: center; /* Alinha o texto à esquerda */
 }
 
 /* Remove a borda inferior da última linha */
@@ -73,7 +109,15 @@ tr:last-child td {
 }
 
 /* Estilo para temperatura em alerta */
-.alertaTemp {
-  color: red;
+.alertaTempErro {
+  background-color: red;
   font-weight: bold;
+  text-align: center;
 }
+
+.alertaTempNormal {
+  background-color: #01BE4F;
+  font-weight: bold;
+  text-align: center;
+}
+

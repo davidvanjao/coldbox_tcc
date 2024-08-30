@@ -21,3 +21,59 @@
   font-size: 18px;
   font-weight: 600;
 } 
+
+
+/* ------------------------------------------- */
+/* CÂMARAS E ATIVOS */
+
+/* Fundo branco para a tabela inteira */
+.tabelaCamaras {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse; /* Garante que as bordas não se sobreponham */
+  background-color: #ffffff; /* Define o fundo branco para a tabela inteira */
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Mantém o fundo branco para toda a tabela */
+table {
+  width: 100%;
+  text-align: left;
+  border-spacing: 0;
+}
+
+/* Cabeçalho sem fundo */
+thead {
+  background-color: #ffffff; /* Fundo branco para o cabeçalho */
+}
+
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Define o fundo cinza claro para as linhas da tabela */
+tbody tr {
+  background-color: #f5f5f5; /* Leve tom de cinza */
+}
+
+tbody tr:nth-child(even) {
+  background-color: #eeeeee; /* Tom de cinza um pouco mais escuro nas linhas pares para contraste */
+}
+
+/* Estilo do cabeçalho */
+th {
+  font-weight: bold;
+}
+
+/* Remove a borda inferior da última linha */
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* Estilo para temperatura em alerta */
+.alertaTemp {
+  color: red;
+  font-weight: bold;
+}

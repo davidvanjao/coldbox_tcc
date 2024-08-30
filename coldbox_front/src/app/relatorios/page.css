@@ -1,0 +1,9 @@
+.bodyGrafico{
+    background-color: #C0C0C0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 250px ;
+  }

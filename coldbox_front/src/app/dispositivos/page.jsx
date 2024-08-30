@@ -1,22 +1,27 @@
+'use client'
 import Image from 'next/image';
 import Head from 'next/head';
 import NavBar from '../../components/NavBar/NavBar';
-import GoogleChart from '../../components/GoogleChart/GoogleChart';
 import Barra from '../../components/Barra/barra';
 import styles from './page.css'
 
-export default function tempoReal() {
-    return (
-      <div className='body'>
-        <>
-          <NavBar />
-          {/* <Barra /> */}
+
+
+
+export default function dispositivos() {
+  return (
+    <div className='bodyGrafico'>
+        <NavBar />
+        <Barra />
         
-          <h1>Tela de Dispositivos</h1>
-        
-        </>
-        </div>
-      );
+      
+      </div>
+        );
 }
+
+
+
+
+
 
 

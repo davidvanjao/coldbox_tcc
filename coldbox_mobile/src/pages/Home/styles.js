@@ -45,5 +45,5 @@ export default styles = StyleSheet.create({
         borderRadius:10,
         borderWidth: 2,
 
-    }
+    },
 }); 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, alert, ImageBackground, Image} from 'react-native';
+import { View, Text, TextInput, Pressable, alert, ImageBackground, Image} from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
@@ -100,13 +100,13 @@ export default function Login() {
                     autoCapitalize="none"
                 />
 
-                <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                <Pressable style={styles.button} onPress={handleLogin}>
                     <Text style={styles.buttonText}>Acessar</Text>
-                </TouchableOpacity>
+                </Pressable>
 
-                <TouchableOpacity style={styles.buttonRegister}>
+                <Pressable style={styles.buttonRegister}>
                     <Text style={styles.registerText}>Não possui uma conta? Cadastre-se</Text>
-                </TouchableOpacity>
+                </Pressable>
 
                 <View style={styles.campoImagem}>
                     <Image

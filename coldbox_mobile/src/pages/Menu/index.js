@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity} from 'react-native';
+import { View, Text, Pressable} from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -19,39 +19,39 @@ export default function Menu(props) {
         <View>
 
             <View>
-                <TouchableOpacity
+                <Pressable
                     style={styles.viewDrawer}
                     onPress={() => props.navigation.navigate('Home')}
                     >
                     <Text style={styles.txtDrawer}>Home</Text>
-                </TouchableOpacity>
+                </Pressable>
             </View>
 
             <View>
-                <TouchableOpacity
+                <Pressable
                     style={styles.viewDrawer}
                     onPress={() => props.navigation.navigate('Configuracao')}
                     >
                     <Text style={styles.txtDrawer}>Configuração</Text>
-                </TouchableOpacity>
+                </Pressable>
             </View>
 
             <View>
-                <TouchableOpacity
+                <Pressable
                     style={styles.viewDrawer}
                     onPress={() => props.navigation.navigate('Sobre')}
                     >
                     <Text style={styles.txtDrawer}>Sobre</Text>
-                </TouchableOpacity>
+                </Pressable>
             </View>
 
             <View>
-                <TouchableOpacity
+                <Pressable
                     style={styles.viewDrawer}
                     onPress={handleLogout}
                     >
                     <Text style={styles.txtDrawer}>Logoff</Text>
-                </TouchableOpacity>
+                </Pressable>
             </View>
         </View>
     );

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity} from 'react-native';
+import { View, Text, Pressable} from 'react-native';
 
 import styles from './styles';
 
@@ -10,7 +10,7 @@ export default function Home(props) {
             <Text style={styles.titulo}>Seja bem vindo David!</Text>               
             <Text style={styles.textoSimples}>Equipamentos disponiveis:</Text>            
 
-            <TouchableOpacity style={styles.equipamento} 
+            <Pressable style={styles.equipamento} 
                 onPress={() => props.navigation.navigate('Equipamento')}
             >
                 <View style={styles.equipamentoInfo}>
@@ -21,7 +21,7 @@ export default function Home(props) {
                 <View style={styles.equipamentoStatus}>
                     <Text style={styles.textoSimples}>5</Text>
                 </View>
-            </TouchableOpacity>      
+            </Pressable>      
 
         </View>
     );

@@ -4,7 +4,6 @@ import Head from 'next/head';
 import NavBar from '../../components/NavBar/NavBar';
 import GoogleChart from '../../components/GoogleChart/GoogleChart';
 import Barra from '../../components/Barra/barra';
-import PaiRetangulos from '../../components/PaiRetangulos/PaiRetangulos'
 import styles from './page.css'
 import Alerta from '@/components/Alertas/Alertas';
 import GraficoInformacoes from '@/components/GraficoInformacoes/GraficoInformacoes';
@@ -23,7 +22,7 @@ export default function tempoReal() {
           </div>
           <GoogleChart />
         </div>
-        <div className='paiRetangulos'>
+        <div className='paiRetangulo'>
           <GraficoInformacoes />
         </div>
         <Alerta />

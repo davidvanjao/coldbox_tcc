@@ -26,9 +26,8 @@ const GraficoInformacoes = () => {
   };
 
   return (
-    <div>
-      {/* Passando os selecionados para o gráfico */}
-      <GoogleChart selecionados={selecionados} /> 
+
+
       <div className='painelInformacoes'>
         <div className='barraCamarasAtivos'>
           <span className='tag'>Câmaras e Ativos</span>
@@ -78,7 +77,7 @@ const GraficoInformacoes = () => {
           </table>
         </div>   
       </div>
-    </div>
+
   );
 };
 

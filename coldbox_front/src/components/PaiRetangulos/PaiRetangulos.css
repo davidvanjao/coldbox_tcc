@@ -1,8 +1,0 @@
-.paiRetangulos {
-  grid-row: 5/ span 2;
-  grid-column: 1 / span 3;
-  box-sizing: border-box; /* Inclui padding e bordas na altura total */
-}
-
-
-

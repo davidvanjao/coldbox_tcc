@@ -6,11 +6,7 @@ import { faCheck, faExclamationTriangle } from '@fortawesome/free-solid-svg-icon
 import { faThermometerHalf, faTint } from '@fortawesome/free-solid-svg-icons';
 import GoogleChart from '../GoogleChart/GoogleChart';
 
-
-
-
 const GraficoInformacoes = () => {
-
   const [selecionados, setSelecionados] = useState({
     Principal: true,
     Frios: true,
@@ -26,13 +22,11 @@ const GraficoInformacoes = () => {
   };
 
   return (
-
-
+    <div className='paiRetangulo'>
       <div className='painelInformacoes'>
         <div className='barraCamarasAtivos'>
           <span className='tag'>Câmaras e Ativos</span>
         </div>
-      
 
         <div className="conteudoTabela">
           <table className="tabelaCamaras">
@@ -77,7 +71,7 @@ const GraficoInformacoes = () => {
           </table>
         </div>   
       </div>
-
+    </div>
   );
 };
 

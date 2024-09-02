@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './CamarasEAtivos.css';
 import camarasAtivosDados from './CamarasEAtivosDados';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faExclamationTriangle, faCheckSquare } from '@fortawesome/free-solid-svg-icons';
 import { faThermometerHalf, faTint } from '@fortawesome/free-solid-svg-icons';
 import GoogleChart from '../GoogleChart/GoogleChart';
 
@@ -32,7 +32,9 @@ const CamarasEAtivos = () => {
           <table className="tabelaCamaras">
             <thead>
               <tr>
-                <th></th>
+                <th className='thCentro'>
+                  <FontAwesomeIcon icon={faCheckSquare} style={{ marginRight: '5px', fontSize: '2rem' }} />
+                </th>
                 <th>Equipamento</th>
                 <th>Ativo</th>
                 <th className='thCentro'>
@@ -48,7 +50,7 @@ const CamarasEAtivos = () => {
               {camarasAtivosDados.map((item, index) => (
                 <tr key={index}>
                   <td>
-                    <input 
+                    <input
                       type="checkbox" 
                       checked={selecionados[item.ativo]}
                       onChange={() => handleCheckboxChange(item.ativo)}

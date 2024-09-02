@@ -127,3 +127,10 @@ tr:last-child td {
   text-align: center;
 }
 
+/* Estilo para aumentar e centralizar a checkbox */
+input[type="checkbox"] {
+  width: 20px; /* Aumenta a largura da checkbox */
+  height: 20px; /* Aumenta a altura da checkbox */
+  margin: auto; /* Centraliza a checkbox verticalmente e horizontalmente */
+  display: block; /* Certifica-se de que a checkbox ocupe o espaço necessário */
+}

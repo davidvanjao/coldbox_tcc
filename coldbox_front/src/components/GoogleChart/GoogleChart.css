@@ -31,10 +31,3 @@
   flex-direction: column;
 }
 
-.containerGrafico {
-  display: grid;
-  grid-template: repeat(6, 1fr) / repeat(5, 1fr);
-  padding: 1rem;
-  width: 100%;
-  gap: 1.5rem;
-}

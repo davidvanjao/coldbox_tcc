@@ -64,7 +64,6 @@ const GoogleChart = () => {
       </div>
       <div
         id="curve_chart"
-        style={{ width: '100%', height: '100%' }}
       ></div>
     </div>
   );

@@ -6,16 +6,16 @@ import GoogleChart from '../../components/GoogleChart/GoogleChart';
 import Barra from '../../components/Barra/barra';
 import styles from './page.css'
 import Alerta from '@/components/Alertas/Alertas';
-import GraficoInformacoes from '@/components/GraficoInformacoes/GraficoInformacoes';
+import CamarasEAtivos from '@/components/CamarasEAtivos/CamarasEAtivos';
 
 export default function tempoReal() {
   return (
-    <div className='bodyGrafico'>
+    <div className='bodyContainer'>
       <NavBar />
-      <div className='containerGrafico'>
+      <div className='containerGrid'>
         <Barra />
         <GoogleChart />
-        <GraficoInformacoes />
+        <CamarasEAtivos />
         <Alerta />
       </div>
     </div>

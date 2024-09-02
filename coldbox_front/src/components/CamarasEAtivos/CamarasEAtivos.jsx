@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import styles from './GraficoInformacoes.css';
-import camarasAtivosDados from './camarasAtivosDados';
+import styles from './CamarasEAtivos.css';
+import camarasAtivosDados from './CamarasEAtivosDados';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { faThermometerHalf, faTint } from '@fortawesome/free-solid-svg-icons';
 import GoogleChart from '../GoogleChart/GoogleChart';
 
-const GraficoInformacoes = () => {
+const CamarasEAtivos = () => {
   const [selecionados, setSelecionados] = useState({
     Principal: true,
     Frios: true,
@@ -75,4 +75,4 @@ const GraficoInformacoes = () => {
   );
 };
 
-export default GraficoInformacoes;
+export default CamarasEAtivos;

@@ -14,6 +14,8 @@ export default function tempoReal() {
       <NavBar />
       <div className='containerGrid'>
         <Barra />
+        <GoogleChart exportButton={true} />
+
         <GoogleChart />
         <CamarasEAtivos />
         <Alerta />

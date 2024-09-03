@@ -1,8 +1,32 @@
 "use client"; // Marca o componente como um Client Component
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './GoogleChart.css';
 
-const GoogleChart = () => {
+// A prop 'exportButton' renderizará o botão de exportação apenas quando necessário
+const GoogleChart = ({ exportButton }) => {
+  // Estado para controlar a visibilidade do modal de exportação
+  const [showExportModal, setShowExportModal] = useState(false);
+
+  // Funções para abrir e fechar o modal de exportação
+  const handleOpenExportModal = () => {
+    console.log('Abrindo modal de exportação...');
+    setShowExportModal(true);
+  };
+
+  const handleCloseExportModal = () => {
+    console.log('Fechando modal de exportação...');
+    setShowExportModal(false);
+  };
+
+  // Função de exportação de dados
+  const handleExport = (e) => {
+    e.preventDefault(); // Evita o comportamento padrão do formulário de recarregar a página
+    console.log('Exportando dados...');
+    alert('Exportando dados...');
+    handleCloseExportModal(); // Fecha o modal após a exportação
+  };
+
+
   useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://www.gstatic.com/charts/loader.js';
@@ -61,10 +85,38 @@ const GoogleChart = () => {
     <div className='contentGrafico'>
       <div className='headerGrafico'>
         <span className='tag'>Temperatura</span>
+        {exportButton && (
+          <button className='exportButton' onClick={handleOpenExportModal}>
+            Exportar Dados
+          </button>
+        )}
       </div>
-      <div
-        id="curve_chart"
-      ></div>
+      <div id="curve_chart"></div>
+      
+      {/* Modal para selecionar o período de exportação */}
+      {showExportModal && (
+        <div className="modal-overlay" onClick={handleCloseExportModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>Exportar Dados</h2>
+            <form>
+              <div className="form-group">
+                <label htmlFor="start-date">Data de Início:</label>
+                <input type="date" id="start-date" name="start-date" required />
+              </div>
+              <div className="form-group">
+                <label htmlFor="end-date">Data de Fim:</label>
+                <input type="date" id="end-date" name="end-date" required />
+              </div>
+
+              {/* Botões para fechar e exportar */}
+              <div className="form-actions">
+                <button type="button" onClick={handleCloseExportModal}>Fechar</button>
+                <button type="submit" onClick={handleExport}>Exportar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,0 +1,19 @@
+.bodyGrafico {
+    background-color: #C0C0C0;
+    height: 100vh;
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 250px;
+    overflow-y: auto; /* Adiciona scroll vertical se necessário */
+}
+
+.containerGrid {
+    display: grid;
+    grid-template-rows: auto; /* Permite que as linhas se ajustem ao conteúdo */
+    grid-template-columns: 1fr; /* Ajusta a largura das colunas para se adaptar ao conteúdo */
+    padding: 1rem;
+    width: 100%;
+    gap: 1.5rem;
+    overflow-y: auto; /* Adiciona scroll vertical se o conteúdo ultrapassar a altura disponível */
+}

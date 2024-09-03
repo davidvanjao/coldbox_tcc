@@ -16,6 +16,9 @@
   padding: 1.5rem .5rem;
   position: relative; /* Para que o botão absoluto se posicione corretamente */
   overflow: visible; /* Certifique-se de que o conteúdo transborde visivelmente */
+  /* display: flex; /* Use flexbox para posicionar os elementos lado a lado */
+  /* justify-content: space-between; Garante que os elementos se afastem horizontalmente */
+  /* align-items: center; Centraliza os elementos verticalmente */ 
 }
 
 .headerGrafico .tag{
@@ -123,3 +126,44 @@
   color: white;
 }
 
+/* Estilos para o seletor "Exportar visualização atual" */
+.checkbox-group {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+/* Estilos para o label da checkbox */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+}
+
+/* Ajuste para o espaçamento entre a checkbox e o texto */
+.checkbox-container input[type="checkbox"] {
+  margin-right: 8px; /* Espaço entre a checkbox e o texto */
+}
+
+/* Garantia de alinhamento do texto */
+.checkbox-text {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+
+/* Estilização para o seletor de período */
+.timeSelect {
+  position: absolute;
+  right: 150px; /*Posiciona o botão no lado direito */
+  top: 50%; /* Centraliza verticalmente */
+  transform: translateY(-50%); /* Ajusta para que o centro do botão esteja alinhado verticalmente */
+  padding: 7px 10px;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  font-size: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 10; /* Certifique-se de que o botão esteja acima de outros elementos */
+}

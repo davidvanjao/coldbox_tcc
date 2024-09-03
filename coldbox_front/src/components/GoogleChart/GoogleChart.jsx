@@ -4,6 +4,7 @@ import styles from './GoogleChart.css';
 
 // A prop 'exportButton' renderizará o botão de exportação apenas quando necessário
 const GoogleChart = ({ exportButton }) => {
+
   // Estado para controlar a visibilidade do modal de exportação
   const [showExportModal, setShowExportModal] = useState(false);
 
@@ -26,6 +27,22 @@ const GoogleChart = ({ exportButton }) => {
     handleCloseExportModal(); // Fecha o modal após a exportação
   };
 
+  // Estado padrão para o seletor "Exportar visualização atual"
+  const [exportCurrentView, setExportCurrentView] = useState(false); 
+
+  const handleExportCurrentViewChange = (event) => {
+    setExportCurrentView(event.target.checked);
+  };
+
+
+  // Estado padrão para o seletor
+  const [selectedOption, setSelectedOption] = useState('24h'); 
+  
+  //Função para quando o usuario selecionar uma nova opção no select
+  const handleSelectChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+  
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -85,11 +102,24 @@ const GoogleChart = ({ exportButton }) => {
     <div className='contentGrafico'>
       <div className='headerGrafico'>
         <span className='tag'>Temperatura</span>
+
         {exportButton && (
+          <>
+          Botão para selecionar o periodo
+          <select className='timeSelect' value={selectedOption} onChange={handleSelectChange}>
+            <option value="24h">Últimas 24 horas</option>
+            <option value="semana">Esta Semana</option>
+            <option value="mes">Este Mês</option>
+            <option value="ano">Este Ano</option>
+          </select>
+
+          {/* Botao Exportar dados */}
           <button className='exportButton' onClick={handleOpenExportModal}>
             Exportar Dados
           </button>
+          </>
         )}
+        
       </div>
       <div id="curve_chart"></div>
       
@@ -98,14 +128,29 @@ const GoogleChart = ({ exportButton }) => {
         <div className="modal-overlay" onClick={handleCloseExportModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h2>Exportar Dados</h2>
+
             <form>
+
               <div className="form-group">
                 <label htmlFor="start-date">Data de Início:</label>
                 <input type="date" id="start-date" name="start-date" required />
               </div>
+
               <div className="form-group">
                 <label htmlFor="end-date">Data de Fim:</label>
                 <input type="date" id="end-date" name="end-date" required />
+              </div>
+
+              {/* Seletor para exportar visualização atual */}
+              <div className="form-group checkbox-group">
+                <label className="checkbox-container">
+                  <input
+                    type="checkbox"
+                    checked={exportCurrentView}
+                    onChange={handleExportCurrentViewChange}
+                  />
+                  <span className="checkbox-text">Exportar visualização atual</span>
+                </label>
               </div>
 
               {/* Botões para fechar e exportar */}

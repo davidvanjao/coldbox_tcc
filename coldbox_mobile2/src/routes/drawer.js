@@ -3,6 +3,7 @@ import Home from '../telas/home';
 import Sobre from '../telas/sobre';
 import Sair from '../telas/sair';
 
+//menu
 const Drawer = createDrawerNavigator();
 
 export default function RoutesDrawer() {

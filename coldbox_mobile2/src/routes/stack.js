@@ -2,8 +2,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Login from "../telas/login";
 import RoutesDrawer from "./drawer";
-import Equipamento from "../telas/equipamento";
 
+//telas
 const  Stack = createNativeStackNavigator();
 
 export default function RoutesStack() {
@@ -12,7 +12,6 @@ export default function RoutesStack() {
         <Stack.Navigator>
             <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
             <Stack.Screen name="Home" component={RoutesDrawer} options={{headerShown: false}}/>
-            <Stack.Screen name="Equipamento" component={Equipamento}/>
         </Stack.Navigator>
     )
 }

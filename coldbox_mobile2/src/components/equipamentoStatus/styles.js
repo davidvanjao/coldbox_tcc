@@ -1,4 +1,4 @@
-import {StyleSheet } from 'react-native';
+import { Button, StyleSheet } from 'react-native';
 
 //exporta estilizacao
 export default styles = StyleSheet.create({

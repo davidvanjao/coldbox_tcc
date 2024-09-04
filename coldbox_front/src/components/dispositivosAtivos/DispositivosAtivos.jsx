@@ -19,7 +19,7 @@ const DispositivosAtivos = () => {
         <div className={styles.header}>
           <span className={styles.tag}>Dispositivos Ativos</span>
         </div>
-        
+
         <div className={styles.tabelaGeral}>
           <table className={styles.table}>
             <thead>

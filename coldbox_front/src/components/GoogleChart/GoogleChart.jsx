@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './GoogleChart.css';
 
-// A prop 'exportButton' renderizará o botão de exportação apenas quando necessário
+//! A prop 'exportButton' renderizará o botão de exportação apenas quando necessário
 const GoogleChart = ({ exportButton }) => {
 
   // Estado para controlar a visibilidade do modal de exportação
@@ -16,8 +16,7 @@ const GoogleChart = ({ exportButton }) => {
 
 
 
-  // Funções para abrir e fechar o modal de exportação
-
+  //! Funções para abrir e fechar o modal de exportação
   // Função para abrir o modal de exportação
   const handleOpenExportModal = () => {
     setExportCurrentView(false); // Resetar o estado da checkbox ao abrir o modal

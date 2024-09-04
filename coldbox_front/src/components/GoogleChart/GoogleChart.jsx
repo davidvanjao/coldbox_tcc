@@ -8,41 +8,49 @@ const GoogleChart = ({ exportButton }) => {
   // Estado para controlar a visibilidade do modal de exportação
   const [showExportModal, setShowExportModal] = useState(false);
 
+  // Estado padrão para o seletor "Exportar visualização atual"
+  const [exportCurrentView, setExportCurrentView] = useState(false);
+
+  // Estado padrão para o seletor de período
+  const [selectedOption, setSelectedOption] = useState('24h');
+
+
+
   // Funções para abrir e fechar o modal de exportação
+
+  // Função para abrir o modal de exportação
   const handleOpenExportModal = () => {
-    console.log('Abrindo modal de exportação...');
+    setExportCurrentView(false); // Resetar o estado da checkbox ao abrir o modal
     setShowExportModal(true);
   };
 
+  // Função para fechar o modal de exportação
   const handleCloseExportModal = () => {
-    console.log('Fechando modal de exportação...');
     setShowExportModal(false);
   };
+
 
   // Função de exportação de dados
   const handleExport = (e) => {
     e.preventDefault(); // Evita o comportamento padrão do formulário de recarregar a página
-    console.log('Exportando dados...');
     alert('Exportando dados...');
     handleCloseExportModal(); // Fecha o modal após a exportação
   };
 
-  // Estado padrão para o seletor "Exportar visualização atual"
-  const [exportCurrentView, setExportCurrentView] = useState(false); 
 
-  const handleExportCurrentViewChange = (event) => {
-    setExportCurrentView(event.target.checked);
+
+  // Função para alternar o estado da checkbox "Exportar visualização atual"
+  const handleExportCurrentViewChange = () => {
+    setExportCurrentView(!exportCurrentView);
   };
 
 
-  // Estado padrão para o seletor
-  const [selectedOption, setSelectedOption] = useState('24h'); 
-  
+
   //Função para quando o usuario selecionar uma nova opção no select
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
   };
-  
+
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -105,24 +113,25 @@ const GoogleChart = ({ exportButton }) => {
 
         {exportButton && (
           <>
-          Botão para selecionar o periodo
-          <select className='timeSelect' value={selectedOption} onChange={handleSelectChange}>
-            <option value="24h">Últimas 24 horas</option>
-            <option value="semana">Esta Semana</option>
-            <option value="mes">Este Mês</option>
-            <option value="ano">Este Ano</option>
-          </select>
+            Botão para selecionar o periodo
+            <select className='timeSelect' value={selectedOption} onChange={handleSelectChange}>
+              <option value="24h">Últimas 24 horas</option>
+              <option value="semana">Esta Semana</option>
+              <option value="mes">Este Mês</option>
+              <option value="ano">Este Ano</option>
+            </select>
 
-          {/* Botao Exportar dados */}
-          <button className='exportButton' onClick={handleOpenExportModal}>
-            Exportar Dados
-          </button>
+            {/* Botao Exportar dados */}
+            <button className='exportButton' onClick={handleOpenExportModal}>
+              Exportar Dados
+            </button>
           </>
         )}
-        
+
       </div>
       <div id="curve_chart"></div>
-      
+
+
       {/* Modal para selecionar o período de exportação */}
       {showExportModal && (
         <div className="modal-overlay" onClick={handleCloseExportModal}>
@@ -130,26 +139,37 @@ const GoogleChart = ({ exportButton }) => {
             <h2>Exportar Dados</h2>
 
             <form>
-
               <div className="form-group">
                 <label htmlFor="start-date">Data de Início:</label>
-                <input type="date" id="start-date" name="start-date" required />
+                <input
+                  type="date"
+                  id="start-date"
+                  name="start-date"
+                  disabled={exportCurrentView} //Desabilitar o campo se o checkbox estiver marcado  
+                  className={exportCurrentView ? "disabled-input" : ""} //Classe para estilizar
+                  />
               </div>
 
               <div className="form-group">
                 <label htmlFor="end-date">Data de Fim:</label>
-                <input type="date" id="end-date" name="end-date" required />
+                <input 
+                type="date" 
+                id="end-date" 
+                name="end-date" 
+                disabled={exportCurrentView} //Desabilitar o campo se o checkbox estiver marcado  
+                className={exportCurrentView ? "disabled-input" : ""} //Classe para estilizar
+               
+                required />
               </div>
 
-              {/* Seletor para exportar visualização atual */}
-              <div className="form-group checkbox-group">
-                <label className="checkbox-container">
-                  <input
-                    type="checkbox"
-                    checked={exportCurrentView}
-                    onChange={handleExportCurrentViewChange}
+              <div className="export-checkbox-container">
+                <input 
+                  type="checkbox"  
+                  checkbox={exportCurrentView}
+                  onChange={handleExportCurrentViewChange}
                   />
-                  <span className="checkbox-text">Exportar visualização atual</span>
+                <label htmlFor="exportCheckbox" className="export-checkbox-label">
+                  Exportar visualização atual
                 </label>
               </div>
 
@@ -159,6 +179,7 @@ const GoogleChart = ({ exportButton }) => {
                 <button type="submit" onClick={handleExport}>Exportar</button>
               </div>
             </form>
+
           </div>
         </div>
       )}

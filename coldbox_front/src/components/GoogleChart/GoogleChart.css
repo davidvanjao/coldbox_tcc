@@ -126,32 +126,24 @@
   color: white;
 }
 
+/* ------------------------------------------------------------------ */
 /* Estilos para o seletor "Exportar visualização atual" */
-.checkbox-group {
-  margin-bottom: 15px;
+.export-checkbox-container {
   display: flex;
   align-items: center;
+  margin-top: 25px; 
 }
 
-/* Estilos para o label da checkbox */
-.checkbox-container {
-  display: flex;
-  align-items: center;
-  font-weight: normal;
-}
-
-/* Ajuste para o espaçamento entre a checkbox e o texto */
-.checkbox-container input[type="checkbox"] {
-  margin-right: 8px; /* Espaço entre a checkbox e o texto */
-}
-
-/* Garantia de alinhamento do texto */
-.checkbox-text {
-  display: inline-block;
-  vertical-align: middle;
+.export-checkbox-label {
+  margin-left: 40px;
+  position: relative;
+  left: -30px;
+  color: black;
+ 
 }
 
 
+/* --------------------------------------------------------------- */
 /* Estilização para o seletor de período */
 .timeSelect {
   position: absolute;
@@ -167,3 +159,14 @@
   cursor: pointer;
   z-index: 10; /* Certifique-se de que o botão esteja acima de outros elementos */
 }
+
+
+/* ----------------------------------------------------------------- */
+/* Estilos para o campo desabilitado */
+.disabled-input {
+  background-color: #f0f0f0; /* Cor de fundo cinza clara para indicar desativação */
+  color: #a0a0a0; /* Texto em cor cinza claro */
+  cursor: not-allowed; /* Cursor de "não permitido" para indicar desabilitação */
+  opacity: 0.6; /* Reduz a opacidade para um efeito visual de desativação */
+}
+

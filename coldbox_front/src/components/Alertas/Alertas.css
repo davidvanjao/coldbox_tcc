@@ -47,3 +47,78 @@
     font-size: 14px;
     color: #555;
 }
+
+
+/* -------------------------------------------------- */
+/* Estilização da notificação de erro */
+
+/* Estilização do overlay do modal (a sobreposição de fundo semitransparente) */
+.modal-overlay {
+    position: fixed; /* Fixa o modal na tela, independente da rolagem */
+    top: 0; /* Posiciona o overlay no topo da página */
+    left: 0; /* Posiciona o overlay à esquerda da página */
+    width: 100%; /* Faz com que o overlay cubra toda a largura da tela */
+    height: 100%; /* Faz com que o overlay cubra toda a altura da tela */
+    background: rgba(0, 0, 0, 0.5); /* Cor de fundo preta com transparência (50%) */
+    display: flex; /* Flexbox para centralizar o modal */
+    justify-content: center; /* Centraliza o modal horizontalmente */
+    align-items: center; /* Centraliza o modal verticalmente */
+    z-index: 1000; /* Z-index alto para garantir que o overlay fique acima de todos os outros elementos */
+  }
+  
+  /* Estilização do conteúdo do modal */
+  .modal-content {
+    background: white; /* Fundo branco do modal */
+    padding: 20px; /* Espaçamento interno do conteúdo */
+    border-radius: 8px; /* Bordas arredondadas do modal */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Sombra para destacar o modal do fundo */
+    z-index: 1001; /* Z-index ligeiramente maior para garantir que o conteúdo do modal esteja acima do overlay */
+    width: 30%; /* Define a largura do modal em 30% da tela */
+    margin: 0 auto; /* Centraliza o modal horizontalmente */
+    transition: all 0.3s ease-in-out; /* Adiciona uma transição suave ao abrir e fechar o modal */
+  }
+  
+  /* Estilização do título dentro do modal */
+  .modal-content h2 {
+    font-weight: bold; /* Deixa o título em negrito */
+    color: #000000; /* Cor do título (cinza escuro) */
+    font-size: 18px;
+  }
+  
+  /* Estilização do parágrafo dentro do modal */
+  .modal-content p {
+    font-size: 16px; /* Tamanho da fonte do parágrafo */
+    margin-top: 10px; /* Espaçamento acima do parágrafo */
+    color: #000000; /* Cor do texto do parágrafo (cinza claro) */
+  }
+  
+  /* Estilização das listas dentro do modal */
+  .modal-content ul {
+    margin-top: 20px; /* Espaçamento acima da lista */
+    padding-left: 20px; /* Espaçamento à esquerda (para alinhar a lista com marcadores) */
+    list-style: disc; /* Define que a lista use marcadores em formato de disco */
+  }
+
+  /* Adiciona espaçamento entre os itens da lista (li) */
+  .modal-content ul li {
+    margin-bottom: 10px; /* Espaçamento de 10px entre cada item da lista */
+  }
+  
+  /* Estilização dos botões de ação dentro do modal */
+  .form-actions {
+    display: flex; /* Usa flexbox para alinhar os botões */
+    justify-content: flex-end; /* Alinha os botões no lado direito */
+    margin-top: 20px; /* Espaçamento acima dos botões */
+  }
+  
+  /* Estilização individual dos botões */
+  .form-actions button {
+    padding: 10px 20px; /* Espaçamento interno dos botões */
+    background-color: #f44336; /* Cor de fundo vermelha */
+    color: white; /* Cor do texto branca */
+    border: none; /* Remove as bordas padrão */
+    border-radius: 5px; /* Bordas arredondadas nos botões */
+    cursor: pointer; /* Muda o cursor para "pointer" ao passar o mouse sobre o botão */
+    font-size: 16px; /* Tamanho da fonte dos botões */
+  }
+  

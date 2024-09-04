@@ -43,8 +43,8 @@ const NavBarComponent = () => {
                     <li className={routePath === '/usuarios' ? 'activeMenuItem' : ''}>
                         <Link href='/usuarios'>Usuários</Link>
                     </li>
-                    <li className={routePath === '/' ? 'activeMenuItem' : ''}>
-                        <Link href='/'>Configurações</Link>
+                    <li className={routePath === '/configuracoes' ? 'activeMenuItem' : ''}>
+                        <Link href='/configuracoes'>Configurações</Link>
                     </li>
                     <li className={routePath === '/suporteColdBox' ? 'activeMenuItem' : ''}>
                         <Link href='/suporteColdBox'>Suporte ColdBox</Link>

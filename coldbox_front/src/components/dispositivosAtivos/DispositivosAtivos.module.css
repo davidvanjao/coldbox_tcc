@@ -1,29 +1,49 @@
-/* src/components/dispositivosAtivos/DispositivosAtivos.module.css */
+.conteinerGrid{
+  border-radius: 10px;
+  grid-row: 2 / span 3;
+  grid-column: 1 / -1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+} /*! OBS: Alterar a grid para ocupar toda a tela conforme necessario */
+
 .container {
-    /* width: 100%; */
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
   }
   
   .header {
     background-color: #E6E6E6;
-    padding: 15px 10px;
+    padding: 1.5rem .5rem;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+    position: sticky; /* Mantém a barra fixa no topo do painel */
+    top: 0; /* Fixa no topo */
   }
   
-  .header h2 {
-    margin: 0;
-    font-size: 20px;
+  .header .tag {
+    padding: 5px 10px;
+    font-size: 18px;
     font-weight: 600;
   }
   
+  .tabelaGeral {
+    overflow-y: auto;
+    flex-grow: 1; /* Permite que o conteúdo cresça conforme necessário */
+    padding: 10px;
+  }
+
   .table {
     width: 100%;
     border-collapse: collapse;
     background-color: #ffffff;
+    /* border-radius: 10px; */
+    overflow: hidden;
   }
   
   .th, .td {
@@ -73,14 +93,5 @@
   
   .red {
     background-color: red;
-  }
-  
-  .conteinerGrid{
-    border-radius: 10px;
-    grid-row: 2 / span 5;
-    grid-column: 1 / -1;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
   }
   

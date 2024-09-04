@@ -48,13 +48,6 @@ export default styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold'
     },
-    buttonRegister: {
-        marginTop: 14,
-        alignSelf: 'center',
-    },
-    registerText: {
-        color:'#a1a1a1'
-    },
     campoImagem: {
         flex:1,
         justifyContent: 'center',

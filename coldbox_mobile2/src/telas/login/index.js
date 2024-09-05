@@ -65,13 +65,6 @@ export default function Login() {
         }
     
     };
-
-    const handleLogout = async () => {
-        // Remove o token ao fazer logout
-        await AsyncStorage.removeItem('userToken');
-        navigation.navigate('LoginScreen');
-    };
-
     
 
     return (
@@ -103,10 +96,6 @@ export default function Login() {
 
                 <Pressable style={styles.button} onPress={handleLogin}>
                     <Text style={styles.buttonText}>Acessar</Text>
-                </Pressable>
-
-                <Pressable style={styles.button} onPress={handleLogout}>
-                    <Text style={styles.buttonText}>Sair</Text>
                 </Pressable>
 
                 <View style={styles.campoImagem}>

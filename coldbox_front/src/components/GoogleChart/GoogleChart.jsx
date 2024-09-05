@@ -113,7 +113,7 @@ const GoogleChart = ({ exportButton }) => {
         {exportButton && (
           <>
             Botão para selecionar o periodo
-            <select className='timeSelect' value={selectedOption} onChange={handleSelectChange}>
+            <select className='selecionarPeriodo' value={selectedOption} onChange={handleSelectChange}>
               <option value="24h">Últimas 24 horas</option>
               <option value="semana">Esta Semana</option>
               <option value="mes">Este Mês</option>
@@ -121,7 +121,7 @@ const GoogleChart = ({ exportButton }) => {
             </select>
 
             {/* Botao Exportar dados */}
-            <button className='exportButton' onClick={handleOpenExportModal}>
+            <button className='botaoExportar' onClick={handleOpenExportModal}>
               Exportar Dados
             </button>
           </>
@@ -133,49 +133,49 @@ const GoogleChart = ({ exportButton }) => {
 
       {/* Modal para selecionar o período de exportação */}
       {showExportModal && (
-        <div className="modal-overlay" onClick={handleCloseExportModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="telaSobreposta" onClick={handleCloseExportModal}>
+          <div className="conteudoDaSobreposicao" onClick={(e) => e.stopPropagation()}>
             <h2>Exportar Dados</h2>
 
             <form>
-              <div className="form-group">
-                <label htmlFor="start-date">Data de Início:</label>
+              <div className="formularioData">
+                <label htmlFor="dataInicio">Data de Início:</label>
                 <input
                   type="date"
-                  id="start-date"
-                  name="start-date"
+                  id="dataInicio"
+                  name="dataInicio"
                   disabled={exportCurrentView} //Desabilitar o campo se o checkbox estiver marcado  
-                  className={exportCurrentView ? "disabled-input" : ""} //Classe para estilizar
+                  className={exportCurrentView ? "desabilitarCampo" : ""} //Classe para estilizar
                   />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="end-date">Data de Fim:</label>
+              <div className="formularioData">
+                <label htmlFor="dataFim">Data de Fim:</label>
                 <input 
                 type="date" 
-                id="end-date" 
-                name="end-date" 
+                id="dataFim" 
+                name="dataFim" 
                 disabled={exportCurrentView} //Desabilitar o campo se o checkbox estiver marcado  
-                className={exportCurrentView ? "disabled-input" : ""} //Classe para estilizar
+                className={exportCurrentView ? "desabilitarCampo" : ""} //Classe para estilizar
                
                 required />
               </div>
 
-              <div className="export-checkbox-container">
+              <div className="containerCheckBox">
                 <input 
                   type="checkbox"  
                   checkbox={exportCurrentView}
                   onChange={handleExportCurrentViewChange}
                   />
-                <label htmlFor="exportCheckbox" className="export-checkbox-label">
+                <label htmlFor="exportCheckbox" className="checkBoxLabel">
                   Exportar visualização atual
                 </label>
               </div>
 
               {/* Botões para fechar e exportar */}
-              <div className="form-actions">
-                <button type="button" onClick={handleCloseExportModal}>Fechar</button>
-                <button type="submit" onClick={handleExport}>Exportar</button>
+              <div className="botaoFecharExportar">
+                <button type="fechar" onClick={handleCloseExportModal}>Fechar</button>
+                <button type="exportar" onClick={handleExport}>Exportar</button>
               </div>
             </form>
 

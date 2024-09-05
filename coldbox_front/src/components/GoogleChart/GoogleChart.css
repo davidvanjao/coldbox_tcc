@@ -37,7 +37,7 @@
 }
 
 /* Estilização para o botão de exportar dados */
-.exportButton {
+.botaoExportar {
   position: absolute;
   right: 15px; /* Posiciona o botão no lado direito */
   top: 50%; /* Centraliza verticalmente */
@@ -46,19 +46,14 @@
   background-color: #4285F4;
   color: white;
   font-size: 15px;
-  /* font-weight: 400; */
   border: none;
   border-radius: 5px;
   cursor: pointer;
   z-index: 10; /* Certifique-se de que o botão esteja acima de outros elementos */
 }
 
-.exportButton:hover {
-  background-color: #357ae8;
-}
-
 /* Estilização para a tela de exportação */
-.modal-overlay {
+.telaSobreposta {
   position: fixed;
   top: 0;
   left: 0;
@@ -68,10 +63,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10;
+  z-index: 1002;
 }
 
-.modal-content {
+.conteudoDaSobreposicao{
   background: white;
   padding: 20px;
   border-radius: 8px;
@@ -82,70 +77,71 @@
   transition: all 0.3s ease-in-out;
 }
 
-.modal-content h2{
+.conteudoDaSobreposicao h2{
   font-weight: bold;
   margin-bottom: 20px; /* Adiciona um espaço de 20px abaixo do título */
 }
 
-.form-group {
+.formularioData {
   margin-bottom: 15px;
 }
 
-.form-group label {
+.formularioData label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
 }
 
-.form-group input {
+.formularioData input {
   width: 100%;
   padding: 8px;
   box-sizing: border-box;
 }
 
-.form-actions {
+.botaoFecharExportar {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
 }
 
-.form-actions button {
+.botaoFecharExportar button {
   padding: 10px 20px;
   border: none;
   cursor: pointer;
   font-size: 16px;
 }
 
-.form-actions button[type="submit"] {
+.botaoFecharExportar button[type="exportar"] {
   background-color: #4CAF50;
   color: white;
 }
 
-.form-actions button[type="button"] {
+.botaoFecharExportar button[type="fechar"] {
   background-color: #f44336;
   color: white;
 }
 
 /* ------------------------------------------------------------------ */
 /* Estilos para o seletor "Exportar visualização atual" */
-.export-checkbox-container {
+.containerCheckBox {
   display: flex;
   align-items: center;
   margin-top: 25px; 
 }
 
-.export-checkbox-label {
-  margin-left: 40px;
+.checkBoxLabel{
+  margin-left: 200px;
   position: relative;
-  left: -30px;
+  left: -190px;
   color: black;
  
 }
 
 
+
 /* --------------------------------------------------------------- */
 /* Estilização para o seletor de período */
-.timeSelect {
+.selecionarPeriodo {
   position: absolute;
   right: 150px; /*Posiciona o botão no lado direito */
   top: 50%; /* Centraliza verticalmente */
@@ -163,7 +159,7 @@
 
 /* ----------------------------------------------------------------- */
 /* Estilos para o campo desabilitado */
-.disabled-input {
+.desabilitarCampo {
   background-color: #f0f0f0; /* Cor de fundo cinza clara para indicar desativação */
   color: #a0a0a0; /* Texto em cor cinza claro */
   cursor: not-allowed; /* Cursor de "não permitido" para indicar desabilitação */

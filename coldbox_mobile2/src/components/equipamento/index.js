@@ -6,7 +6,7 @@ export default function Equipamento(props) {
 
     return (           
         <Pressable style={styles.equipamento} 
-            onPress={() => props.navigation.navigate('Sobre')}//mudei para sobre
+            onPress={() => props.navigation.navigate('InfoEquipamento')}//mudei para sobre
 
         >
             <View style={styles.equipamentoInfo}>

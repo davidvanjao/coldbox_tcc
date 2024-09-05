@@ -1,25 +1,16 @@
-import React, { useEffect } from 'react';
-import { View, Text, Alert, Pressable} from 'react-native';
+import { View} from 'react-native';
 
-import styles from './styles'; 
+import styles from './styles';
 
-function liberarAlerta(e) {
+import EquipamentoStatus from '../../components/equipamentoStatus';
+import Grafico from '../../components/graficos';
 
-    Alert.alert('Alert Title', 'My Alert Msg', [
-        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel',},
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
-    ]);
+export default function InfoEquipamento() {
 
-}
-
-
-
-export default function Equipamento() {
-
-    return (
-
+    return (           
         <View style={styles.container}>
-
+            <Grafico/>
+            <EquipamentoStatus/>
         </View>
     );
 };

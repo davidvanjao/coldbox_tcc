@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './usuario.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 
 const Usuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -27,6 +27,12 @@ const Usuarios = () => {
     });
   };
 
+  const deleteUsuario = (index) => {
+    const updatedUsuarios = [...usuarios];
+    updatedUsuarios.splice(index, 1);
+    setUsuarios(updatedUsuarios);
+  };
+
   return (
     <div className={styles.conteinerGrid}>
       <div className={styles.container}>
@@ -46,6 +52,7 @@ const Usuarios = () => {
                 <th className={styles.th}>Usuário</th>
                 <th className={styles.th}>Senha</th>
                 <th className={styles.th}>Nível de Acesso</th>
+                <th className={styles.th}>Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -57,6 +64,18 @@ const Usuarios = () => {
                   <td className={styles.td}>{item.usuario}</td>
                   <td className={styles.td}>{'*'.repeat(item.senha.length)}</td>
                   <td className={styles.td}>{item.nivelAcesso}</td>
+                  <td className={styles.td}>
+                    <FontAwesomeIcon
+                      icon={faPen}
+                      className={styles.editIcon}
+                      onClick={() => console.log('Editar usuário', index)}
+                    />
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      className={styles.deleteIcon}
+                      onClick={() => deleteUsuario(index)}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>

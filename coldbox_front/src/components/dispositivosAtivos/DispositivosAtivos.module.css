@@ -94,4 +94,52 @@
   .red {
     background-color: red;
   }
-  
+
+  /* Estilos para o formulário */
+.form {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.input {
+  width: 30%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.addButton {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.addButton:hover {
+  background-color: #45a049;
+}
+
+/* Estilos para o ícone de edição */
+.editIcon {
+  cursor: pointer;
+  color: #007bff;
+  margin-right: 10px;
+}
+
+.editIcon:hover {
+  color: #0056b3;
+}
+
+/* Estilos para o ícone de deletar */
+.deleteIcon {
+  cursor: pointer;
+  color: #dc3545;
+}
+
+.deleteIcon:hover {
+  color: #c82333;
+}

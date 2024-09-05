@@ -27,6 +27,7 @@ const camarasAtivosDados = [
       umidade: '95%',
       alerta: true,
     },
+    
   ];
   
   export default camarasAtivosDados;

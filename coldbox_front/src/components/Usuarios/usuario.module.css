@@ -182,3 +182,19 @@
 .modalActions button:last-child {
   background-color: red;
 }
+
+/* Adicionando estilo para o ícone de deletar */
+.deleteIcon {
+  color: #ff0000;
+  cursor: pointer;
+  font-size: 18px;
+  margin-left: 10px;
+}
+
+/* Mantendo o estilo do ícone de edição */
+.editIcon {
+  color: #007bff;
+  cursor: pointer;
+  font-size: 18px;
+  margin-left: 10px;
+}

@@ -9,6 +9,10 @@ export default function Home(props) {
         <View style={styles.container}>                      
             <Text style={styles.textoSimples}>Equipamentos disponiveis:</Text>
             <Equipamento {...props}/>  
+            <Equipamento {...props}/>  
+            <Equipamento {...props}/>  
+            <Equipamento {...props}/>  
+            <Equipamento {...props}/>  
         </View>
     );
 };

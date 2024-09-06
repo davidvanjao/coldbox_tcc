@@ -15,8 +15,9 @@ export default styles = StyleSheet.create({
 
     grafico: {
       width: '100%',
-      height: 300,
+      //height: 300,
       borderWidth: 2,
+      padding:10
     },
       
 }); 

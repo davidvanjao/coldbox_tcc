@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './CamarasEAtivos.css';
 import camarasAtivosDados from './CamarasEAtivosDados';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,12 +14,29 @@ const CamarasEAtivos = () => {
     Congelados: true,
   });
 
+  //CheckBox
   const handleCheckboxChange = (ativo) => {
     setSelecionados(prevState => ({
       ...prevState,
       [ativo]: !prevState[ativo]
     }));
   };
+
+
+  //Conexão com API
+  useEffect(() => {
+    const fetchDados = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:3333/equipamento');
+        const data = await response.json();
+        console.log(data); // Verifique o conteúdo da resposta aqui
+        setDados(data.dados);
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+      }
+    };
+    fetchDados();
+  }, []);
 
   return (
     <div className='paiRetangulo'>
@@ -56,7 +73,7 @@ const CamarasEAtivos = () => {
                       onChange={() => handleCheckboxChange(item.ativo)}
                     />
                   </td>
-                  <td>{item.equipamento}</td>
+                  <td>{item.equip_nome}</td>
                   <td>{item.ativo}</td>
                   <td className={item.alerta ? 'alertaTempErro' : 'alertaTempNormal'}>{item.tempInterna}</td>
                   <td className='tdCentro'>{item.umidade}</td>

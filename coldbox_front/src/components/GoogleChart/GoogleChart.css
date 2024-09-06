@@ -72,7 +72,7 @@
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   z-index: 10;
-  width: 25%; /* Largura ajustada */
+  width: 20%; /* Largura ajustada */
   margin: 0 auto; /* Centraliza o modal horizontalmente */
   transition: all 0.3s ease-in-out;
 }

@@ -64,14 +64,14 @@ const BarraSuperior = () => {
 
         {/* Renderiza o modal somente se showModal for true */}
         {showModal && (
-          <div className="modal-overlay" onClick={handleCloseModal}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="telaSobreposicao" onClick={handleCloseModal}>
+            <div className="containerSobreposicao" onClick={(e) => e.stopPropagation()}>
               <h2>Editar Perfil</h2>
 
               {/* Área da foto de perfil */}
-              <div className="profile-picture">
-                  <img src={selectedFile || profilePicture} alt="Foto de Perfil" className="profile-image" />
-                <div className="edit-icon-overlay">
+              <div className="fotoDePerfil">
+                  <img src={selectedFile || profilePicture} alt="Foto de Perfil" className="imagemDePerfil" />
+                <div className="sobreposicaoParaEditar">
                   <input
                     type="file"
                     accept="image/*"
@@ -79,7 +79,7 @@ const BarraSuperior = () => {
                     style={{ display: 'none' }} // Esconde o input de arquivo
                     id="file-input"
                   />
-                  <label htmlFor="file-input" className="edit-profile-pic-button">
+                  <label htmlFor="file-input" className="editarFotoDePerfil">
                     Alterar foto do perfil
                   </label>
                 </div>
@@ -87,25 +87,25 @@ const BarraSuperior = () => {
 
               <form>
               {/* Campo para alterar o nome */}
-              <div className="form-group">
+              <div className="formularios">
                 <label htmlFor="name">Nome:</label>
                 <input type="text" id="name" name="name" placeholder="Seu nome" />
               </div>
 
               {/* Campo para alterar o nome de usuário */}
-              <div className="form-group">
+              <div className="formularios">
                 <label htmlFor="username">Nome de Usuário:</label>
                 <input type="text" id="username" name="username" placeholder="Seu nome de usuário" />
               </div>
 
               {/* Campo para alterar o email */}
-              <div className="form-group">
+              <div className="formularios">
                 <label htmlFor="email">Email:</label>
                 <input type="email" id="email" name="email" placeholder="Seu email" />
               </div>
 
               {/* Campo para alterar o número de telefone */}
-              <div className="form-group">
+              <div className="formularios">
                 <label htmlFor="phone">Número de Telefone:</label>
                 {/* input com validação para que só seja digitado números */}
                 <input
@@ -120,7 +120,7 @@ const BarraSuperior = () => {
               </div>
 
               {/* Botões para fechar e salvar */}
-              <div className="form-actions">
+              <div className="botoesFecharSalvar">
                 <button type="button" onClick={handleCloseModal}>Fechar</button>
                 <button type="submit">Salvar</button>
               </div>

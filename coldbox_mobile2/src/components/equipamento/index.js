@@ -4,6 +4,13 @@ import styles from './styles';
 
 export default function Equipamento(props) {
 
+
+
+
+
+
+
+
     return (           
         <Pressable style={styles.equipamento} 
             onPress={() => props.navigation.navigate('InfoEquipamento')}//mudei para sobre

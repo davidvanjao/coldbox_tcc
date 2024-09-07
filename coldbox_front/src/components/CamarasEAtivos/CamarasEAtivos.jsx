@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Importa a biblioteca axios
 import styles from './CamarasEAtivos.css';
 import camarasAtivosDados from './CamarasEAtivosDados';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -22,19 +23,23 @@ const CamarasEAtivos = () => {
     }));
   };
 
+  const [dados, setDados] = useState([]); // Inicializa o estado com um array vazio
 
-  //Conexão com API
+  // Função para buscar dados da API usando axios
   useEffect(() => {
     const fetchDados = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:3333/equipamento');
-        const data = await response.json();
-        console.log(data); // Verifique o conteúdo da resposta aqui
-        setDados(data.dados);
+        const response = await axios.get('http://127.0.0.1:3333/equipamento'); // Faz a requisição GET
+        if (response.data.sucesso) {
+          setDados(response.data.dados); // Armazena os dados da API no estado
+        } else {
+          console.error(response.data.mensagem);
+        }
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
       }
     };
+
     fetchDados();
   }, []);
 
@@ -64,7 +69,7 @@ const CamarasEAtivos = () => {
               </tr>
             </thead>  
             <tbody>
-              {camarasAtivosDados.map((item, index) => (
+            {dados.map((item, index) => (
                 <tr key={index}>
                   <td>
                     <input
@@ -74,7 +79,7 @@ const CamarasEAtivos = () => {
                     />
                   </td>
                   <td>{item.equip_nome}</td>
-                  <td>{item.ativo}</td>
+                  <td>{item.equip_modelo}</td>
                   <td className={item.alerta ? 'alertaTempErro' : 'alertaTempNormal'}>{item.tempInterna}</td>
                   <td className='tdCentro'>{item.umidade}</td>
                   <td className='tdCentro'>

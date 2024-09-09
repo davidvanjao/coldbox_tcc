@@ -13,19 +13,20 @@
   .retanguloContainer {
     background-image: url(./retangulo2.png);
     background-position: center;
-    width: 400px; /* Define uma largura menor */
-    height: 600px;
+    width: 500px; /* Largura aumentada */
+    height: 700px; /* Altura aumentada */
     background-repeat: no-repeat;
-    display: flex; /* Adiciona flexbox para centralizar o conteúdo */
+    display: flex;
     flex-direction: column;
-    justify-content: start; /* Centraliza horizontalmente */
-    align-items: center; /* Centraliza verticalmente */
-    border-radius: 20px; 
+    justify-content: start;
+    align-items: center;
+    border-radius: 20px;
     border: solid 2px #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     padding-top: 20px;
-    overflow: hidden; /* Evita que o conteúdo transborde fora do container */
+    overflow: hidden;
   }
+  
   
   .mensagemRecuperacao {
     text-align: center;
@@ -122,4 +123,11 @@
       font-weight: bold;
       margin-top: 5px; /* Pequena distância adicional entre o logo e o texto */
     }
+
+    .errorMessage {
+      color: red;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    
   

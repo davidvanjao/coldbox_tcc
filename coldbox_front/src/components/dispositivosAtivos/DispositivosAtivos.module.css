@@ -91,7 +91,18 @@
   background-color: white;
   padding: 30px;
   border-radius: 10px;
-  width: 500px;
+  width: 600px; /* Largura aumentada */
+  height: auto; /* Altura ajustada para o conteúdo */
+}
+
+.modalContent textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  resize: vertical;
 }
 
 .modalContent h2 {

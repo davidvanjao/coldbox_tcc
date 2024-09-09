@@ -10,6 +10,8 @@ const DispositivosAtivos = () => {
     nomeDispositivo: '',
     nomeCamara: '',
     dataInstalacao: '',
+    modelo: '',       // Novo campo "Modelo"
+    observacao: '',    // Novo campo "Observação"
   });
 
   const handleInputChange = (e) => {
@@ -24,6 +26,8 @@ const DispositivosAtivos = () => {
       nomeDispositivo: '',
       nomeCamara: '',
       dataInstalacao: '',
+      modelo: '',
+      observacao: '',
     });
   };
 
@@ -52,6 +56,8 @@ const DispositivosAtivos = () => {
                 <th className={styles.th}>Nome do Dispositivo</th>
                 <th className={styles.th}>Câmara</th>
                 <th className={styles.th}>Data de Instalação</th>
+                <th className={styles.th}>Modelo</th>      {/* Coluna para "Modelo" */}
+                <th className={styles.th}>Observação</th>  {/* Coluna para "Observação" */}
                 <th className={styles.th}>Ações</th>
               </tr>
             </thead>
@@ -64,6 +70,8 @@ const DispositivosAtivos = () => {
                   <td className={styles.td}>{item.nomeDispositivo}</td>
                   <td className={styles.td}>{item.nomeCamara}</td>
                   <td className={styles.td}>{item.dataInstalacao}</td>
+                  <td className={styles.td}>{item.modelo}</td>          {/* Valor "Modelo" */}
+                  <td className={styles.td}>{item.observacao}</td>      {/* Valor "Observação" */}
                   <td className={styles.td}>
                     <FontAwesomeIcon
                       icon={faPen}
@@ -114,6 +122,26 @@ const DispositivosAtivos = () => {
               id="dataInstalacao"
               value={newDevice.dataInstalacao}
               onChange={handleInputChange}
+              required
+            />
+
+            <label htmlFor="modelo">Modelo</label> {/* Campo "Modelo" */}
+            <input
+              type="text"
+              name="modelo"
+              id="modelo"
+              value={newDevice.modelo}
+              onChange={handleInputChange}
+              required
+            />
+
+            <label htmlFor="observacao">Observação</label> {/* Campo "Observação" */}
+            <textarea
+              name="observacao"
+              id="observacao"
+              value={newDevice.observacao}
+              onChange={handleInputChange}
+              rows="3"
               required
             />
 

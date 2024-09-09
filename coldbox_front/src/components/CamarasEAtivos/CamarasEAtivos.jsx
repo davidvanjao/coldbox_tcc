@@ -80,8 +80,8 @@ const CamarasEAtivos = () => {
                   </td>
                   <td>{item.equip_nome}</td>
                   <td>{item.equip_modelo}</td>
-                  <td className={item.alerta ? 'alertaTempErro' : 'alertaTempNormal'}>{item.tempInterna}</td>
-                  <td className='tdCentro'>{item.umidade}</td>
+                  <td className={item.alerta ? 'alertaTempErro' : 'alertaTempNormal'}>{item.dados_temp}</td>
+                  <td className='tdCentro'>{item.dados_umid}</td>
                   <td className='tdCentro'>
                     {item.alerta ? (
                       <FontAwesomeIcon icon={faExclamationTriangle} style={{ color: 'red' }} />

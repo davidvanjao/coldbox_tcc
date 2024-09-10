@@ -4,8 +4,8 @@ const db = require('../database/connection');
 module.exports = {
     async listar(request, response) {
         try {
-            // instruções SQL
-            const sql = `select 
+            // instrução SQL com INNER JOIN para unir as tabelas "equipamento" e "dados"
+            const sql = `SELECT 
                             a.equip_id, 
                             a.equip_nome, 
                             a.equip_modelo, 
@@ -16,13 +16,21 @@ module.exports = {
                             a.loc_id, 
                             b.loc_razaoSocial,
                             d.dados_temp,
-                            d.dados_umid
-                    from 
+                            d.dados_umid,
+                            d.dados_data
+                    FROM 
                         equipamento a
-                    inner join
+                    INNER JOIN
                         localizacao b ON a.loc_id = b.loc_id
-                    inner join 
-                        dados d ON a.equip_id = d.equip_id;`; 
+                    INNER JOIN
+                        dados d ON a.equip_id = d.equip_id
+                    WHERE
+                        d.dados_data = (
+                            SELECT MAX(d2.dados_data)
+                            FROM dados d2
+                            WHERE d2.equip_id = d.equip_id
+                        );`; //Finalizando com um consulta para que o mesmo equip_id somente apareça uma vez mostrando o dado mais recente
+
 
             //executa instruções SQL e armazena o resultado na variável usuários
             const equipamento = await db.query(sql); 

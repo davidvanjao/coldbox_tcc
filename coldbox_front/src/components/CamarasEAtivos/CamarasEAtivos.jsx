@@ -1,37 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Importa a biblioteca axios
+import axios from 'axios'; 
 import styles from './CamarasEAtivos.css';
-import camarasAtivosDados from './CamarasEAtivosDados';
+//import camarasAtivosDados from './CamarasEAtivosDados';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faExclamationTriangle, faCheckSquare } from '@fortawesome/free-solid-svg-icons';
-import { faThermometerHalf, faTint } from '@fortawesome/free-solid-svg-icons';
-import GoogleChart from '../GoogleChart/GoogleChart';
+import { faCheck, faExclamationTriangle, faCheckSquare, faThermometerHalf, faTint } from '@fortawesome/free-solid-svg-icons';
+//import GoogleChart from '../GoogleChart/GoogleChart';
 
 const CamarasEAtivos = () => {
-  const [selecionados, setSelecionados] = useState({
-    Principal: true,
-    Frios: true,
-    Bebidas: true,
-    Congelados: true,
-  });
+  const [equipamentos, setEquipamentos] = useState([]); // Inicializa o estado com um array vazio
 
-  //CheckBox
-  const handleCheckboxChange = (ativo) => {
-    setSelecionados(prevState => ({
-      ...prevState,
-      [ativo]: !prevState[ativo]
-    }));
-  };
-
-  const [dados, setDados] = useState([]); // Inicializa o estado com um array vazio
-
-  // Função para buscar dados da API usando axios
-  useEffect(() => {
-    const fetchDados = async () => {
+  //Função para buscar dados da API 'equipamento'
+    const fetchEquipamentoDados  = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:3333/equipamento'); // Faz a requisição GET
+        const response = await axios.get('http://127.0.0.1:3333/equipamento'); //Faz a requisição GET
         if (response.data.sucesso) {
-          setDados(response.data.dados); // Armazena os dados da API no estado
+          setEquipamentos(response.data.dados); //Armazena os dados mais recentes da API
         } else {
           console.error(response.data.mensagem);
         }
@@ -40,8 +23,17 @@ const CamarasEAtivos = () => {
       }
     };
 
-    fetchDados();
+  // Atualizar os dados a cada 1 minuto
+  useEffect(() => {
+    fetchEquipamentoDados(); // Carrega os dados inicialmente
+
+    const interval = setInterval(() => {
+      fetchEquipamentoDados(); // Faz a requisição a cada 1 minuto
+    }, 60000); // 60000 ms = 1 minuto
+
+    return () => clearInterval(interval); // Limpa o intervalo quando o componente não estiver sendo renderizado na tela
   }, []);
+
 
   return (
     <div className='paiRetangulo'>
@@ -69,13 +61,12 @@ const CamarasEAtivos = () => {
               </tr>
             </thead>  
             <tbody>
-            {dados.map((item, index) => (
+            {equipamentos.map((item, index) => (
                 <tr key={index}>
                   <td>
                     <input
                       type="checkbox" 
-                      checked={selecionados[item.ativo]}
-                      onChange={() => handleCheckboxChange(item.ativo)}
+                      checked={item.selecionado} readOnly
                     />
                   </td>
                   <td>{item.equip_nome}</td>

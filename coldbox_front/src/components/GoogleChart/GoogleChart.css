@@ -134,6 +134,7 @@
   position: relative;
   left: -190px;
   color: black;
+  white-space: nowrap; /* Impede quebra de linha */
  
 }
 
@@ -166,3 +167,35 @@
   opacity: 0.6; /* Reduz a opacidade para um efeito visual de desativação */
 }
 
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+  .containerCheckBox {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .checkBoxLabel {
+    margin-left: 0;
+    margin-top: 10px; /* Espaçamento entre o checkbox e o label em telas menores */
+  }
+
+  .botaoFecharExportar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .botaoFecharExportar button {
+    font-size: 14px;
+    width: 100%;
+    margin-bottom: 10px; /* Adiciona espaçamento entre os botões */
+  }
+}
+
+/* Responsividade para telas ainda menores (smartphones) */
+@media (max-width: 480px) {
+  .botaoFecharExportar button {
+    font-size: 12px;
+    padding: 8px 15px;
+  }
+}

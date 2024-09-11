@@ -82,18 +82,19 @@
 }
 
 .botaoEntrar {
-  width: 60%; /* Reduz a largura do botão */
-  padding: 8px; /* Ajusta o padding para diminuir a altura */
-  background-color: #007bff; /* Cor azul */
+  width: 60%; /* Igual ao botão Entrar */
+  padding: 8px; /* Igual ao botão Entrar */
+  background-color: #007bff; /* Igual ao botão Entrar */
   color: black;
-  font-size: 14px; /* Diminui o tamanho da fonte */
+  font-size: 14px; /* Igual ao botão Entrar */
   font-weight: bold;
   border: none;
-  border-radius: 25px; /* Deixa o botão mais arredondado */
+  border-radius: 25px; /* Igual ao botão Entrar */
   cursor: pointer;
   text-align: center; /* Centraliza o texto dentro do botão */
-
+  margin-top: 80px; /* Ajuste este valor para posicionar o botão mais para baixo */
 }
+
 
 .botaoEntrar:hover {
   background-color: #0056b3; /* Azul mais escuro ao passar o mouse */

@@ -48,7 +48,9 @@ export default function Login() {
             placeholder="Senha"
             className={styles.inputCaixa}
           />
-          <button className={styles.botaoEntrar}>Entrar</button>
+          <Link href="/tempoReal">
+            <button className="botaoEntrar">Entrar</button>
+          </Link>
           <Link href="/esqueceuSenha" className={styles.esqueceuSenha}>
             Esqueceu a Senha?
           </Link>

@@ -8,8 +8,6 @@ import styles from './page.css'
 import SuporteColdBox from '@/components/Suporte/SuporteColdBox';
 
 
-
-
 export default function tempoReal() {
   return (
     <div className='bodyGrafico'>

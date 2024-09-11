@@ -1,5 +1,6 @@
-.container {
-    max-width: 100%; 
+/* Adiciona uma classe exclusiva para a página de suporte */
+.paginaSuporte .container {
+    max-width: 100%;
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ccc;
@@ -7,35 +8,37 @@
     background-color: #f9f9f9;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
-    height: auto; 
-    min-height: 100vh; 
-    overflow-y: auto; 
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centraliza o conteúdo horizontalmente */
-    text-align: center; /* Centraliza o texto */
+    align-items: center;
+    text-align: center;
 }
 
-.container h1, .container h2, .container h3 {
+.paginaSuporte h1, .paginaSuporte h2, .paginaSuporte h3 {
     font-weight: bold;
     margin: 0 0 10px 0;
     line-height: 1.2;
 }
 
-.container p {
+.paginaSuporte p {
     font-size: 16px;
     line-height: 1.5;
     margin: 0 0 20px 0;
-    text-align: justify; /* Ajusta o texto para justificar */
+    text-align: justify;
 }
 
-.container label {
+.paginaSuporte label {
     font-weight: bold;
     margin-bottom: 5px;
     display: block;
 }
 
-.container input[type="text"], .container input[type="email"], .container textarea {
+.paginaSuporte input[type="text"], 
+.paginaSuporte input[type="email"], 
+.paginaSuporte textarea {
     width: 100%;
     padding: 10px;
     border-radius: 5px;
@@ -45,7 +48,7 @@
     box-sizing: border-box;
 }
 
-.container button {
+.paginaSuporte button {
     padding: 10px 20px;
     border-radius: 5px;
     border: none;
@@ -55,6 +58,6 @@
     cursor: pointer;
 }
 
-.container button:hover {
+.paginaSuporte button:hover {
     background-color: #0056b3;
 }

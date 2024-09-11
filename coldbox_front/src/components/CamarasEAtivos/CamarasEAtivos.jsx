@@ -29,7 +29,7 @@ const CamarasEAtivos = () => {
 
     const interval = setInterval(() => {
       fetchEquipamentoDados(); // Faz a requisição a cada 1 minuto
-    }, 60000); // 60000 ms = 1 minuto
+    }, 6000); // 60000 ms = 1 minuto
 
     return () => clearInterval(interval); // Limpa o intervalo quando o componente não estiver sendo renderizado na tela
   }, []);
@@ -71,8 +71,8 @@ const CamarasEAtivos = () => {
                   </td>
                   <td>{item.equip_nome}</td>
                   <td>{item.equip_modelo}</td>
-                  <td className={item.alerta ? 'alertaTempErro' : 'alertaTempNormal'}>{item.dados_temp}</td>
-                  <td className='tdCentro'>{item.dados_umid}</td>
+                  <td className={item.alerta ? 'alertaTempErro' : 'alertaTempNormal'}>{item.dados_temp} C°</td>
+                  <td className='tdCentro'>{item.dados_umid}%</td>
                   <td className='tdCentro'>
                     {item.alerta ? (
                       <FontAwesomeIcon icon={faExclamationTriangle} style={{ color: 'red' }} />

@@ -1,15 +1,11 @@
 const express = require('express');
 const cors = require('cors');
-
 const db = require('./conexao');
-// const router = require('./routers/routers');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-// app.use(router);
 
-// const porta = process.env.PORT || 3333;
 const porta = 3334;
 
 app.listen(porta, () => {
@@ -25,31 +21,28 @@ const interval = setInterval(() => {
     n++;
     console.log('repete' + ' ' + n);
     cadastrar();
-}, 6000);
+}, 60000);
 
 interval;
 
 async function cadastrar(request, response) {
     try {
-        // parâmetros recebidos no corpo da requisição
+        // Loop pelos 4 equip_id (de 1 a 4)
+        for (let equip_id = 1; equip_id <= 4; equip_id++) {
+            const dados_temp = getRandomInRange(-4, 6);
+            const dados_umid = getRandomInRange(50, 90);
+            const data = new Date();
 
-        const equip_id = getRandomInRange(1, 4);;
-        const dados_temp = getRandomInRange(-4, 6);
-        const dados_umid = getRandomInRange(50, 90);
-        const data = new Date();
+            // Instrução SQL
+            const sql = `INSERT INTO dados (equip_id, dados_temp, dados_umid, dados_data) VALUES (?, ?, ?, ?)`;
 
-        // instrução SQL
-        const sql = `INSERT INTO dados (equip_id, dados_temp, dados_umid, dados_data) VALUES (?, ?, ?, ?)`;
+            // Definição dos dados a serem inseridos em um array
+            const values = [equip_id, dados_temp, dados_umid, data];
 
-        // definição dos dados a serem inseridos em um array
-        const values = [equip_id, dados_temp, dados_umid, data];
-
-        // execução da instrução sql passando os parâmetros
-        await db.query(sql, values); 
-
-        //identificação do ID do registro inserido
-        // const dados_id = execSql[0].insertId;           
-
+            // Execução da instrução sql passando os parâmetros
+            await db.query(sql, values); 
+        }
+        
     } catch (error) {
         console.log(error);
     }

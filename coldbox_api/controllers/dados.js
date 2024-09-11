@@ -4,15 +4,23 @@ const db = require('../database/connection');
 module.exports = {
     async listar(request, response) {
         try {
-            // instruções SQL
-            const sql = `select a.dados_id, c.loc_id, c.loc_razaoSocial, a.equip_id, b.equip_nome,  a.dados_temp, a.dados_umid, a.dados_data
-                from 
-                    dados a, 
-                    equipamento b,
-                    localizacao c
-                where 
-                    a.equip_id = b.equip_id
-                and b.loc_id = c.loc_id;`; 
+            // instruções SQL 
+            const sql = `select 
+                            a.dados_id, 
+                            c.loc_id, 
+                            c.loc_razaoSocial, 
+                            a.equip_id, 
+                            b.equip_nome,  
+                            a.dados_temp, 
+                            a.dados_umid, 
+                            a.dados_data
+                        from 
+                            dados a, 
+                            equipamento b,
+                            localizacao c
+                        where 
+                            a.equip_id = b.equip_id
+                        and b.loc_id = c.loc_id;`; 
 
             //executa instruções SQL e armazena o resultado na variável usuários
             const dadosEquipamento = await db.query(sql); 

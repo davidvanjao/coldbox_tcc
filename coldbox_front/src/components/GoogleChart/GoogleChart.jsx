@@ -69,26 +69,29 @@ const GoogleChart = ({ exportButton }) => {
       const response = await axios.get('http://127.0.0.1:3333/dados');
       if (response.data.sucesso) {
         const dados = response.data.dados;
-      
+  
         const equipamentos = [...new Set(dados.map(item => item.equip_nome))];
   
         // Inicializa o array de dados com os cabeçalhos
         const chartDataArray = [['Hora', ...equipamentos]];
   
-        // Agrupa os dados por hora, minuto e segundo para manter a precisão
+        // Armazena os dados reais por hora
         const dataByTime = {};
+  
         let currentMax = maxValue;
   
+        // Preencha os dados com base nos horários reais
         dados.forEach(item => {
-          const horaMinSec = new Date(item.dados_data).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }); // Hora, minuto e segundo
+          const horaReal = new Date(item.dados_data).getHours();  // Obtem apenas a hora (numérica)
           const temp = parseFloat(item.dados_temp);
   
-          if (!dataByTime[horaMinSec]) {
-            dataByTime[horaMinSec] = new Array(equipamentos.length).fill(null);
+          // Use o horário real como chave
+          if (!dataByTime[horaReal]) {
+            dataByTime[horaReal] = new Array(equipamentos.length).fill(null);
           }
   
           const equipIndex = equipamentos.indexOf(item.equip_nome);
-          dataByTime[horaMinSec][equipIndex] = temp;
+          dataByTime[horaReal][equipIndex] = temp;
   
           // Atualiza o maior valor se a temperatura atual for maior
           if (temp > currentMax) {
@@ -96,18 +99,20 @@ const GoogleChart = ({ exportButton }) => {
           }
         });
   
-        // Preenche os dados no formato correto com precisão de horas, minutos e segundos
-        Object.entries(dataByTime).forEach(([horaMinSec, temps]) => {
-          chartDataArray.push([horaMinSec, ...temps]);
+        // Preencher o gráfico com os dados reais, sem ignorar horários
+        Object.entries(dataByTime).forEach(([horaReal, temps]) => {
+          chartDataArray.push([parseInt(horaReal), ...temps]);
         });
   
         setChartData(chartDataArray);
-        setMaxValue(currentMax);  
+        setMaxValue(currentMax);
       }
     } catch (error) {
       console.error('Erro ao buscar dados da API', error);
     }
   };
+  
+  
   
 
   // Carrega o script do Google Charts e inicializa a função de desenho do gráfico
@@ -155,18 +160,17 @@ const GoogleChart = ({ exportButton }) => {
         legend: { position: 'right', alignment: 'center', legend: 'none' },
         colors: ['#4285F4', '#DB4437', '#F4B400', '#0F9D58'],
         hAxis: {
-          // title: 'Hora',
           ticks: [
             { v: 2, f: '0h' },
             { v: 6, f: '6h' },
             { v: 12, f: '12h' },
             { v: 18, f: '18h' },
-            { v: 23, f: '23h' }
+            { v: 23.9833, f: '23h59' }  // Valor próximo de 24h (23h59)
           ],  // Define os rótulos específicos
           gridlines: {
             count: 5  // Mostra apenas 6 linhas de grade (relacionadas aos ticks)
           }
-        },
+        },        
         vAxis: {
           // title: 'Temperatura',
           viewWindow: {

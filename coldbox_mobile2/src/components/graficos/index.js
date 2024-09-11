@@ -1,14 +1,18 @@
 import React from 'react';
 import { View, Text, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import { useRoute } from '@react-navigation/native'; // Importa o useRoute
 
 import styles from './styles';
 
 export default function Grafico() {
 
+    const route = useRoute(); // Usa o useRoute para acessar os parâmetros
+    const { equipamentoId } = route.params; // Extrai o parâmetro passado (equipamentoId)
+
     return (        
         <View>
-            <Text style={styles.titulo}>Equipamento A</Text>
+            <Text style={styles.titulo}>Equipamento {equipamentoId}</Text>
             <View style={styles.grafico}>
                 
                 <View>

@@ -1,8 +1,23 @@
 import { View, Text, Pressable} from 'react-native';
+import { useRoute } from '@react-navigation/native'; // Importa o useRoute
 
 import styles from './styles';
 
 export default function EquipamentoStatus() {
+
+    const route = useRoute(); // Usa o useRoute para acessar os parâmetros
+    const { equipamentoId } = route.params; // Extrai o parâmetro passado (equipamentoId)
+
+
+
+
+
+
+
+
+
+
+    
 
     return (
 

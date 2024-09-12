@@ -1,11 +1,10 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import styles from './GoogleChart.css';
+import React, { useState, useEffect } from 'react'; 
+import axios from 'axios'; 
+import styles from './GoogleChart.css'; 
 
-//! A prop 'exportButton' renderizará o botão de exportação apenas quando necessário
+// A prop 'exportButton' renderizará o botão de exportação apenas quando necessário
 const GoogleChart = ({ exportButton }) => {
-
   // Estado para os dados do gráfico
   const [chartData, setChartData] = useState([]); 
 
@@ -13,175 +12,147 @@ const GoogleChart = ({ exportButton }) => {
   const [isGoogleChartsLoaded, setIsGoogleChartsLoaded] = useState(false);
 
   // Armazena o maior valor já visto no gráfico
-  const [maxValue, setMaxValue] = useState(0);  
+  const [maxValue, setMaxValue] = useState(0);
 
   // Estado para controlar a visibilidade do modal de exportação
   const [showExportModal, setShowExportModal] = useState(false);
 
-  // Estado padrão para o seletor "Exportar visualização atual"
+  // Estado para a checkbox "Exportar visualização atual"
   const [exportCurrentView, setExportCurrentView] = useState(false);
 
-  // Estado padrão para o seletor de período
+  // Estado para o seletor de período
   const [selectedOption, setSelectedOption] = useState('24h');
 
-
-
   //! Funções para abrir e fechar o modal de exportação
-  // Função para abrir o modal de exportação
   const handleOpenExportModal = () => {
     setExportCurrentView(false); // Resetar o estado da checkbox ao abrir o modal
     setShowExportModal(true);
   };
 
-  // Função para fechar o modal de exportação
   const handleCloseExportModal = () => {
     setShowExportModal(false);
   };
 
-
-  // Função de exportação de dados
+  // Função de exportação de dados (no momento, apenas exibe um alerta)
   const handleExport = (e) => {
     e.preventDefault(); // Evita o comportamento padrão do formulário de recarregar a página
     alert('Exportando dados...');
     handleCloseExportModal(); // Fecha o modal após a exportação
   };
 
-
-
-  // Função para alternar o estado da checkbox "Exportar visualização atual"
+  // Alterna o estado da checkbox "Exportar visualização atual"
   const handleExportCurrentViewChange = () => {
     setExportCurrentView(!exportCurrentView);
   };
 
-
-
-  //Função para quando o usuario selecionar uma nova opção no select
+  // Atualiza o estado ao selecionar uma nova opção no seletor de período
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
+  //Função para abreviar o nome dos equipamentos, pegando sempre a ultima palavra
+  const abreviarNomeEquipamento = (nome) => {
+      const palavras = nome.split(' '); //Divide o nome em palavras
+      return palavras[palavras.length - 1]; //Retorna a ultima palavra
+  };
 
-  // Função para buscar os dados da API
+  //! Função para buscar os dados da API
   const fetchChartData = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:3333/dados');
-      if (response.data.sucesso) {
-        const dados = response.data.dados;
-  
-        const equipamentos = [...new Set(dados.map(item => item.equip_nome))];
-  
+      const response = await axios.get('http://127.0.0.1:3333/dados'); // Faz uma requisição para obter os dados da API
+      if (response.data.sucesso) { 
+        const dados = response.data.dados; // Extrai os dados da resposta da API
+
+        // Substitui os nomes completos pelos abreviados
+        const equipamentos = [...new Set(dados.map(item => abreviarNomeEquipamento(item.equip_nome)))];
+
         // Inicializa o array de dados com os cabeçalhos
         const chartDataArray = [['Hora', ...equipamentos]];
-  
+
         // Armazena os dados reais por hora
         const dataByTime = {};
-  
-        let currentMax = maxValue;
-  
-        // Preencha os dados com base nos horários reais
+
+        let currentMax = maxValue; // Inicializa o maior valor com o estado maxValue
+
+        // Preenche os dados com base nos horários reais
         dados.forEach(item => {
-          const horaReal = new Date(item.dados_data).getHours();  // Obtem apenas a hora (numérica)
+          const horaReal = new Date(item.dados_data).getHours(); // Obtém a hora (numérica) a partir da data
           const temp = parseFloat(item.dados_temp);
-  
-          // Use o horário real como chave
+
           if (!dataByTime[horaReal]) {
-            dataByTime[horaReal] = new Array(equipamentos.length).fill(null);
+            dataByTime[horaReal] = new Array(equipamentos.length).fill(null); // Cria um array de temperaturas
           }
-  
-          const equipIndex = equipamentos.indexOf(item.equip_nome);
-          dataByTime[horaReal][equipIndex] = temp;
-  
-          // Atualiza o maior valor se a temperatura atual for maior
-          if (temp > currentMax) {
+
+          const equipIndex = equipamentos.indexOf(abreviarNomeEquipamento(item.equip_nome)); // Obtém o índice do equipamento abreviado
+          dataByTime[horaReal][equipIndex] = temp; // Atribui a temperatura ao horário e equipamento
+
+          if (temp > currentMax) { // Atualiza o maior valor de temperatura se necessário
             currentMax = temp;
           }
         });
-  
-        // Preencher o gráfico com os dados reais, sem ignorar horários
+
+        // Insere os dados no array de dados do gráfico
         Object.entries(dataByTime).forEach(([horaReal, temps]) => {
           chartDataArray.push([parseInt(horaReal), ...temps]);
         });
-  
-        setChartData(chartDataArray);
-        setMaxValue(currentMax);
+
+        setChartData(chartDataArray); // Atualiza os dados do gráfico
+        setMaxValue(currentMax); // Atualiza o valor máximo
       }
     } catch (error) {
-      console.error('Erro ao buscar dados da API', error);
+      console.error('Erro ao buscar dados da API', error); // Lida com erros da API
     }
   };
-  
-  
-  
 
-  // Carrega o script do Google Charts e inicializa a função de desenho do gráfico
+  //! Carrega o script do Google Charts
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = 'https://www.gstatic.com/charts/loader.js';
+    script.src = 'https://www.gstatic.com/charts/loader.js'; // URL do Google Charts
     script.async = true;
     script.onload = () => {
       window.google.charts.load('current', { packages: ['corechart'] });
       window.google.charts.setOnLoadCallback(() => setIsGoogleChartsLoaded(true)); // Marca como carregado
     };
-    document.body.appendChild(script);
+    document.body.appendChild(script); // Adiciona o script ao documento
   }, []);
 
-  // Atualiza o gráfico a cada minuto
+  //! Atualiza o gráfico a cada minuto
   useEffect(() => {
     fetchChartData(); // Carrega os dados inicialmente
 
     const interval = setInterval(() => {
-      fetchChartData(); // Atualiza os dados a cada 1 minuto (60000 ms)
+      fetchChartData(); // Atualiza os dados a cada minuto
     }, 60000);
 
     return () => clearInterval(interval); // Limpa o intervalo quando o componente for desmontado
   }, []);
 
-  // Função para desenhar o gráfico
+  //! Desenha o gráfico quando os dados e o Google Charts estão prontos
   useEffect(() => {
     const drawChart = () => {
       if (!isGoogleChartsLoaded || chartData.length === 0) {
-        return;
+        return; // Se o script não estiver carregado ou não houver dados, não faz nada
       }
-      // const data = window.google.visualization.arrayToDataTable([
-      //   ['Hora', 'Principal', 'Frios', 'Bebidas', 'Congelados'],
-      //   ['00h', 1000, 450, 900, 100],
-      //   ['06h', 1170, 460, 750, 170],
-      //   ['12h', 800, 1120, 850, 660],
-      //   ['18h', 1030, 540, 400, 500],
-      //   ['23h59', 584, 198, 300, 400],
-      // ]);
 
-      const data = window.google.visualization.arrayToDataTable(chartData); // Usa os dados da API
+      const data = window.google.visualization.arrayToDataTable(chartData); // Converte os dados em formato do Google Charts
 
       const options = {
-        // curveType: 'function',
         legend: { position: 'right', alignment: 'center', legend: 'none' },
-        colors: ['#4285F4', '#DB4437', '#F4B400', '#0F9D58'],
+        colors: ['#4285F4', '#DB4437', '#F4B400', '#0F9D58'], // Define as cores das linhas
         hAxis: {
           ticks: [
-            { v: 2, f: '0h' },
+            { v: 2, f: '0h' }, // Rótulo da hora
             { v: 6, f: '6h' },
             { v: 12, f: '12h' },
             { v: 18, f: '18h' },
-            { v: 23.9833, f: '23h59' }  // Valor próximo de 24h (23h59)
-          ],  // Define os rótulos específicos
-          gridlines: {
-            count: 5  // Mostra apenas 6 linhas de grade (relacionadas aos ticks)
-          }
-        },        
+            { v: 23.9833, f: '23h59' } // Próximo de 24h
+          ],
+          gridlines: { count: 5 } // Quantidade de linhas de grade
+        },
         vAxis: {
-          // title: 'Temperatura',
-          viewWindow: {
-            min: -4,   // Define o limite mínimo para -4°C
-            max: 6     // Define o limite máximo para 6°C
-          },
-          gridlines: {
-            count: -1
-          },
+          viewWindow: { min: -4, max: 6 }, // Intervalo de temperatura (-4°C a 6°C)
           format: '#,##0°C'
         },
-        
-        // pointSize: 5,
         chartArea: {
           left: 70,
           width: '75%',
@@ -189,32 +160,29 @@ const GoogleChart = ({ exportButton }) => {
           right: 180,
         },
       };
-      
 
       const chart = new window.google.visualization.LineChart(
         document.getElementById('curve_chart')
       );
-
-      chart.draw(data, options);
+      chart.draw(data, options); // Desenha o gráfico com os dados e opções
     };
 
     if (isGoogleChartsLoaded) {
       drawChart();
     }
 
-    window.addEventListener('resize', drawChart);
+    window.addEventListener('resize', drawChart); // Redesenha o gráfico ao redimensionar a janela
     return () => {
-      window.removeEventListener('resize', drawChart);
+      window.removeEventListener('resize', drawChart); // Remove o listener ao desmontar o componente
     };
   }, [isGoogleChartsLoaded, chartData, maxValue]);
-
 
   return (
     <div className='contentGrafico'>
       <div className='headerGrafico'>
         <span className='tag'>Temperatura</span>
 
-        {exportButton && (
+        {exportButton && ( // Renderiza o botão de exportação se 'exportButton' estiver ativo
           <>
             Botão para selecionar o periodo
             <select className='selecionarPeriodo' value={selectedOption} onChange={handleSelectChange}>
@@ -224,16 +192,14 @@ const GoogleChart = ({ exportButton }) => {
               <option value="ano">Este Ano</option>
             </select>
 
-            {/* Botao Exportar dados */}
+            {/* Botão para abrir o modal de exportação */}
             <button className='botaoExportar' onClick={handleOpenExportModal}>
               Exportar Dados
             </button>
           </>
         )}
-
       </div>
-      <div id="curve_chart"></div>
-
+      <div id="curve_chart"></div> {/* Onde o gráfico será renderizado */}
 
       {/* Modal para selecionar o período de exportação */}
       {showExportModal && (
@@ -248,21 +214,21 @@ const GoogleChart = ({ exportButton }) => {
                   type="date"
                   id="dataInicio"
                   name="dataInicio"
-                  disabled={exportCurrentView} //Desabilitar o campo se o checkbox estiver marcado  
-                  className={exportCurrentView ? "desabilitarCampo" : ""} //Classe para estilizar
-                  />
+                  disabled={exportCurrentView} // Desabilita o campo se a checkbox estiver marcada
+                  className={exportCurrentView ? "desabilitarCampo" : ""}
+                />
               </div>
 
               <div className="formularioData">
                 <label htmlFor="dataFim">Data de Fim:</label>
                 <input 
-                type="date" 
-                id="dataFim" 
-                name="dataFim" 
-                disabled={exportCurrentView} //Desabilitar o campo se o checkbox estiver marcado  
-                className={exportCurrentView ? "desabilitarCampo" : ""} //Classe para estilizar
-               
-                required />
+                  type="date" 
+                  id="dataFim" 
+                  name="dataFim" 
+                  disabled={exportCurrentView} 
+                  className={exportCurrentView ? "desabilitarCampo" : ""}
+                  required 
+                />
               </div>
 
               <div className="containerCheckBox">
@@ -270,7 +236,7 @@ const GoogleChart = ({ exportButton }) => {
                   type="checkbox"  
                   checkbox={exportCurrentView}
                   onChange={handleExportCurrentViewChange}
-                  />
+                />
                 <label htmlFor="exportCheckbox" className="checkBoxLabel">
                   Exportar visualização atual
                 </label>
@@ -282,7 +248,6 @@ const GoogleChart = ({ exportButton }) => {
                 <button type="exportar" onClick={handleExport}>Exportar</button>
               </div>
             </form>
-
           </div>
         </div>
       )}
@@ -291,6 +256,7 @@ const GoogleChart = ({ exportButton }) => {
 };
 
 export default GoogleChart;
+
 
 //! ALTERAÇÃO PARA O BANCO DE DADOS
 // DESCRIBE dados; //! VISUALIZAR FORMATO DA TABELA

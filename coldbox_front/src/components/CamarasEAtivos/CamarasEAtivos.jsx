@@ -4,17 +4,24 @@ import styles from './CamarasEAtivos.css';
 //import camarasAtivosDados from './CamarasEAtivosDados';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faExclamationTriangle, faCheckSquare, faThermometerHalf, faTint } from '@fortawesome/free-solid-svg-icons';
-//import GoogleChart from '../GoogleChart/GoogleChart';
+import GoogleChart from '../GoogleChart/GoogleChart';
 
 const CamarasEAtivos = () => {
   const [equipamentos, setEquipamentos] = useState([]); // Inicializa o estado com um array vazio
+  const [equipamentosSelecionados,  setEquipamentosSelecionados] = useState([]); //Estado para os equipamentos selecionados
 
   //Função para buscar dados da API 'equipamento'
     const fetchEquipamentoDados  = async () => {
       try {
         const response = await axios.get('http://127.0.0.1:3333/equipamento'); //Faz a requisição GET
         if (response.data.sucesso) {
-          setEquipamentos(response.data.dados); //Armazena os dados mais recentes da API
+          //adcionando a propriedade 'selecionado' para cada equipamento
+          const dadosComSelecao = response.data.dados.map(item => ({
+            ...item,
+            selecionado: true //Por padrãos todos estarão selecionados
+          }))
+          setEquipamentos(dadosComSelecao); //Armazena os dados mais recentes da API com o estado 'selecionado'
+          setEquipamentosSelecionados(dadosComSelecao.map(item => item.equip_nome)); // Inicializa os selecionados
         } else {
           console.error(response.data.mensagem);
         }
@@ -34,6 +41,26 @@ const CamarasEAtivos = () => {
     return () => clearInterval(interval); // Limpa o intervalo quando o componente não estiver sendo renderizado na tela
   }, []);
 
+  //Função para manipular a mudança das checkboxes
+  const handleCheckboxChange = (equipNome) => {
+    setEquipamentos(prevState =>
+      prevState.map(item =>
+        item.equip_nome === equipNome
+          ? { ...item, selecionado: !item.selecionado } //Altera o estado de selecionado
+          : item
+      )
+    );
+
+    //Atualiza a lista de equipamentos selecionados
+    setEquipamentosSelecionados(prevSelecionados => {
+      if (prevSelecionados.includes(equipNome)) {
+        return prevSelecionados.filter(nome => nome !== equipNome); //Remove da lista de desmarcado
+      } else {
+        return [...prevSelecionados, equipNome]; //Adciona a lista se marcado
+      }
+    });
+  };
+
 
   return (
     <div className='paiRetangulo'>
@@ -50,7 +77,7 @@ const CamarasEAtivos = () => {
                   <FontAwesomeIcon icon={faCheckSquare} style={{ marginRight: '5px', fontSize: '2rem' }} />
                 </th>
                 <th>Equipamento</th>
-                <th>Ativo</th>
+                <th>Modelo</th>
                 <th className='thCentro'>
                   <FontAwesomeIcon icon={faThermometerHalf} style={{ marginRight: '5px' }} />Temp. Interna
                 </th>
@@ -66,7 +93,8 @@ const CamarasEAtivos = () => {
                   <td>
                     <input
                       type="checkbox" 
-                      checked={item.selecionado} readOnly
+                      checked={item.selecionado}
+                      onChange={() => handleCheckboxChange(item.equip_nome)} // Manipulador de eventos para a checkbox
                     />
                   </td>
                   <td>{item.equip_nome}</td>
@@ -86,6 +114,8 @@ const CamarasEAtivos = () => {
           </table>
         </div>   
       </div>
+            {/* Passa os equipamentos selecionados para o componente GoogleChart */}
+            <GoogleChart equipamentosSelecionados={equipamentosSelecionados} />
     </div>
   );
 };

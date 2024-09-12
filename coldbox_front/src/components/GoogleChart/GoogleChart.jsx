@@ -15,8 +15,6 @@ const GoogleChart = ({ exportButton }) => {
   // Armazena o maior valor já visto no gráfico
   const [maxValue, setMaxValue] = useState(0);  
 
-
-
   // Estado para controlar a visibilidade do modal de exportação
   const [showExportModal, setShowExportModal] = useState(false);
 
@@ -156,7 +154,7 @@ const GoogleChart = ({ exportButton }) => {
       const data = window.google.visualization.arrayToDataTable(chartData); // Usa os dados da API
 
       const options = {
-        curveType: 'function',
+        // curveType: 'function',
         legend: { position: 'right', alignment: 'center', legend: 'none' },
         colors: ['#4285F4', '#DB4437', '#F4B400', '#0F9D58'],
         hAxis: {
@@ -183,7 +181,7 @@ const GoogleChart = ({ exportButton }) => {
           format: '#,##0°C'
         },
         
-        pointSize: 5,
+        // pointSize: 5,
         chartArea: {
           left: 70,
           width: '75%',

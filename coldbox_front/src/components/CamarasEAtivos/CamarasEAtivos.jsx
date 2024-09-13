@@ -36,7 +36,7 @@ const CamarasEAtivos = () => {
 
     const interval = setInterval(() => {
       fetchEquipamentoDados(); // Faz a requisição a cada 1 minuto
-    }, 60000); // 60000 ms = 1 minuto
+    }, 6000); // 60000 ms = 1 minuto
 
     return () => clearInterval(interval); // Limpa o intervalo quando o componente não estiver sendo renderizado na tela
   }, []);

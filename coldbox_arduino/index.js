@@ -21,7 +21,7 @@ const interval = setInterval(() => {
     n++;
     console.log('repete' + ' ' + n);
     cadastrar();
-}, 1800000); // 1800000 milissegundos = 30 minutos
+}, 6000); // 1800000 milissegundos = 30 minutos
 
 
 interval;

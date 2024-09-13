@@ -122,7 +122,7 @@ const GoogleChart = ({ exportButton }) => {
 
     const interval = setInterval(() => {
       fetchChartData(); // Atualiza os dados a cada minuto
-    }, 60000);
+    }, 6000);
 
     return () => clearInterval(interval); // Limpa o intervalo quando o componente for desmontado
   }, []);
@@ -135,6 +135,17 @@ const GoogleChart = ({ exportButton }) => {
       }
 
       const data = window.google.visualization.arrayToDataTable(chartData); // Converte os dados em formato do Google Charts
+
+      // Definindo o formatter para adicionar "°C" e limitar a 1 casa decimal
+      const formatter = new window.google.visualization.NumberFormat({
+        suffix: '°C',  // Sufixo que vai aparecer após o número
+        fractionDigits: 0, // Limita a 1 casa decimal
+      });
+
+      // Aplica o formatter para cada coluna de temperatura no gráfico
+      for (let i = 1; i < chartData[0].length; i++) {
+        formatter.format(data, i); // Aplica o formatter na coluna i (pula a coluna 'Hora')
+      }
 
       const options = {
         legend: { position: 'right', alignment: 'center', legend: 'none' },
@@ -159,6 +170,7 @@ const GoogleChart = ({ exportButton }) => {
           height: '70%',
           right: 180,
         },
+        tooltip: { isHtml: true }, // Habilita tooltips em HTML
       };
 
       const chart = new window.google.visualization.LineChart(

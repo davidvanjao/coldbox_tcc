@@ -56,11 +56,6 @@ export default function Login() {
           </Link>
         </div>
 
-        {/* Novo botão Criar Conta */}
-        <button className={styles.botaoCriarConta}>
-        <Link href="/criarConta">Criar Conta</Link>
-        </button>
-
         <div className={styles.extras}>
             <span>Ajuda</span>
             <span>Sobre</span>

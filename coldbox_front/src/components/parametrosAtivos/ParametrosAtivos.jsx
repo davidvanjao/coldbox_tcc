@@ -66,7 +66,7 @@ const ParametrosAtivos = () => {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th className={styles.th}></th>
+            <th className={styles.th}>ON/OFF</th>
             <th className={styles.th}>Equipamento</th>
             <th className={styles.th}>Nome/Ativo</th>
             <th className={styles.th}>Temp. Min</th>

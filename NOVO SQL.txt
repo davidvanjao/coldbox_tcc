@@ -1,0 +1,17 @@
+/*COLDBOX*/
+select * from clientes;
+
+
+/*TABELAS CLIENTES*/
+select * from alerta; /*cadastrar nome de alertas*/
+select * from equipamento; /*cadastro dos equipamentos*/
+select * from nivel_acesso;/*nivel de acesso do usuario*/
+
+select * from usuario;/*se conecta ao nivel de acesso, e empresa*/
+select * from equipamento_localizacao; /*onde equipamento esta instalado e em qual empresa*/
+select * from equipamento_dados; /*recolhe os dados do equipamento e armazena*/
+select * from equipamento_alertas_enviados; /*verifica a tabela dados e verifica se os parametros estao dentro do desejado.*/
+select * from equipamento_parametro;/*os parametros definidos em cada equipamento.*/
+
+
+ALTER TABLE novo_clientes MODIFY COLUMN cli_data datetime NOW;

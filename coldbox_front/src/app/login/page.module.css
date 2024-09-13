@@ -48,7 +48,7 @@
 }
 
 .esqueciSenha {
-  margin-top: 10px;
+  margin-top: 20px; /* Aumentar a distância entre "Entrar" e "Esqueceu a Senha" */
   font-size: 12px;
   color: #007bff;
   text-decoration: none;
@@ -82,24 +82,22 @@
 }
 
 .botaoEntrar {
-  width: 60%; /* Igual ao botão Entrar */
-  padding: 8px; /* Igual ao botão Entrar */
-  background-color: #007bff; /* Igual ao botão Entrar */
-  color: black;
-  font-size: 14px; /* Igual ao botão Entrar */
+  width: 60%;
+  padding: 10px;
+  background-color: #007bff; /* Azul */
+  color: white; /* Texto em branco */
+  font-size: 14px;
   font-weight: bold;
   border: none;
-  border-radius: 25px; /* Igual ao botão Entrar */
+  border-radius: 30px; /* Mais arredondado */
   cursor: pointer;
-  text-align: center; /* Centraliza o texto dentro do botão */
-  margin-top: 80px; /* Ajuste este valor para posicionar o botão mais para baixo */
+  text-align: center;
+  margin-top: 60px; /* Ajusta a distância para baixo */
 }
-
 
 .botaoEntrar:hover {
-  background-color: #0056b3; /* Azul mais escuro ao passar o mouse */
+  background-color: #0056b3; /* Azul mais escuro no hover */
 }
-
 
   .logo {
   display: flex;
@@ -150,24 +148,15 @@
   font-weight: bold;
 }
 
-/* Estilo para o botão Criar Conta */
-.botaoCriarConta {
-  width: 60%; /* Igual ao botão Entrar */
-  padding: 8px; /* Igual ao botão Entrar */
-  background-color: #007bff; /* Igual ao botão Entrar */
-  color: black;
-  font-size: 14px; /* Igual ao botão Entrar */
-  font-weight: bold;
-  border: none;
-  border-radius: 25px; /* Igual ao botão Entrar */
-  cursor: pointer;
-  text-align: center; /* Centraliza o texto dentro do botão */
-  margin-top: 80px; /* Ajuste este valor para posicionar o botão mais para baixo */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  margin-bottom: 20px;
 }
 
-.botaoCriarConta:hover {
-  background-color: #0056b3; /* Igual ao botão Entrar */
-}
+
 
 
   

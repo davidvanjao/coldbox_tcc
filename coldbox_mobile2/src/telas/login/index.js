@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, TextInput, Image} from 'react-native';
 
+
 import { useNavigation } from '@react-navigation/native'; //usando para navegacao
 import AsyncStorage from '@react-native-async-storage/async-storage'; //usado para gerar token
 
@@ -50,14 +51,21 @@ export default function Login() {
     
             const data = await response.json();
             //Aqui você pode adicionar a lógica para salvar o token de autenticação e navegar para outra tela
-            //alert(`Sucesso Bem-vindo, ${email}!`);
             const token = data.token;
+            const user_id = data.dados[0].user_id;
 
             //Armazena o token no AsyncStorage
             await AsyncStorage.setItem('userToken', token);
 
-            //Navega para a tela principal
-            navigation.navigate('Home');
+            // Exemplo de envio de parâmetros ao navegar para a tela 'Home'
+            navigation.navigate('Home', {
+                user_id: user_id,  // Parâmetro enviado
+                token: token,      // Outro parâmetro enviado
+            });
+
+
+
+
             
         } catch(error) {
             alert('Erro Credenciais inválidas');

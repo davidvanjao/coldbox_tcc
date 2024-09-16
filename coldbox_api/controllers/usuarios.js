@@ -142,7 +142,7 @@ module.exports = {
             const {user_email, user_senha} = request.body;
 
             // instruções SQL
-            //NOVO - const sql = `select user_id, user_nome, user_tel, nivel_id, user_priorid from usuario where user_email = ? and user_senha = ?;`;
+            //const sql = `select user_id, user_nome, user_tel, nivel_id, user_priorid from usuario where user_email = ? and user_senha = ?;`;
             const sql = `select user_id, user_nome, user_senha, user_email, user_tel, nivel_id from novo_usuario where user_email = ? and user_senha = ?;`; 
 
             const values = [user_email, user_senha];

@@ -15,7 +15,7 @@ let connection;
 // const bd_porta = '3306'; // porta padrão MySQL
 // const bd_banco = 'bd_tcc_tecdes_223_g2'; // nome do banco de dados
 // let connection;
-    
+
 const config = {
     host: bd_servidor, 
     port: bd_porta, //Default: 3306

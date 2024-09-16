@@ -1,21 +1,42 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import styles from './page.module.css';
-import Link from 'next/link';
+import axios from 'axios'; 
 
 export default function Login() {
   const searchParams = useSearchParams();
   const emailSent = searchParams.get('emailSent');
   const [showMessage, setShowMessage] = useState(false);
+  const [emailOrPhone, setEmailOrPhone] = useState('');  // Estado para o campo de email/telefone
+  const [senha, setSenha] = useState('');  // Estado para o campo de senha
+  const [error, setError] = useState('');
+  const router = useRouter();  // Usado para redirecionamento após o login
 
-  useEffect(() => {
-    if (emailSent) {
-      setShowMessage(true);
-      setTimeout(() => setShowMessage(false), 30000); // Mensagem some após 30 segundos
+  // Função para efetuar login
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError('');  // Limpa qualquer mensagem de erro anterior
+
+    try {
+      const response = await axios.post('http://127.0.0.1:3333/usuarios', {
+        user_email: emailOrPhone,  // Enviando o dado coletado no campo
+        user_senha: senha
+      });
+
+      if (response.data.sucesso) {
+        // Redireciona para a página de tempo real se o login for bem-sucedido
+        router.push('/tempoReal');
+      } else {
+        // Exibe mensagem de erro se as credenciais estiverem incorretas
+        setError('Login ou senha inválidos.');
+      }
+    } catch (error) {
+      console.error('Erro ao tentar logar:', error);
+      setError('Ocorreu um erro no servidor. Tente novamente mais tarde.');
     }
-  }, [emailSent]);
+  };
 
   return (
     <div className={styles.fundo}>
@@ -27,7 +48,7 @@ export default function Login() {
           <img src="/logo.png" alt="ColdBox Logo" />
           <span>ColdBox</span>
         </div>
-        
+
         {showMessage && (
           <div className={styles.caixaMensagem}>
             <span className={styles.iconeVisto}>✔️</span>
@@ -36,30 +57,33 @@ export default function Login() {
             </span>
           </div>
         )}
-        
-        <div className={styles.formulario}>
+
+        <form className={styles.formulario} onSubmit={handleLogin}>
           <input
             type="text"
             placeholder="Número do celular ou email"
             className={styles.inputCaixa}
+            value={emailOrPhone}
+            onChange={(e) => setEmailOrPhone(e.target.value)}  // Atualiza o estado
+            required
           />
           <input
             type="password"
             placeholder="Senha"
             className={styles.inputCaixa}
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}  // Atualiza o estado
+            required
           />
-          <Link href="/tempoReal">
-            <button className="botaoEntrar">Entrar</button>
-          </Link>
-          <Link href="/esqueceuSenha" className={styles.esqueceuSenha}>
-            Esqueceu a Senha?
-          </Link>
-        </div>
+          <button type="submit" className="botaoEntrar">Entrar</button>
+        </form>
+
+        {error && <div className={styles.error}>{error}</div>}  {/* Exibe mensagem de erro */}
 
         <div className={styles.extras}>
-            <span>Ajuda</span>
-            <span>Sobre</span>
-            <span>Mais</span>
+          <span>Ajuda</span>
+          <span>Sobre</span>
+          <span>Mais</span>
         </div>
       </div>
     </div>

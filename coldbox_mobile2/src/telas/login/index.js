@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, TextInput, Image} from 'react-native';
 
-
 import { useNavigation } from '@react-navigation/native'; //usando para navegacao
 import AsyncStorage from '@react-native-async-storage/async-storage'; //usado para gerar token
 

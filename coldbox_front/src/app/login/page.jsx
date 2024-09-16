@@ -9,7 +9,7 @@ export default function Login() {
   const searchParams = useSearchParams();
   const emailSent = searchParams.get('emailSent');
   const [showMessage, setShowMessage] = useState(false);
-  const [emailOrPhone, setEmailOrPhone] = useState('');  // Estado para o campo de email/telefone
+  const [email, setEmail] = useState('');  // Estado para o campo de email
   const [senha, setSenha] = useState('');  // Estado para o campo de senha
   const [error, setError] = useState('');
   const router = useRouter();  // Usado para redirecionamento após o login
@@ -20,14 +20,14 @@ export default function Login() {
     setError('');  // Limpa qualquer mensagem de erro anterior
 
     try {
-      const response = await axios.post('http://127.0.0.1:3333/usuarios', {
-        user_email: emailOrPhone,  // Enviando o dado coletado no campo
+      const response = await axios.post('http://127.0.0.1:3333/usuarios/login', {
+        user_email: email,  // Enviando o email coletado no campo
         user_senha: senha
       });
 
       if (response.data.sucesso) {
         // Redireciona para a página de tempo real se o login for bem-sucedido
-        router.push('/tempoReal');
+        router.push('tempoReal');
       } else {
         // Exibe mensagem de erro se as credenciais estiverem incorretas
         setError('Login ou senha inválidos.');
@@ -60,11 +60,11 @@ export default function Login() {
 
         <form className={styles.formulario} onSubmit={handleLogin}>
           <input
-            type="text"
-            placeholder="Número do celular ou email"
+            type="email"
+            placeholder="Email"
             className={styles.inputCaixa}
-            value={emailOrPhone}
-            onChange={(e) => setEmailOrPhone(e.target.value)}  // Atualiza o estado
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}  // Atualiza o estado com o email
             required
           />
           <input
@@ -72,7 +72,7 @@ export default function Login() {
             placeholder="Senha"
             className={styles.inputCaixa}
             value={senha}
-            onChange={(e) => setSenha(e.target.value)}  // Atualiza o estado
+            onChange={(e) => setSenha(e.target.value)}  // Atualiza o estado com a senha
             required
           />
           <button type="submit" className="botaoEntrar">Entrar</button>

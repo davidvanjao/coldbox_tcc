@@ -1,23 +1,37 @@
 'use client'
 
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import styles from './NavBar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation';
 
 
 
 // Importa useRouter apenas no lado cliente de forma dinâmica
-const useRouter = dynamic(() => import('next/router').then(mod => mod.useRouter), {
-    ssr: false
-});
+// const useRouter = dynamic(() => import('next/router').then(mod => mod.useRouter), {
+//     ssr: false
+// });
 
 const NavBarComponent = () => {
     const router = useRouter();
-    const routePath = usePathname()
+    const routePath = usePathname();
+
+
+//Função do Logout
+const handleLogout = (e) => {
+    e.preventDefault(); //Evita o comportamento padrão do link
+    //Remover dados da sessão (Nome do usuario, tokens, etc)
+    localStorage.removeItem('userName') //Remove o nome de usuario
+    //adcionar aqui outras limpezas depois de prontas, como tokens de autenticação
+
+
+    //Redirecionar para a página de login
+    router.push('/login');
+    
+    }
     return (
         <div className='sidebar'>
             <div className='logo'>
@@ -52,7 +66,7 @@ const NavBarComponent = () => {
                 </ul>
             </nav>
             <div className='logout'>
-                <Link href="/login" className='logoutLink'>
+                <Link href="/login" className='logoutLink' onClick={handleLogout}>
                     <FontAwesomeIcon icon={faSignOutAlt} style={{ color: 'inherit' }} />Logout
                 </Link>
 

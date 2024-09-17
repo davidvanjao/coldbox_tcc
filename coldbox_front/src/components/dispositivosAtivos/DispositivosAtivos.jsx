@@ -39,7 +39,7 @@ const DispositivosAtivos = () => {
 
   return (
     <div className={styles.conteinerGrid}>
-      <div className={styles.header}>
+      <div className={styles.headerDispositivos}>
         <span className={styles.tag}>Dispositivos Ativos</span>
         <button
           className={styles.addButton}
@@ -49,7 +49,7 @@ const DispositivosAtivos = () => {
         </button>
       </div>
       <div className={styles.tabelaGeral}>
-        <table className={styles.table}>
+        <table className={styles.tabelaDispositivos}>
           <thead>
             <tr>
               <th className={styles.th}>Nome do Dispositivo</th>
@@ -90,7 +90,7 @@ const DispositivosAtivos = () => {
       </div>
 
       {showModal && (
-        <div className={styles.modal}>
+        <div className={styles.modalDispositivos}>
           <div className={styles.modalContent}>
             <h2>Adicionar Novo Dispositivo</h2>
             <label htmlFor="nomeDispositivo">Nome do Dispositivo</label>

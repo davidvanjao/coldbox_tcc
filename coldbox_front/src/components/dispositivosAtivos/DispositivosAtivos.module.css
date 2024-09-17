@@ -19,7 +19,7 @@
   flex-direction: column;
 }
 
-.header {
+.headerDispositivos {
   background-color: #E6E6E6;
   padding: 15px 10px;
   border-top-left-radius: 10px;
@@ -27,13 +27,13 @@
   position: relative; /* Para que o botão absoluto se posicione corretamente */
 }
 
-.header .tag {
+.headerDispositivos .tag {
   padding: 5px 10px;
   font-size: 18px;
   font-weight: 600;
 }
 
-.table {
+.tabelaDispositivos {
   width: 100%;
   border-collapse: collapse;
   background-color: #ffffff;
@@ -80,7 +80,7 @@
   background-color: #0056b3;
 }
 
-.modal {
+.modalDispositivos {
   position: fixed;
   top: 0;
   left: 0;

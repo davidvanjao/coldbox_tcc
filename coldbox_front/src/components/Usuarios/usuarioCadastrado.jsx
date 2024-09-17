@@ -35,8 +35,8 @@ const Usuarios = () => {
 
   return (
     <div className={styles.conteinerGrid}>
-      <div className={styles.container}>
-        <div className={styles.header}>
+      <div className={styles.containerUsuarios}>
+        <div className={styles.headerUsuarios}>
           <span className={styles.tag}>Usuários</span>
           <button
             className={styles.addButton}
@@ -46,7 +46,7 @@ const Usuarios = () => {
           </button>
         </div>
         <div className={styles.tabelaGeral}>
-          <table className={styles.table}>
+          <table className={styles.tabelaUsuarios}>
             <thead>
               <tr>
                 <th className={styles.th}>Usuário</th>
@@ -84,7 +84,7 @@ const Usuarios = () => {
       </div>
 
       {showModal && (
-        <div className={styles.modal}>
+        <div className={styles.modalUsuarios}>
           <div className={styles.modalContent}>
             <h2>Adicionar Novo Usuário</h2>
             <label htmlFor="usuario">Usuário</label>

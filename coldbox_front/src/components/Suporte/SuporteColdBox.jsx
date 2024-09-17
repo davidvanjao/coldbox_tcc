@@ -4,8 +4,8 @@ import './SuporteColdBox.css';
 const SuporteColdBox = () => {
     return (
         <div className="paginaSuporte"> {/* Adicionando a classe pai exclusiva */}
-            <div className="container">
-                <h1 className="title">Suporte ColdBox</h1>
+            <div className="containerSuporte">
+                <h1 className="tituloSuporte">Suporte ColdBox</h1>
                 <p className="welcome-text">Bem-vindo à Central de Suporte da ColdBox!</p>
                 <p className="description">
                     Na ColdBox, entendemos a importância de manter suas câmaras frias funcionando perfeitamente para garantir a segurança e a qualidade dos seus produtos. Nossa equipe de suporte está aqui para ajudar você a resolver qualquer problema e a garantir que seu sistema de monitoramento opere com a máxima eficiência.

@@ -22,10 +22,13 @@ export default function Login() {
     try {
       const response = await axios.post('http://127.0.0.1:3333/usuarios/login', {
         user_email: email,  // Enviando o email coletado no campo
-        user_senha: senha
+        user_senha: senha,
       });
 
       if (response.data.sucesso) {
+        //Salvar o nome de usuario para utilizar na tela principal
+        localStorage.setItem('userName', response.data.dados[0].user_nome);
+
         // Redireciona para a página de tempo real se o login for bem-sucedido
         router.push('tempoReal');
       } else {

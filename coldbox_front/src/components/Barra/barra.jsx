@@ -3,13 +3,22 @@ import Link from 'next/link';
 import styles from './barra.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Função para a edição do perfil do usuario
 const BarraSuperior = () => {
   const [showModal, setShowModal] = useState(false);
   const [profilePicture, setProfilePicture] = useState('/user.png'); // Caminho inicial para a imagem de perfil
   const [selectedFile, setSelectedFile] = useState(null);
+  const [userName, setUserName] = useState(''); // Estado para armazenar o nome do usuário
+    
+  useEffect(() => {
+    //Pegar o nome de usuario do localStorage
+    const storedUserName = localStorage.getItem('userName');
+    if (storedUserName) {
+      setUserName(storedUserName);
+    }
+  }, []);
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -53,7 +62,7 @@ const BarraSuperior = () => {
           <div className='informacaoUsuario'>
             <img src="/user.png" alt="Usuario" />
               <div>
-                <h3>Pedro Lima</h3>
+              <h3>{userName || 'Usuário'}</h3> {/* Exibe o nome recuperado ou 'Usuário' como fallback */}
                   <span>Administrador</span>
               </div>
           </div>

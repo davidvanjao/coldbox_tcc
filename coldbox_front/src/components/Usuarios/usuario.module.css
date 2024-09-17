@@ -1,5 +1,5 @@
 /* src/components/dispositivosAtivos/DispositivosAtivos.module.css */
-.container {
+.containerUsuarios {
     /* width: 100%; */
     background-color: #ffffff;
     border-radius: 10px;
@@ -7,21 +7,21 @@
     padding: 20px;
   }
   
-  .header {
+  .headerUsuarios {
     background-color: #E6E6E6;
     padding: 15px 10px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
   }
 
-  .header .tag {
+  .headerUsuarios .tag {
     padding: 5px 10px;
     font-size: 18px;
     font-weight: 600;
   }
   
   
-  .header h2 {
+  .headerUsuarios h2 {
     margin: 0;
     font-size: 20px;
     font-weight: 600;
@@ -33,7 +33,7 @@
     padding: 10px;
   }
 
-  .table {
+  .tabelaUsuarios {
     width: 100%;
     border-collapse: collapse;
     background-color: #ffffff;
@@ -125,7 +125,7 @@
 }
 
 /* Estilos do modal */
-.modal {
+.modalUsuarios {
   position: fixed;
   top: 0;
   left: 0;

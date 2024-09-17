@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, TextInput, Image} from 'react-native';
 
-
 import { useNavigation } from '@react-navigation/native'; //usando para navegacao
 import AsyncStorage from '@react-native-async-storage/async-storage'; //usado para gerar token
 
@@ -51,9 +50,9 @@ export default function Login() {
     
             const data = await response.json();
             //Aqui você pode adicionar a lógica para salvar o token de autenticação e navegar para outra tela
-            const token = data.token;
+            const token = data.dados[0].user_id;//token criado é o mesmo do id do usuario logado.
             const user_id = data.dados[0].user_id;
-
+            
             //Armazena o token no AsyncStorage
             await AsyncStorage.setItem('userToken', token);
 
@@ -63,8 +62,7 @@ export default function Login() {
                 token: token,      // Outro parâmetro enviado
             });
 
-
-
+            console.log('Navegando para Home com user_id:', user_id, 'e token:', token);
 
             
         } catch(error) {

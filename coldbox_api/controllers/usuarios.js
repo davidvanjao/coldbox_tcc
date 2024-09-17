@@ -8,7 +8,7 @@ module.exports = {
     async listar(request, response) {
         try {
             // instruções SQL
-            const sql = `select user_id, user_nome, user_senha, user_email, user_tel, nivel_id, user_priorid from usuario;`; 
+            const sql = `select user_id, user_nome, user_senha, user_email, user_tel, nivel_id from novo_usuario;`; 
 
             //executa instruções SQL e armazena o resultado na variável usuários
             const usuarios = await db.query(sql); 
@@ -42,15 +42,15 @@ module.exports = {
 
 
             // parâmetros recebidos no corpo da requisição
-            const { user_nome, user_senha, user_email, user_tel, nivel_id, user_priorid } = request.body;
+            const { user_nome, user_senha, user_email, user_tel, nivel_id } = request.body;
 
             // instrução SQL
-            const sql = `INSERT INTO usuario
-                (user_nome, user_senha, user_email, user_tel, nivel_id, user_priorid) 
-                VALUES (?, ?, ?, ?, ?, ?)`;
+            const sql = `INSERT INTO novo_usuario
+            (user_nome, user_senha, user_email, user_tel, nivel_id) 
+            VALUES (?, ?, ?, ?, ?);`;
 
             // definição dos dados a serem inseridos em um array
-            const values = [user_nome, user_senha, user_email, user_tel, nivel_id, user_priorid];  
+            const values = [user_nome, user_senha, user_email, user_tel, nivel_id];  
 
             // execução da instrução sql passando os parâmetros
             const execSql = await db.query(sql, values); 
@@ -76,18 +76,18 @@ module.exports = {
     async editar(request, response) {
         try {
             // parâmetros recebidos pelo corpo da requisição
-            const { user_nome, user_senha, user_email, user_tel, nivel_id, user_priorid } = request.body;
+            const { user_nome, user_senha, user_email, user_tel, nivel_id} = request.body;
 
             // parâmetro recebido pela URL via params ex: /usuario/1
             const { user_id } = request.params; 
 
             // instruções SQL
-            const sql = `UPDATE usuario SET user_nome = ?, user_senha = ?,
-            user_email = ?, user_tel = ?, nivel_id = ?, user_priorid = ?
+            const sql = `UPDATE novo_usuario SET
+            user_nome = ?, user_senha = ?, user_email = ?, user_tel = ?, nivel_id = ?
             WHERE user_id = ?;`; 
 
             // preparo do array com dados que serão atualizados
-            const values = [user_nome, user_senha, user_email, user_tel, nivel_id, user_priorid, user_id]; 
+            const values = [user_nome, user_senha, user_email, user_tel, nivel_id, user_id]; 
 
             // execução e obtenção de confirmação da atualização realizada
             const atualizaDados = await db.query(sql, values); 
@@ -113,7 +113,7 @@ module.exports = {
             const { user_id } = request.params;
 
             // comando de exclusão
-            const sql = `DELETE FROM usuario WHERE user_id = ?;`;
+            const sql = `DELETE FROM novo_usuario WHERE user_id = ?;`;
 
             // array com parâmetros da exclusão
             const values = [user_id];
@@ -135,14 +135,13 @@ module.exports = {
         }
     },
 
-    //VERIFICA SE USUARIO E SENHA EXISTE
+    //VERIFICA SE USUARIO E SENHA EXISTE - ok
     async login(request, response) {
         try {
 
             const {user_email, user_senha} = request.body;
 
             // instruções SQL
-            //const sql = `select user_id, user_nome, user_tel, nivel_id, user_priorid from usuario where user_email = ? and user_senha = ?;`;
             const sql = `select user_id, user_nome, user_senha, user_email, user_tel, nivel_id from novo_usuario where user_email = ? and user_senha = ?;`; 
 
             const values = [user_email, user_senha];

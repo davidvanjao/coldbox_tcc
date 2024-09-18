@@ -4,6 +4,7 @@ import styles from './barra.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 // Função para a edição do perfil do usuario
 const BarraSuperior = () => {
@@ -11,12 +12,21 @@ const BarraSuperior = () => {
   const [profilePicture, setProfilePicture] = useState('/user.png'); // Caminho inicial para a imagem de perfil
   const [selectedFile, setSelectedFile] = useState(null);
   const [userName, setUserName] = useState(''); // Estado para armazenar o nome do usuário
-    
+  const [nome, setNome] = useState(''); //Armazena o nome
+  const [sobrenome, setSobrenome] =useState(''); //Armazena o sobrenome
+  const [email, setEmail] = useState('') //Armazen o email
+  const [telefone, setTelefone] = useState('') //Armazena o telefone
+  const [userId, setUserId] = useState(null); //Armazena o user_id
+  
   useEffect(() => {
     //Pegar o nome de usuario do localStorage
     const storedUserName = localStorage.getItem('userName');
+    const storedUserId = localStorage.getItem('userId'); //Armazena o user_id
     if (storedUserName) {
       setUserName(storedUserName);
+    }
+    if (storedUserId) {
+      setUserId(storedUserId);
     }
   }, []);
 
@@ -36,13 +46,38 @@ const BarraSuperior = () => {
     }
   };
 
-  const handleSave = () => {
-    // Atualiza a foto de perfil com a nova imagem selecionada
-    if (selectedFile) {
-      setProfilePicture(selectedFile);
-      setSelectedFile(null); // Limpa o estado temporário após salvar
+  const handleSave = async (e) => {
+    e.preventDefault();
+
+    if (!userId) {
+      alert('ERRO: ID do usuário não encontrado.');
+      return;
     }
-    handleCloseModal(); // Fecha o modal após salvar
+
+    const user_nome = `${nome} ${sobrenome}`; // Junta Nome e Sobrenome
+
+    //Dados a serem enviados para a API
+    const updateUser = {
+      user_nome,
+      user_email: email,
+      user_tel: telefone,
+    };
+
+    try {
+      //Chamando a API de edição
+      const response = await axios.patch(`http://127.0.0.1:3333/usuarios/${userId}`, updateUser);
+
+      if (response.data.sucesso) {
+        alert('Usuário atualizado com sucesso');
+        setUserName(user_nome); //Atualiza o nome no estado após salvar
+        handleCloseModal();
+      } else {
+        alert('Erro ao atualizar usuário.');
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar usuário', error)
+      alert('Erro ao atualizar usuário.');
+    }
   };
 
 
@@ -98,19 +133,42 @@ const BarraSuperior = () => {
               {/* Campo para alterar o nome */}
               <div className="formularios">
                 <label htmlFor="name">Nome:</label>
-                <input type="text" id="name" name="name" placeholder="Seu nome" />
+                <input 
+                  type="text"  
+                  id="name" 
+                  name="name" 
+                  placeholder="Seu nome" 
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  required
+                  />
               </div>
 
               {/* Campo para alterar o nome de usuário */}
               <div className="formularios">
-                <label htmlFor="username">Nome de Usuário:</label>
-                <input type="text" id="username" name="username" placeholder="Seu nome de usuário" />
+                <label htmlFor="username">Sobrenome:</label>
+                <input 
+                  type="text" 
+                  id="username" 
+                  name="username" 
+                  placeholder="Seu sobrenome" 
+                  value={sobrenome}
+                  onChange={(e) => setSobrenome(e.target.value)}
+                  required
+                  />
               </div>
 
               {/* Campo para alterar o email */}
               <div className="formularios">
                 <label htmlFor="email">Email:</label>
-                <input type="email" id="email" name="email" placeholder="Seu email" />
+                <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                placeholder="Seu email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
 
               {/* Campo para alterar o número de telefone */}
@@ -124,7 +182,10 @@ const BarraSuperior = () => {
                   placeholder="Seu número de telefone"
                   pattern="\d*"
                   inputMode="numeric"
-                  onInput={(e) => e.target.value = e.target.value.replace(/\D/g, '')}
+                  value={telefone}
+                  onChange={(e) => setTelefone(e.target.value)}
+                  onInput={(e) => e.target.value = e.target.value.replace(/\D/g, '')} //Valida para aceitar apenas números
+                  required
                 />
               </div>
 

@@ -9,10 +9,16 @@ export default function Login() {
   const searchParams = useSearchParams();
   const emailSent = searchParams.get('emailSent');
   const [showMessage, setShowMessage] = useState(false);
-  const [email, setEmail] = useState('');  // Estado para o campo de email
+  const [loginInput, setLoginInput] = useState('');  // Estado para o campo de email ou username
   const [senha, setSenha] = useState('');  // Estado para o campo de senha
   const [error, setError] = useState('');
   const router = useRouter();  // Usado para redirecionamento após o login
+
+  // Função para verificar se o input é um email
+  const isEmail = (value) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  // Expressão regular para validar email
+    return emailRegex.test(value);
+  };
 
   // Função para efetuar login
   const handleLogin = async (e) => {
@@ -20,17 +26,16 @@ export default function Login() {
     setError('');  // Limpa qualquer mensagem de erro anterior
 
     try {
-      const response = await axios.post('http://127.0.0.1:3333/usuarios/login', {
-        user_email: email,  // Enviando o email coletado no campo
-        user_senha: senha,
+      const loginField = isEmail(loginInput) ? 'user_email' : 'user_nome';  // Determina se é email ou username
+
+      const response = await axios.post('http://127.0.0.1:3333/usuarios', {
+        [loginField]: loginInput,  // Envia o dado dinamicamente (email ou username)
+        user_senha: senha
       });
 
       if (response.data.sucesso) {
-        //Salvar o nome de usuario para utilizar na tela principal
-        localStorage.setItem('userName', response.data.dados[0].user_nome);
-
         // Redireciona para a página de tempo real se o login for bem-sucedido
-        router.push('tempoReal');
+        router.push('/tempoReal');
       } else {
         // Exibe mensagem de erro se as credenciais estiverem incorretas
         setError('Login ou senha inválidos.');
@@ -63,11 +68,11 @@ export default function Login() {
 
         <form className={styles.formulario} onSubmit={handleLogin}>
           <input
-            type="email"
-            placeholder="Email"
+            type="text"
+            placeholder="Email ou Usuário"
             className={styles.inputCaixa}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}  // Atualiza o estado com o email
+            value={loginInput}
+            onChange={(e) => setLoginInput(e.target.value)}  // Atualiza o estado com o email ou username
             required
           />
           <input

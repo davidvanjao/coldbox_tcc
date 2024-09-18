@@ -8,7 +8,7 @@ module.exports = {
     async listar(request, response) {
         try {
             // instruções SQL
-            const sql = `select user_id, user_nome, user_senha, user_email, user_tel, nivel_id from novo_usuario;`; 
+            const sql = `select user_id, user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil from novo_usuario;`; 
 
             //executa instruções SQL e armazena o resultado na variável usuários
             const usuarios = await db.query(sql); 
@@ -42,15 +42,15 @@ module.exports = {
 
 
             // parâmetros recebidos no corpo da requisição
-            const { user_nome, user_senha, user_email, user_tel, nivel_id } = request.body;
+            const { user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil } = request.body;
 
             // instrução SQL
             const sql = `INSERT INTO novo_usuario
-            (user_nome, user_senha, user_email, user_tel, nivel_id) 
-            VALUES (?, ?, ?, ?, ?);`;
+            (user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil) 
+            VALUES (?, ?, ?, ?, ?, ?);`;
 
             // definição dos dados a serem inseridos em um array
-            const values = [user_nome, user_senha, user_email, user_tel, nivel_id];  
+            const values = [user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil];  
 
             // execução da instrução sql passando os parâmetros
             const execSql = await db.query(sql, values); 
@@ -76,18 +76,18 @@ module.exports = {
     async editar(request, response) {
         try {
             // parâmetros recebidos pelo corpo da requisição
-            const { user_nome, user_senha, user_email, user_tel, nivel_id} = request.body;
+            const { user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil} = request.body;
 
             // parâmetro recebido pela URL via params ex: /usuario/1
             const { user_id } = request.params; 
 
             // instruções SQL
             const sql = `UPDATE novo_usuario SET
-            user_nome = ?, user_senha = ?, user_email = ?, user_tel = ?, nivel_id = ?
+            user_nome = ?, user_senha = ?, user_email = ?, user_tel = ?, nivel_id = ?, user_imagem_perfil = ?
             WHERE user_id = ?;`; 
 
             // preparo do array com dados que serão atualizados
-            const values = [user_nome, user_senha, user_email, user_tel, nivel_id, user_id]; 
+            const values = [user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil, user_id]; 
 
             // execução e obtenção de confirmação da atualização realizada
             const atualizaDados = await db.query(sql, values); 
@@ -142,7 +142,7 @@ module.exports = {
             const {user_email, user_senha} = request.body;
 
             // instruções SQL
-            const sql = `select user_id, user_nome, user_senha, user_email, user_tel, nivel_id from novo_usuario where user_email = ? and user_senha = ?;`; 
+            const sql = `select user_id, user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil from novo_usuario where user_email = ? and user_senha = ?;`; 
 
             const values = [user_email, user_senha];
 

@@ -13,7 +13,7 @@ export default function RoutesStack() {
     return(
         <Stack.Navigator>
             <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
-            <Stack.Screen name="Home" component={RoutesDrawer} options={{headerShown: false}}/>
+            <Stack.Screen name="Home" component={RoutesDrawer} options={{headerShown: false}} />
             <Stack.Screen name="InfoEquipamento" component={InfoEquipamento}/>
         </Stack.Navigator>
     )

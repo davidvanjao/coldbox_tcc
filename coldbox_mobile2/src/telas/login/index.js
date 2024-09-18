@@ -56,14 +56,15 @@ export default function Login() {
             //Armazena o token no AsyncStorage
             await AsyncStorage.setItem('userToken', token);
 
-            // Exemplo de envio de parâmetros ao navegar para a tela 'Home'
-            navigation.navigate('Home', {
+            const info = {
                 user_id: user_id,  // Parâmetro enviado
                 token: token,      // Outro parâmetro enviado
-            });
+            }
+
+            // Exemplo de envio de parâmetros ao navegar para a tela 'Home'
+            navigation.navigate('Home', {info});
 
             console.log('Navegando para Home com user_id:', user_id, 'e token:', token);
-
             
         } catch(error) {
             alert('Erro Credenciais inválidas');

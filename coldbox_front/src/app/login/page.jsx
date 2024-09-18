@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import styles from './page.module.css';
-import axios from 'axios'; 
+import axios from 'axios';
 
 export default function Login() {
   const searchParams = useSearchParams();

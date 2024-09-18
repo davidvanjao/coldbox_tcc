@@ -28,7 +28,7 @@ export default function Login() {
     try {
       const loginField = isEmail(loginInput) ? 'user_email' : 'user_nome';  // Determina se é email ou username
 
-      const response = await axios.post('http://127.0.0.1:3333/usuarios', {
+      const response = await axios.post('http://127.0.0.1:3333/usuarios/login', {
         [loginField]: loginInput,  // Envia o dado dinamicamente (email ou username)
         user_senha: senha
       });

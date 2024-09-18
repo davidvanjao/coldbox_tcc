@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, Pressable } from 'react-native';
 import styles from './styles';
 
-export default function Equipamento(props) {
+export default function Equipamento(usuario) {
+
+    console.log(usuario);
+
+
     const [equipamentos, setEquipamentos] = useState([]);
     const [loading, setLoading] = useState(true);
 

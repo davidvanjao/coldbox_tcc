@@ -177,5 +177,53 @@ module.exports = {
             });
         }
     },
-}
+    
+    async listarDadosUsuarioEmpresa(request, response) {
+        try {
 
+            //const {user_id} = request.body;
+            const { user_id } = request.params; 
+
+            // instruções SQL
+            const sql = `SELECT a.user_id, a.user_nome,  b.cli_id, b.cli_razaoSocial
+            FROM 
+                novo_usuario a,
+                novo_clientes b
+            WHERE 
+                a.user_id = ?
+            AND a.cli_id = b.cli_id;`; 
+
+            const values = [user_id];
+
+            //executa instruções SQL e armazena o resultado na variável usuários
+            const usuario = await db.query(sql, values); 
+            const nItens = usuario[0].length;
+
+            console.log(usuario[0]);
+
+            if(nItens < 1) {
+
+                return response.status(403).json({
+                    sucesso: false, 
+                    mensagem: 'Dados do usuário inválido.', 
+                    dados: null               
+                });
+
+            }
+
+            return response.status(200).json({
+                sucesso: true, 
+                mensagem: 'Sucesso na requisição.', 
+                dados: usuario[0]            
+            });
+
+        } catch (error) {
+            //console.log(error);
+            return response.status(500).json({
+                sucesso: false, 
+                mensagem: 'Erro na requisição.', 
+                dados: error.message
+            });
+        }
+    },
+}

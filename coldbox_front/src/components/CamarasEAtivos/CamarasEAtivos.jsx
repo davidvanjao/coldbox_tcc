@@ -115,7 +115,7 @@ const CamarasEAtivos = () => {
         </div>   
       </div>
             {/* Passa os equipamentos selecionados para o componente GoogleChart */}
-            <GoogleChart equipamentosSelecionados={equipamentosSelecionados} />
+            {/* <GoogleChart equipamentosSelecionados={equipamentosSelecionados} /> */}
     </div>
   );
 };

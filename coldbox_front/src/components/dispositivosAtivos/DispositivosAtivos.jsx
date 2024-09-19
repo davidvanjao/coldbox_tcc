@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
 import styles from './DispositivosAtivos.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrash, faPen, faCircle  } from '@fortawesome/free-solid-svg-icons';
+import dispositivosFicticios from './dispositivosFicticios';
 
 const DispositivosAtivos = () => {
-  const [dispositivos, setDispositivos] = useState([]);
+  // const [dispositivos, setDispositivos] = useState([]);
+  const [dispositivos, setDispositivos] = useState(dispositivosFicticios);
   const [showModal, setShowModal] = useState(false);
   const [newDevice, setNewDevice] = useState({
-    nomeDispositivo: '',
-    nomeCamara: '',
-    dataInstalacao: '',
-    modelo: '',       // Novo campo "Modelo"
-    observacao: '',    // Novo campo "Observação"
+    status: 'offline',
+    local_nome: '',
+    equip_modelo: '',
+    equip_tipo: '',
+    equip_ip: '',
+    equip_mac: '',
+    equip_observacao: '',
   });
 
   const handleInputChange = (e) => {
@@ -23,11 +27,13 @@ const DispositivosAtivos = () => {
     setDispositivos((prevDispositivos) => [...prevDispositivos, newDevice]);
     setShowModal(false);
     setNewDevice({
-      nomeDispositivo: '',
-      nomeCamara: '',
-      dataInstalacao: '',
-      modelo: '',
-      observacao: '',
+      status: 'offline', 
+      local_nome: '',
+      equip_modelo: '',
+      equip_tipo: '',
+      equip_ip: '',
+      equip_mac: '',
+      equip_observacao: '',
     });
   };
 
@@ -52,36 +58,41 @@ const DispositivosAtivos = () => {
         <table className={styles.tabelaDispositivos}>
           <thead>
             <tr>
-              <th className={styles.th}>Nome do Dispositivo</th>
-              <th className={styles.th}>Câmara</th>
-              <th className={styles.th}>Data de Instalação</th>
-              <th className={styles.th}>Modelo</th> {/* Coluna para "Modelo" */}
-              <th className={styles.th}>Observação</th> {/* Coluna para "Observação" */}
-              <th className={styles.th}>Ações</th>
+              <th className={styles.th}>Status</th> {/* Indicador de status */}
+              <th className={styles.th}>Equipamento</th> {/* local_nome */}
+              <th className={styles.th}>Modelo</th> {/* equip_modelo */}
+              <th className={styles.th}>Sensor</th> {/* equip_tipo */}
+              <th className={styles.th}>IP</th> {/* equip_ip */}
+              <th className={styles.th}>MAC</th> {/* equip_mac */}
+              <th className={styles.th}>Descrição</th> {/* equip_observacao */}
             </tr>
           </thead>
           <tbody>
             {dispositivos.map((item, index) => (
-              <tr
-                key={index}
-                className={index % 2 === 0 ? styles.evenRow : styles.oddRow}
-              >
-                <td className={styles.td}>{item.nomeDispositivo}</td>
-                <td className={styles.td}>{item.nomeCamara}</td>
-                <td className={styles.td}>{item.dataInstalacao}</td>
-                <td className={styles.td}>{item.modelo}</td> {/* Valor "Modelo" */}
-                <td className={styles.td}>{item.observacao}</td> {/* Valor "Observação" */}
+              <tr key={index} className={index % 2 === 0 ? styles.evenRow : styles.oddRow}>
+                <td className={styles.td}>
+                  <FontAwesomeIcon
+                    icon={faCircle}
+                    className={item.status === 'online' ? styles.online : styles.offline}
+                  />
+                </td>
+                <td className={styles.td}>{item.local_nome}</td>
+                <td className={styles.td}>{item.equip_modelo}</td>
+                <td className={styles.td}>{item.equip_tipo}</td>
+                <td className={styles.td}>{item.equip_ip}</td>
+                <td className={styles.td}>{item.equip_mac}</td>
+                <td className={styles.td}>{item.equip_observacao}</td>
                 <td className={styles.td}>
                   <FontAwesomeIcon
                     icon={faPen}
                     className={styles.editIcon}
                     onClick={() => console.log('Editar dispositivo', index)}
                   />
-                  <FontAwesomeIcon
+                  {/* <FontAwesomeIcon
                     icon={faTrash}
                     className={styles.deleteIcon}
                     onClick={() => deleteDispositivo(index)}
-                  />
+                  /> */}
                 </td>
               </tr>
             ))}
@@ -93,57 +104,69 @@ const DispositivosAtivos = () => {
         <div className={styles.modalDispositivos}>
           <div className={styles.modalContent}>
             <h2>Adicionar Novo Dispositivo</h2>
-            <label htmlFor="nomeDispositivo">Nome do Dispositivo</label>
+      
+            <label htmlFor="nome do equipamento">Equipamento</label>
             <input
               type="text"
-              name="nomeDispositivo"
-              id="nomeDispositivo"
-              value={newDevice.nomeDispositivo}
+              name="local_nome"
+              id="local_nome"
+              value={newDevice.local_nome}
               onChange={handleInputChange}
               required
             />
 
-            <label htmlFor="nomeCamara">Nome da Câmara</label>
+            <label htmlFor="equip_modelo">Modelo</label>
             <input
               type="text"
-              name="nomeCamara"
-              id="nomeCamara"
-              value={newDevice.nomeCamara}
+              name="equip_modelo"
+              id="equip_modelo"
+              value={newDevice.equip_modelo}
               onChange={handleInputChange}
               required
             />
 
-            <label htmlFor="dataInstalacao">Data de Instalação</label>
-            <input
-              type="date"
-              name="dataInstalacao"
-              id="dataInstalacao"
-              value={newDevice.dataInstalacao}
-              onChange={handleInputChange}
-              required
-            />
-
-            <label htmlFor="modelo">Modelo</label> {/* Campo "Modelo" */}
+            <label htmlFor="equip_tipo">Sensor</label>
             <input
               type="text"
-              name="modelo"
-              id="modelo"
-              value={newDevice.modelo}
+              name="equip_tipo"
+              id="equip_tipo"
+              value={newDevice.equip_tipo}
               onChange={handleInputChange}
               required
             />
 
-            <label htmlFor="observacao">Observação</label> {/* Campo "Observação" */}
+            <label htmlFor="equip_ip">IP</label>
+            <input
+              type="text"
+              name="equip_ip"
+              id="equip_ip"
+              value={newDevice.equip_ip}
+              onChange={handleInputChange}
+              required
+            />
+
+            <label htmlFor="equip_mac">MAC</label>
+            <input
+              type="text"
+              name="equip_mac"
+              id="equip_mac"
+              value={newDevice.equip_mac}
+              onChange={handleInputChange}
+              required
+            />
+
+            <label htmlFor="equip_observacao">Descrição</label>
             <textarea
-              name="observacao"
-              id="observacao"
-              value={newDevice.observacao}
+              name="equip_observacao"
+              id="equip_observacao"
+              value={newDevice.equip_observacao}
               onChange={handleInputChange}
             />
 
-            <div className={styles.modalActions}>
-              <button onClick={addDispositivo}>Adicionar</button>
-              <button onClick={() => setShowModal(false)}>Fechar</button>
+            <div className={styles.modalAddDispositivo}>
+              <button type="fecharModal" onClick={() => setShowModal(false)}>Fechar</button>
+              <button type="adicionarDisp" onClick={addDispositivo}>Adicionar</button>
+
             </div>
           </div>
         </div>

@@ -20,7 +20,7 @@ WHERE
 AND a.cli_id = b.cli_id;
 
 /*traz equipamentos*/
-SELECT *
+SELECT a.local_id, a.equip_id, b.local_nome, b.local_descricao, c.equip_modelo, c.equip_observacao
 FROM
 	novo_equipamento_local a,
     novo_local b,
@@ -28,4 +28,4 @@ FROM
 WHERE
 	a.local_id = b.local_id
 AND a.equip_id = c.equip_id
-AND b.cli_id = '2';
+AND b.cli_id = '1';

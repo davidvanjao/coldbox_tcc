@@ -39,7 +39,7 @@ export default function Login() {
         localStorage.setItem('userId', response.data.dados[0].user_id);
 
 
-        // Redireciona para a página de tempo real se o login for bem-sucedido
+        //Redireciona para a página de tempo real se o login for bem-sucedido
         router.push('/tempoReal');
       } else {
         // Exibe mensagem de erro se as credenciais estiverem incorretas

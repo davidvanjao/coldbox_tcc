@@ -122,7 +122,7 @@ const GoogleChart = ({ exportButton }) => {
 
     const interval = setInterval(() => {
       fetchChartData(); // Atualiza os dados a cada minuto
-    }, 6000);
+    }, 60000);
 
     return () => clearInterval(interval); // Limpa o intervalo quando o componente for desmontado
   }, []);

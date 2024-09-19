@@ -17,9 +17,11 @@ const BarraSuperior = () => {
   const [email, setEmail] = useState('') //Armazen o email
   const [telefone, setTelefone] = useState('') //Armazena o telefone
   const [userId, setUserId] = useState(null); //Armazena o user_id
+  const [senha, setSenha] = useState(''); //Armazena ouser_senha
+  const [nivelId, setNivelId] = useState(''); //Armazena o nivel_id
   
   useEffect(() => {
-    //Pegar o nome de usuario do localStorage
+    //Pegar o nome de usuario e o ID do localStorage
     const storedUserName = localStorage.getItem('userName');
     const storedUserId = localStorage.getItem('userId'); //Armazena o user_id
     if (storedUserName) {
@@ -30,9 +32,40 @@ const BarraSuperior = () => {
     }
   }, []);
 
-  const handleOpenModal = () => {
-    setShowModal(true);
+
+  //Função para abrir o modal e carregar os dados do usuário
+  const handleOpenModal = async () => {
+    setShowModal(true); //Abre o modal
+
+    try {
+      if (!userId) {
+        alert('ERRO: ID de usuário não encontrado.');
+        return;
+      }
+ 
+      //Busca os dados do usuario
+      const response = await axios.get(`http://127.0.0.1:3333/usuarios/${userId}`);
+      // console.log(response.data)
+
+      if (response.data.sucesso) {
+        const { user_nome, user_email, user_tel, user_senha, nivel_id } = response.data.dados; // Dados do usuário
+
+        const [firstName, ...rest] = user_nome.split(' '); // Divide nome e sobrenome
+        setNome(firstName); //Preenche o campo de nome
+        setSobrenome(rest.join(' ')); //Preenche o campo de sobrenome
+        setEmail(user_email); //Preenche o campo de email
+        setTelefone(user_tel); //Preenche o campo de telefone
+        setSenha(user_senha); // Armazena a senha existente
+        setNivelId(nivel_id); // Armazena o nível de acesso existente
+      } else {
+        alert('Erro ao buscar dados do usuário');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar dados do usuário', error);
+      alert('Erro ao buscar dados do usuário.');
+    }
   };
+
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -61,15 +94,23 @@ const BarraSuperior = () => {
       user_nome,
       user_email: email,
       user_tel: telefone,
+      user_senha: senha, // Envia a senha existente
+      nivel_id: nivelId, // Envia o nível de acesso existente
     };
+
+    console.log("Dados enviados para atualização:", updateUser); 
+    console.log("ID do usuário:", userId);
+    
 
     try {
       //Chamando a API de edição
       const response = await axios.patch(`http://127.0.0.1:3333/usuarios/${userId}`, updateUser);
+      console.log("Resposta da API:", response);
 
       if (response.data.sucesso) {
         alert('Usuário atualizado com sucesso');
         setUserName(user_nome); //Atualiza o nome no estado após salvar
+        localStorage.setItem('userName', user_nome); // Atualiza o nome no localStorage
         handleCloseModal();
       } else {
         alert('Erro ao atualizar usuário.');
@@ -129,7 +170,7 @@ const BarraSuperior = () => {
                 </div>
               </div>
 
-              <form>
+              <form onSubmit={handleSave}>
               {/* Campo para alterar o nome */}
               <div className="formularios">
                 <label htmlFor="name">Nome:</label>

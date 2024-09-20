@@ -44,7 +44,7 @@ const BarraSuperior = () => {
       }
  
       //Busca os dados do usuario
-      const response = await axios.get(`http://127.0.0.1:3333/usuarios/${userId}`);
+      const response = await axios.get(`http://127.0.0.1:3333/usuarios/dadosUsuario/${userId}`);
       // console.log(response.data)
 
       if (response.data.sucesso) {

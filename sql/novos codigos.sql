@@ -29,3 +29,6 @@ WHERE
 	a.local_id = b.local_id
 AND a.equip_id = c.equip_id
 AND b.cli_id = '1';
+
+/*traz a ultima comunicacao do equipamento*/
+SELECT * FROM novo_equipamento_dados WHERE equip_id = '1' ORDER BY dados_data DESC LIMIT 1;

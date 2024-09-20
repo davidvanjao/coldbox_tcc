@@ -187,6 +187,43 @@ module.exports = {
                 dados: error.message
             });
         }
+    },
+
+    //traz os equipamentos da empresa
+    async listarDadosUltimaComunicacao(request, response) {
+        try {
+
+            // parâmetro recebido pela URL via params ex: /usuario/1
+            const { equip_id } = request.params; 
+
+            // instruções SQL
+            const sql = `SELECT * FROM novo_equipamento_dados WHERE equip_id = ? ORDER BY dados_data DESC LIMIT 1;`; 
+
+            // preparo do array com dados que serão atualizados
+            const values = [equip_id]; 
+
+            //executa a query
+            const equipamento = await db.query(sql, values); 
+            console.log('Resultado da query:', equipamento);
+
+            //verifica se ha dados retornados
+            const nItens = equipamento[0].length;
+
+            return response.status(200).json({
+                sucesso: true, 
+                mensagem: 'Ultimas informacoes do equipamento.', 
+                dados: equipamento[0], 
+                nItens                 
+            });
+
+        } catch (error) {
+            console.error('Erro na função listarDadosUltimaComunicacao:', error.message);
+            return response.status(500).json({
+                sucesso: false, 
+                mensagem: 'Erro na requisição.', 
+                dados: error.message
+            });
+        }
     }
 
 

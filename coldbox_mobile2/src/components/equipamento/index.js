@@ -8,6 +8,7 @@ export default function Equipamento({id_usuario, id_cliente}) {
 
     const [equipamentos, setEquipamentos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [extraData, setExtraData] = useState({}); // Armazena dados adicionais por equipamento
 
     useEffect(() => {
         const fetchData = async () => {
@@ -30,7 +31,7 @@ export default function Equipamento({id_usuario, id_cliente}) {
                 setLoading(false);
 
             } catch (error) {
-                alert('Erro ao buscar os dados');
+                //alert('Erro ao buscar os dados');
                 setLoading(false);
             }
         };
@@ -47,23 +48,45 @@ export default function Equipamento({id_usuario, id_cliente}) {
 
     }, [id_cliente]);
 
+
+    const fetchExtraData = async (equip_id) => {
+
+        try {
+            const response = await fetch(`http://127.0.0.1:3333/equipamento/dadosUltimaComunicacao/${equip_id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro na requisição');
+            }
+
+            const data = await response.json();
+
+            setExtraData(prevState => ({
+                ...prevState,
+                [equip_id]: data // Armazena os dados específicos de cada equipamento pelo seu ID
+            }));
+
+        } catch (error) {
+            console.error(`Erro ao buscar dados adicionais para o equipamento ${equip_id}:`, error);
+        }
+    };
+
+    useEffect(() => {
+        // Faz uma requisição para cada equipamento
+        equipamentos.forEach(item => {
+            fetchExtraData(item.equip_id);
+        });
+    }, [equipamentos]);
+
+
     if (loading) {
         return <ActivityIndicator size="large" color="#0000ff" />;
     }
 
-    /*
-
-            {
-            "local_id": 3,
-            "equip_id": 3,
-            "local_nome": "CAMERA PEIXE",
-            "local_descricao": "CAMERA COM PEIXE",
-            "equip_modelo": "ESP8266",
-            "equip_observacao": null
-        }
-    
-    
-    */
 
     return (
         <View>
@@ -77,7 +100,12 @@ export default function Equipamento({id_usuario, id_cliente}) {
                     <View style={styles.equipamentoInfo}>
                         <Text>Local: {item.local_nome}</Text> {/* Exibindo o nome do equipamento */}
                         <Text>{item.local_descricao}</Text> {/* Exibindo o local */}
-                        <Text>Ult. Comunicação: #verificar</Text> {/* Exibindo a última comunicação */}
+                        <Text>Id: {item.equip_id}</Text> {/* Exibindo o id do equipamento*/}
+
+
+                        {/* Exibindo dados da segunda requisição */}
+                        <Text>Extra Info: {extraData[item.equip_id]?.infoAdicional || 'Carregando...'}</Text>
+
                     </View>
                     <View style={styles.equipamentoStatus}>
                         <Text style={styles.textoSimples}>5</Text> {/* Exibindo notificacoes */}

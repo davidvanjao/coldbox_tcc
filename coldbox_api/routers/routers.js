@@ -54,6 +54,9 @@ router.delete('/equipamento/:equip_id', EquipamentoController.apagar);
 //traz os equipamentos da empresa
 router.get('/equipamento/dadosEquipamentoEmpresa/:cli_id', EquipamentoController.listarDadosEquipamentoEmpresa); 
 
+//traz a ultima comunicacao com o equipamento
+router.get('/equipamento/dadosUltimaComunicacao/:equip_id', EquipamentoController.listarDadosUltimaComunicacao); 
+
 router.get('/parametro', ParametroController.listar); 
 router.post('/parametro',ParametroController.cadastrar); 
 router.patch('/parametro/:param_id', ParametroController.editar); 

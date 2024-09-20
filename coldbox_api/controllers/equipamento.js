@@ -142,6 +142,53 @@ module.exports = {
                 dados: error.message
             });
         }
+    },
+
+    //traz os equipamentos da empresa
+    async listarDadosEquipamentoEmpresa(request, response) {
+        try {
+
+            // parâmetro recebido pela URL via params ex: /usuario/1
+            const { cli_id } = request.params; 
+
+            // instruções SQL
+            const sql = `SELECT a.local_id, a.equip_id, b.local_nome, b.local_descricao, c.equip_modelo, c.equip_observacao
+            FROM
+                novo_equipamento_local a,
+                novo_local b,
+                novo_equipamento c  
+            WHERE
+                a.local_id = b.local_id
+            AND a.equip_id = c.equip_id
+            AND b.cli_id = ?;`; 
+
+            // preparo do array com dados que serão atualizados
+            const values = [cli_id]; 
+
+            //executa a query
+            const equipamento = await db.query(sql, values); 
+            console.log('Resultado da query:', equipamento);
+
+            //verifica se ha dados retornados
+            const nItens = equipamento[0].length;
+
+            return response.status(200).json({
+                sucesso: true, 
+                mensagem: 'Equipamento.', 
+                dados: equipamento[0], 
+                nItens                 
+            });
+
+        } catch (error) {
+            console.error('Erro na função listarDadosEquipamentoEmpresa:', error.message);
+            return response.status(500).json({
+                sucesso: false, 
+                mensagem: 'Erro na requisição.', 
+                dados: error.message
+            });
+        }
     }
+
+
 }
 

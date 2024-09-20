@@ -12,7 +12,7 @@ export default function Equipamento({id_usuario, id_cliente}) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://127.0.0.1:3333/equipamento/${id_cliente}`, {
+                const response = await fetch(`http://127.0.0.1:3333/equipamento/dadosEquipamentoEmpresa/${id_cliente}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -45,11 +45,25 @@ export default function Equipamento({id_usuario, id_cliente}) {
         //Limpa o intervalo ao desmontar o componente
         return () => clearInterval(intervalId);
 
-    }, []);
+    }, [id_cliente]);
 
     if (loading) {
         return <ActivityIndicator size="large" color="#0000ff" />;
     }
+
+    /*
+
+            {
+            "local_id": 3,
+            "equip_id": 3,
+            "local_nome": "CAMERA PEIXE",
+            "local_descricao": "CAMERA COM PEIXE",
+            "equip_modelo": "ESP8266",
+            "equip_observacao": null
+        }
+    
+    
+    */
 
     return (
         <View>
@@ -61,9 +75,9 @@ export default function Equipamento({id_usuario, id_cliente}) {
                     onPress={() => props.navigation.navigate('InfoEquipamento', { equipamentoId: item.equip_id })}
                 >
                     <View style={styles.equipamentoInfo}>
-                        <Text>Equip: {item.equip_nome}</Text> {/* Exibindo o nome do equipamento */}
-                        <Text>Local: {item.loc_razaoSocial}</Text> {/* Exibindo o local */}
-                        <Text>Ult. Comunicação: {item.dados_data}</Text> {/* Exibindo a última comunicação */}
+                        <Text>Local: {item.local_nome}</Text> {/* Exibindo o nome do equipamento */}
+                        <Text>{item.local_descricao}</Text> {/* Exibindo o local */}
+                        <Text>Ult. Comunicação: #verificar</Text> {/* Exibindo a última comunicação */}
                     </View>
                     <View style={styles.equipamentoStatus}>
                         <Text style={styles.textoSimples}>5</Text> {/* Exibindo notificacoes */}

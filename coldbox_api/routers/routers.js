@@ -20,9 +20,8 @@ router.delete('/usuarios/:user_id', UsuariosController.apagar);
 router.post('/usuarios/login', UsuariosController.login); //USADO PARA VERIFICAR DADOS DE LOGIN
 router.get('/usuarios/dadosUsuario/:user_id', UsuariosController.listarDadosUsuario); //Buscar um usuário especifico pelo ID
 
-//novo - ok 
+//traz nome de usuario e nome da empresa - ok 
 router.get('/usuarios/dadosUsuarioEmpresa/:user_id', UsuariosController.listarDadosUsuarioEmpresa); 
-
 
 
 router.get('/nivel_acesso', NivelAcessoController.listar); 
@@ -51,6 +50,9 @@ router.get('/equipamento', EquipamentoController.listar);
 router.post('/equipamento',EquipamentoController.cadastrar); 
 router.patch('/equipamento/:equip_id', EquipamentoController.editar); 
 router.delete('/equipamento/:equip_id', EquipamentoController.apagar); 
+
+//traz os equipamentos da empresa
+router.get('/equipamento/dadosEquipamentoEmpresa/:cli_id', EquipamentoController.listarDadosEquipamentoEmpresa); 
 
 router.get('/parametro', ParametroController.listar); 
 router.post('/parametro',ParametroController.cadastrar); 

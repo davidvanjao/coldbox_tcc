@@ -20,7 +20,7 @@ router.delete('/usuarios/:user_id', UsuariosController.apagar);
 router.post('/usuarios/login', UsuariosController.login); //USADO PARA VERIFICAR DADOS DE LOGIN
 router.get('/usuarios/dadosUsuario/:user_id', UsuariosController.listarDadosUsuario); //Buscar um usuário especifico pelo ID
 
-//router.get('/usuarios/:user_id', UsuariosController.listarDadosUsuario); 
+//novo - ok 
 router.get('/usuarios/dadosUsuarioEmpresa/:user_id', UsuariosController.listarDadosUsuarioEmpresa); 
 
 

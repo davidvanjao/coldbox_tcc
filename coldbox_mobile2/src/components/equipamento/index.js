@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, Pressable } from 'react-native';
 import styles from './styles';
 
-export default function Equipamento(usuario) {
+export default function Equipamento({id_usuario, id_cliente}) {
 
-    console.log(usuario);
-
+    console.log(id_usuario);
 
     const [equipamentos, setEquipamentos] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -13,7 +12,7 @@ export default function Equipamento(usuario) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://127.0.0.1:3333/equipamento', {
+                const response = await fetch(`http://127.0.0.1:3333/equipamento/${id_cliente}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

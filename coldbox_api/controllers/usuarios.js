@@ -178,6 +178,7 @@ module.exports = {
         }
     },
     
+    //NOVO - TRAZ NOME DE USUARIO E NOME EMPRESA - ok
     async listarDadosUsuarioEmpresa(request, response) {
         try {
 

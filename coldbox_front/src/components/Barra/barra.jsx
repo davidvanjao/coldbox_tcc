@@ -16,20 +16,50 @@ const BarraSuperior = () => {
   const [sobrenome, setSobrenome] =useState(''); //Armazena o sobrenome
   const [email, setEmail] = useState('') //Armazen o email
   const [telefone, setTelefone] = useState('') //Armazena o telefone
-  const [userId, setUserId] = useState(null); //Armazena o user_id
+  const [empresa, setEmpresaNome] = useState('') //Armazena os dados da empresa
   const [senha, setSenha] = useState(''); //Armazena ouser_senha
   const [nivelId, setNivelId] = useState(''); //Armazena o nivel_id
+  const [userId, setUserId] = useState(null); //Armazena o user_id
   
+
   useEffect(() => {
-    //Pegar o nome de usuario e o ID do localStorage
+    // Pegar o nome de usuário e o ID do localStorage
     const storedUserName = localStorage.getItem('userName');
-    const storedUserId = localStorage.getItem('userId'); //Armazena o user_id
+    const storedUserId = localStorage.getItem('userId'); // Armazena o user_id
     if (storedUserName) {
       setUserName(storedUserName);
     }
     if (storedUserId) {
       setUserId(storedUserId);
     }
+    console.log('Buscando dados do usuário com ID:', storedUserId); // Debug
+
+
+    // Chamar a API para buscar dados do usuário e da empresa
+    const fetchUserData = async () => {
+      try {
+        if (!storedUserId) {
+          console.error('ID de usuário não encontrado.');
+          return;
+        }
+
+        // Chamar a API para buscar dados do usuário e empresa
+        const response = await axios.get(`http://127.0.0.1:3333/usuarios/dadosUsuarioEmpresa/${storedUserId}`);
+        console.log('Resposta completa da API:', response.data);
+
+        if (response.data.sucesso && response.data.dados.length > 0) {
+          const { cli_razaoSocial } = response.data.dados[0]; // Acessar o primeiro item do array
+          console.log('Nome da empresa:', cli_razaoSocial); // Exibir o nome da empresa
+          setEmpresaNome(cli_razaoSocial); // Definir o nome da empresa 
+        } else {
+          console.error('Erro ao buscar dados do usuário e empresa.');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar dados do usuário e empresa:', error);
+      }
+    };
+
+    fetchUserData();
   }, []);
 
 
@@ -121,11 +151,10 @@ const BarraSuperior = () => {
     }
   };
 
-
   return (
     <div className='barraSuperior'>
         <div className='nomeEmpresa'>
-            <h1>Supermercado Gaspar</h1>
+          <h1>{empresa || 'Empresa Desconhecida'}</h1>
                 <div className='tagsInformacao'>
                     <span className='tag'>Ambiente Refrigerado</span>
                     <span className='tag'>MEGA2560</span>

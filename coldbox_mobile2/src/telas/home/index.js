@@ -67,7 +67,10 @@ export default function Home({ route }) {
         <View style={styles.container}>
             <Text style={styles.textoSimples}>Usuário: {dadosUsuario[0].user_nome}</Text>
             <Text style={styles.textoSimples}>Empresa: {dadosUsuario[0].cli_razaoSocial}</Text>
-            <Equipamento usuario={token} />
+            <Equipamento 
+                id_usuario={token} 
+                id_cliente={dadosUsuario[0].cli_id} 
+            />
         </View>
     );
 };

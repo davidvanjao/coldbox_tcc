@@ -14,11 +14,11 @@ const ParametroController = require('../controllers/parametro');
 
 
 router.get('/usuarios', UsuariosController.listar);
-router.get('/usuarios', UsuariosController.listar); 
 router.post('/usuarios', body('user_email').isEmail().withMessage('Por favor, forneça um email válido'),  UsuariosController.cadastrar); 
 router.patch('/usuarios/:user_id', UsuariosController.editar); 
 router.delete('/usuarios/:user_id', UsuariosController.apagar);  
 router.post('/usuarios/login', UsuariosController.login); //USADO PARA VERIFICAR DADOS DE LOGIN
+router.get('/usuarios/dadosUsuario/:user_id', UsuariosController.listarDadosUsuario); //Buscar um usuário especifico pelo ID
 
 //novo - ok 
 router.get('/usuarios/dadosUsuarioEmpresa/:user_id', UsuariosController.listarDadosUsuarioEmpresa); 

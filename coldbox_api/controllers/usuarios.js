@@ -227,4 +227,37 @@ module.exports = {
             });
         }
     },
+
+
+    //Faz a busca do usuário pelo ID
+    async listarDadosUsuario(request, response) {
+        const { user_id } = request.params;  // Obtém o ID do usuário a partir dos parâmetros da URL
+    
+        try {
+          const sql = `SELECT * FROM novo_usuario WHERE user_id = ?`;
+          const [result] = await db.query(sql, [user_id]);
+    
+          if (result.length === 0) {
+            return response.status(404).json({
+              sucesso: false,
+              mensagem: 'Usuário não encontrado',
+            });
+          }
+    
+          return response.status(200).json({
+            sucesso: true,
+            dados: result[0], // Retorna os dados do primeiro (e único) usuário encontrado
+          });
+        } catch (error) {
+          return response.status(500).json({
+            sucesso: false,
+            mensagem: 'Erro ao buscar o usuário',
+            dados: error.message,
+          });
+        }
+      }
 }
+
+
+
+

@@ -120,7 +120,7 @@ const Usuarios = () => {
   const deleteUsuario = async (userId, index) => {
     try {
       // Fazendo a requisição DELETE para a API
-      const response = await axios.delete(`http://10.67.23.19:3333/usuarios/${userId}`);
+      const response = await axios.delete(`http://127.0.0.1:3333/usuarios/${userId}`);
 
       if (response.data.sucesso) {
         // Remover o usuário da lista local apenas se a deleção for bem-sucedida

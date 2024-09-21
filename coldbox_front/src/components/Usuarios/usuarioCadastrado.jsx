@@ -27,7 +27,7 @@ const Usuarios = () => {
 
   async function listarUsuarios() {
     try {
-      const response = await axios.get('http://10.67.23.19:3333/usuarios');
+      const response = await axios.get('http://127.0.0.1:3333/usuarios');
 
       if (response.data.sucesso) {
         setUsuarios(response.data.dados);
@@ -97,7 +97,7 @@ const Usuarios = () => {
   // Adiciona um novo usuário e faz requisição para a API
   const addUsuario = async () => {
     try {
-      const response = await axios.post('http://10.67.23.19:3333/usuarios', newUser);
+      const response = await axios.post('http://127.0.0.1:3333/usuarios', newUser);
 
       if (response.data.sucesso) {
         setShowModal(false);

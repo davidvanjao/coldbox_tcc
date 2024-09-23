@@ -186,13 +186,15 @@ module.exports = {
             const { user_id } = request.params; 
 
             // instruções SQL
-            const sql = `SELECT a.user_id, a.user_nome,  b.cli_id, b.cli_razaoSocial
+            const sql = `SELECT a.user_id, a.user_nome,  b.cli_id, b.cli_razaoSocial, c.nivel_acesso
             FROM 
                 novo_usuario a,
-                novo_clientes b
+                novo_clientes b,
+                novo_nivel_acesso c
             WHERE 
                 a.user_id = ?
-            AND a.cli_id = b.cli_id;`; 
+            AND a.cli_id = b.cli_id
+            AND a.nivel_id = c.nivel_id;`; 
 
             const values = [user_id];
 

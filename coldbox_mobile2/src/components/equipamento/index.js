@@ -3,9 +3,7 @@ import { View, Text, ActivityIndicator, Pressable } from 'react-native';
 import styles from './styles';
 
 export default function Equipamento({id_usuario, id_cliente}) {
-
-    console.log(id_usuario);
-
+    
     const [equipamentos, setEquipamentos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [extraData, setExtraData] = useState({}); // Armazena dados adicionais por equipamento
@@ -67,7 +65,10 @@ export default function Equipamento({id_usuario, id_cliente}) {
 
             setExtraData(prevState => ({
                 ...prevState,
-                [equip_id]: data // Armazena os dados específicos de cada equipamento pelo seu ID
+                [equip_id]: {
+                    ...data,
+                    horario: data.dados_data
+                }
             }));
 
         } catch (error) {
@@ -104,7 +105,9 @@ export default function Equipamento({id_usuario, id_cliente}) {
 
 
                         {/* Exibindo dados da segunda requisição */}
-                        <Text>Extra Info: {extraData[item.equip_id]?.infoAdicional || 'Carregando...'}</Text>
+                        <Text>Extra Info: {extraData[item.equip_id]?.horario || 'Carregando...'}</Text>
+
+
 
                     </View>
                     <View style={styles.equipamentoStatus}>

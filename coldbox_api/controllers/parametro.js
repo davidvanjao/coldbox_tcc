@@ -5,14 +5,12 @@ module.exports = {
     async listar(request, response) {
         try {
             // instruções SQL
-            const sql = `select a.param_id, a.equip_id, b.equip_nome, b.equip_tipo, a.param_tipo, a.param_valor, a.alerta_id, c.alerta_tipo
-            from 
-                parametro_alerta a,
-                equipamento b,
-                alerta c
-            where
-            a.equip_id = b.equip_id
-            and a.alerta_id = c.alerta_id;`; 
+            const sql = `SELECT * 
+            FROM 
+                novo_equipamento_parametro2 A,
+                novo_equipamento b
+            WHERE 
+                A.equip_id = b.equip_id`; 
 
             //executa instruções SQL e armazena o resultado na variável usuários
             const parametro = await db.query(sql); 

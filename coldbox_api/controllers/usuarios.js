@@ -230,7 +230,6 @@ module.exports = {
         }
     },
 
-
     //Faz a busca do usuário pelo ID
     async listarDadosUsuario(request, response) {
         const { user_id } = request.params;  // Obtém o ID do usuário a partir dos parâmetros da URL
@@ -257,7 +256,7 @@ module.exports = {
             dados: error.message,
           });
         }
-      }
+    }
 }
 
 

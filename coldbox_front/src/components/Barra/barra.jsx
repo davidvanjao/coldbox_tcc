@@ -19,6 +19,7 @@ const BarraSuperior = () => {
   const [empresa, setEmpresaNome] = useState('') //Armazena os dados da empresa
   const [senha, setSenha] = useState(''); //Armazena ouser_senha
   const [nivelId, setNivelId] = useState(''); //Armazena o nivel_id
+  const [nivelAcesso, SetNivelAcesso] = useState('') //Armazena o Nivel de acesso do usuario
   const [userId, setUserId] = useState(null); //Armazena o user_id
   
 
@@ -45,12 +46,13 @@ const BarraSuperior = () => {
 
         // Chamar a API para buscar dados do usuário e empresa
         const response = await axios.get(`http://127.0.0.1:3333/usuarios/dadosUsuarioEmpresa/${storedUserId}`);
-        console.log('Resposta completa da API:', response.data);
+        // console.log('Resposta completa da API:', response.data);
 
         if (response.data.sucesso && response.data.dados.length > 0) {
-          const { cli_razaoSocial } = response.data.dados[0]; // Acessar o primeiro item do array
-          console.log('Nome da empresa:', cli_razaoSocial); // Exibir o nome da empresa
+          const { cli_razaoSocial, nivel_acesso } = response.data.dados[0]; // Acessar os dados
+          // console.log('Nome da empresa:', cli_razaoSocial); // Exibir o nome da empresa
           setEmpresaNome(cli_razaoSocial); // Definir o nome da empresa 
+          SetNivelAcesso(nivel_acesso); //Define o nivel de acesso do usuario
         } else {
           console.error('Erro ao buscar dados do usuário e empresa.');
         }
@@ -168,7 +170,8 @@ const BarraSuperior = () => {
             <img src="/user.png" alt="Usuario" />
               <div>
               <h3>{userName || 'Usuário'}</h3> {/* Exibe o nome recuperado ou 'Usuário' como fallback */}
-                  <span>Administrador</span>
+                  <span>{nivelAcesso || 'NivelAcesso'}</span>
+                  {/* <span>Mobile</span> */}
               </div>
           </div>
             <button className='botaoConfiguracao' onClick={handleOpenModal}>

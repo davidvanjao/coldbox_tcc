@@ -100,5 +100,48 @@ module.exports = {
             });
         }
     }, 
+
+    //traz as notificacoes que nao foram visualizadas
+    async listarNotificacoesEmAberto(request, response) {
+        try {
+
+            // parâmetro recebido pela URL via params ex: /usuario/1
+            const { equip_id } = request.params; 
+
+            // instruções SQL
+            const sql = `SELECT COUNT(alertEnviado_status) as notificacao FROM novo_equipamento_alertas_enviados WHERE equip_id = ? AND alertEnviado_usuario_retorno IS NULL;`; 
+
+            // preparo do array com dados que serão atualizados
+            const values = [equip_id]; 
+
+            //executa a query
+            const equipamento = await db.query(sql, values); 
+            console.log('Resultado da query:', equipamento);
+
+            //verifica se ha dados retornados
+            const nItens = equipamento[0].length;
+
+            return response.status(200).json({
+                sucesso: true, 
+                mensagem: 'Notificações em aberto.', 
+                dados: equipamento[0], 
+                nItens                 
+            });
+
+        } catch (error) {
+            console.error('Erro na função listarNotificacoesEmAberto:', error.message);
+            return response.status(500).json({
+                sucesso: false, 
+                mensagem: 'Erro na requisição.', 
+                dados: error.message
+            });
+        }
+    }
+
+
+
+
+
+
 }
 

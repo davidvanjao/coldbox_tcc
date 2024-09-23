@@ -7,7 +7,22 @@ export default function Equipamento({id_usuario, id_cliente}) {
     const [equipamentos, setEquipamentos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [extraData, setExtraData] = useState({}); // Armazena dados adicionais por equipamento
+    const [notificacaoAberto, setnotificacaoAberto] = useState({}); // Armazena dados adicionais por equipamento
 
+    //funcao para formatar data
+    const formatarDataHoraBrasileira = (dataString) => {
+        const data = new Date(dataString);
+        return data.toLocaleString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        });
+    };
+
+    //tras os equipamentos
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -46,7 +61,7 @@ export default function Equipamento({id_usuario, id_cliente}) {
 
     }, [id_cliente]);
 
-
+    //tras a ultima comunicacao
     const fetchExtraData = async (equip_id) => {
 
         try {
@@ -67,7 +82,37 @@ export default function Equipamento({id_usuario, id_cliente}) {
                 ...prevState,
                 [equip_id]: {
                     ...data,
-                    horario: data.dados_data
+                    horario: data.dados[0].dados_data
+                }
+            }));
+
+        } catch (error) {
+            console.error(`Erro ao buscar dados adicionais para o equipamento ${equip_id}:`, error);
+        }
+    };
+
+    //tras a ultima comunicacao
+    const fetchNotificacaoAberto = async (equip_id) => {
+
+        try {
+            const response = await fetch(`http://127.0.0.1:3333/equipamento/dadosUltimaComunicacao/${equip_id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro na requisição');
+            }
+
+            const data = await response.json();
+
+            setExtraData(prevState => ({
+                ...prevState,
+                [equip_id]: {
+                    ...data,
+                    horario: data.dados[0].dados_data
                 }
             }));
 
@@ -84,10 +129,10 @@ export default function Equipamento({id_usuario, id_cliente}) {
     }, [equipamentos]);
 
 
+
     if (loading) {
         return <ActivityIndicator size="large" color="#0000ff" />;
     }
-
 
     return (
         <View>
@@ -103,11 +148,10 @@ export default function Equipamento({id_usuario, id_cliente}) {
                         <Text>{item.local_descricao}</Text> {/* Exibindo o local */}
                         <Text>Id: {item.equip_id}</Text> {/* Exibindo o id do equipamento*/}
 
-
-                        {/* Exibindo dados da segunda requisição */}
-                        <Text>Extra Info: {extraData[item.equip_id]?.horario || 'Carregando...'}</Text>
-
-
+                        {/* Exibindo o horário formatado */}
+                        <Text>Horário: {extraData[item.equip_id]?.horario 
+                            ? formatarDataHoraBrasileira(extraData[item.equip_id].horario) 
+                            : 'Carregando...'}</Text>
 
                     </View>
                     <View style={styles.equipamentoStatus}>

@@ -8,6 +8,7 @@ select * from novo_usuario;
 select * from novo_equipamento_local;/*liga local com equipamento*/
 select * from novo_equipamento_dados;/*relaciona dados com equipamento*/
 select * from novo_equipamento_parametro;/*parametros definidos para cada equipamento*/
+select * from novo_equipamento_parametro2;/*parametros definidos para cada equipamento---NOVO*/
 select * from novo_equipamento_alertas_enviados; /*alertas enviados e esperando acao do usuario*/
 
 select * from alerta;
@@ -32,11 +33,23 @@ CREATE TABLE `novo_equipamento_alertas_enviados` (
   PRIMARY KEY (`alertEnviado_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
+ALTER TABLE novo_equipamento_alertas_enviados ADD COLUMN nivel_data datetime DEFAULT CURRENT_TIMESTAMP;
+
 CREATE TABLE `novo_equipamento_parametro` (
   `param_id` int(11) NOT NULL AUTO_INCREMENT,
   `param_interface` varchar(30) DEFAULT NULL,/*tipo de dispositivo. humidade, temperatura, ...*/
   `param_tipo` varchar(30) DEFAULT NULL,/*maximo, minimo*/
   `param_valor` varchar(10) DEFAULT NULL,
+  `param_data` datetime DEFAULT CURRENT_TIMESTAMP,
+  `equip_id` int(11) NOT NULL,
+  PRIMARY KEY (`param_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `novo_equipamento_parametro2` (
+  `param_id` int(11) NOT NULL AUTO_INCREMENT,
+  `param_interface` varchar(30) DEFAULT NULL,/*tipo de dispositivo. humidade, temperatura, ...*/
+  `param_maximo` varchar(10) DEFAULT NULL,/*maximo*/
+  `param_minimo` varchar(10) DEFAULT NULL,/*minimo*/
   `param_data` datetime DEFAULT CURRENT_TIMESTAMP,
   `equip_id` int(11) NOT NULL,
   PRIMARY KEY (`param_id`)

@@ -41,6 +41,9 @@ router.get('/logs', LogsController.listar);
 router.post('/logs', LogsController.cadastrar); 
 router.patch('/logs/:logs_id', LogsController.editar); 
 
+//traz notificacoes em aberto
+router.get('/logs/listarNotificacoesEmAberto/:cli_id', LogsController.listarNotificacoesEmAberto); 
+
 router.get('/localizacao', LocalizacaoController.listar); 
 router.post('/localizacao', LocalizacaoController.cadastrar); 
 router.patch('/localizacao/:loc_id', LocalizacaoController.editar); 

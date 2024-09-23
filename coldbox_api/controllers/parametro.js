@@ -2,7 +2,7 @@ const { json } = require('express');
 const db = require('../database/connection'); 
 
 module.exports = {
-    async listar(request, response) {
+    async listar(request, response) { /*atualizado - 23/09*/
         try {
             // instruções SQL
             const sql = `SELECT * 

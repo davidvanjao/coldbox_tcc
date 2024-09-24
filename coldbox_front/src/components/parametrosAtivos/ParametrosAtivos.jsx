@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Ou você pode usar fetch
+import axios from 'axios'; 
 import styles from './ParametrosAtivos.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const ParametrosAtivos = () => {
   const [equipments, setEquipments] = useState([]);
+  const [allModels, setAllModels] = useState([]); // Para armazenar todos os modelos de equipamentos
   const [isEditing, setIsEditing] = useState(false);
   const [currentEquipment, setCurrentEquipment] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState(null);
-  const [newEquipment, setNewEquipment] = useState({
-    equipamento: '',
-    nomeAtivo: '',
-    tempMin: '',
-    tempMax: '',
+  const [newParameter, setNewParameter] = useState({
+    equip_id: '', // Alteramos o nome para equip_id
+    param_interface: '',
+    param_minimo: '',
+    param_maximo: '',
     data: '',
   });
 
@@ -22,76 +23,88 @@ const ParametrosAtivos = () => {
   useEffect(() => {
     const fetchEquipments = async () => {
       try {
-        const response = await axios.get('/api/parametros'); // Substitua pela sua URL correta
-        setEquipments(response.data.dados); // Use os dados da resposta
+        const response = await axios.get('http://127.0.0.1:3333/parametro');
+        if (response.data.sucesso) {
+          setEquipments(response.data.dados);
+        } else {
+          setError('Erro ao carregar os equipamentos.');
+        }
       } catch (error) {
-        console.error('Erro ao buscar equipamentos:', error);
+        setError('Erro ao buscar equipamentos.');
+      }
+    };
+
+    const fetchAllModels = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:3333/equipamentos'); // Supondo que você tenha essa rota para obter todos os modelos
+        if (response.data.sucesso) {
+          setAllModels(response.data.dados); // Armazena todos os modelos de equipamentos
+        } else {
+          setError('Erro ao carregar os modelos de equipamentos.');
+        }
+      } catch (error) {
+        setError('Erro ao buscar modelos de equipamentos.');
       }
     };
 
     fetchEquipments();
+    fetchAllModels(); // Chama a função para buscar todos os modelos
   }, []);
 
-  // Função para deletar um equipamento
+  // Função para deletar um parâmetro
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/parametros/${id}`); // Substitua pela sua URL correta
+      await axios.delete(`http://127.0.0.1:3333/parametro/${id}`);
       setEquipments(equipments.filter((equipment) => equipment.param_id !== id));
     } catch (error) {
-      console.error('Erro ao deletar equipamento:', error);
+      console.error('Erro ao deletar parâmetro:', error);
     }
   };
 
-  // Função para iniciar a edição de um equipamento
-  const handleEdit = (equipment) => {
-    setCurrentEquipment(equipment);
+  // Função para iniciar a edição de um parâmetro
+  const handleEdit = (parameter) => {
+    setCurrentEquipment(parameter);
     setIsEditing(true);
     setShowModal(true);
   };
 
-  // Função para iniciar a adição de um novo equipamento
+  // Função para iniciar a adição de um novo parâmetro
   const handleAdd = () => {
     setIsEditing(false);
     setShowModal(true);
   };
 
-  // Função para adicionar um novo equipamento e enviar para a API
-  const addEquipment = async () => {
+  // Função para adicionar um novo parâmetro e enviar para a API
+  const addParameter = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:3333/parametros', newEquipment); // Substitua pela sua URL correta
-
+      const response = await axios.post('http://127.0.0.1:3333/parametro', newParameter);
       if (response.data.sucesso) {
         setShowModal(false);
-        setEquipments([...equipments, response.data.dados]); // Atualiza a lista de equipamentos
-        setNewEquipment({
-          equipamento: '',
-          nomeAtivo: '',
-          tempMin: '',
-          tempMax: '',
-          data: '',
-        });
+        setEquipments([...equipments, response.data.dados]); // Atualiza a lista de parâmetros
+        resetForm();
+      } else {
+        setError('Erro ao adicionar parâmetro');
       }
     } catch (error) {
-      setError('Erro ao adicionar equipamento');
-      console.error(error);
+      setError('Erro ao adicionar parâmetro');
     }
   };
 
-  // Função para salvar um novo equipamento ou atualizar um existente
+  // Função para salvar um novo parâmetro ou atualizar um existente
   const handleSave = async () => {
     if (isEditing) {
       try {
-        await axios.put(`/api/parametros/${currentEquipment.param_id}`, currentEquipment); // Substitua pela sua URL correta
+        await axios.put(`http://127.0.0.1:3333/parametro/${currentEquipment.param_id}`, currentEquipment);
         setEquipments(
           equipments.map((item) =>
             item.param_id === currentEquipment.param_id ? currentEquipment : item
           )
         );
       } catch (error) {
-        console.error('Erro ao editar equipamento:', error);
+        console.error('Erro ao editar parâmetro:', error);
       }
     } else {
-      addEquipment(); // Chama a função de adicionar novo equipamento
+      addParameter(); // Chama a função de adicionar novo parâmetro
     }
     setShowModal(false);
     resetForm();
@@ -103,17 +116,17 @@ const ParametrosAtivos = () => {
     if (isEditing) {
       setCurrentEquipment({ ...currentEquipment, [name]: value });
     } else {
-      setNewEquipment({ ...newEquipment, [name]: value });
+      setNewParameter({ ...newParameter, [name]: value });
     }
   };
 
   // Função para resetar o formulário após adicionar/editar
   const resetForm = () => {
-    setNewEquipment({
-      equipamento: '',
-      nomeAtivo: '',
-      tempMin: '',
-      tempMax: '',
+    setNewParameter({
+      equip_id: '',
+      param_interface: '',
+      param_minimo: '',
+      param_maximo: '',
       data: '',
     });
     setCurrentEquipment(null);
@@ -124,7 +137,7 @@ const ParametrosAtivos = () => {
       <div className={styles.header}>
         <h2>Parâmetros Ativos</h2>
         <button className={styles.addButton} onClick={handleAdd}>
-          Adicionar Equipamento
+          Adicionar Parâmetro
         </button>
       </div>
       <table className={styles.table}>
@@ -145,12 +158,11 @@ const ParametrosAtivos = () => {
               <td className={styles.td}>
                 <div className={styles.circularButton}></div>
               </td>
-              <td className={styles.td}>{item.equipamento}</td>
-              <td className={styles.td}>{item.nomeAtivo}</td>
-              <td className={styles.td}>{item.tempMin}</td>
-              <td className={styles.td}>{item.tempMax}</td>
+              <td className={styles.td}>{item.equip_modelo}</td>
+              <td className={styles.td}>{item.param_interface}</td>
+              <td className={styles.td}>{item.param_minimo}</td>
+              <td className={styles.td}>{item.param_maximo}</td>
               <td className={styles.td}>{item.data}</td>
-
               <td className={styles.td}>
                 <button
                   className={styles.actionButton}
@@ -173,41 +185,63 @@ const ParametrosAtivos = () => {
       {showModal && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <h3>{isEditing ? 'Editar Equipamento' : 'Novo Equipamento'}</h3>
-            {error && <p className={styles.error}>{error}</p>} {/* Exibir erro se houver */}
+            <h3>{isEditing ? 'Editar Parâmetro' : 'Novo Parâmetro'}</h3>
+            {error && <p className={styles.error}>{error}</p>}
+            
+                        
+            {/* <label htmlFor="nivel_id">Nível de Acesso</label>
+            <select
+              name="nivel_id" // Nível de Acesso
+              id="nivel_id"
+              value={newUser.nivel_id}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="">Selecione o Nível</option>
+              <option value="1">ADMINISTRADOR</option>
+              <option value="2">USUARIO</option>
+              <option value="3">MOBILE</option>
+            </select> */}
+
+
+            <select
+              name="equip_id"
+              value={isEditing ? currentEquipment?.equip_id : newParameter.equip_id}
+              onChange={handleChange}
+            >
+              <option value="">Selecione um Equipamento</option>
+              {allModels.map((model) => (
+                <option key={model.equip_id} value={model.equip_modelo}>
+                  {model.equip_modelo}
+                </option>
+              ))}
+            </select>
+
             <input
               type="text"
-              name="equipamento"
-              placeholder="Equipamento"
-              value={isEditing ? currentEquipment?.equipamento : newEquipment.equipamento}
+              name="param_interface"
+              placeholder="Nome/Interface"
+              value={isEditing ? currentEquipment?.param_interface : newParameter.param_interface}
               onChange={handleChange}
             />
             <input
               type="text"
-              name="nomeAtivo"
-              placeholder="Nome/Ativo"
-              value={isEditing ? currentEquipment?.nomeAtivo : newEquipment.nomeAtivo}
-              onChange={handleChange}
-            />
-            <input
-              type="text"
-              name="tempMin"
+              name="param_minimo"
               placeholder="Temp. Min"
-              value={isEditing ? currentEquipment?.tempMin : newEquipment.tempMin}
+              value={isEditing ? currentEquipment?.param_minimo : newParameter.param_minimo}
               onChange={handleChange}
             />
             <input
               type="text"
-              name="tempMax"
+              name="param_maximo"
               placeholder="Temp. Máx"
-              value={isEditing ? currentEquipment?.tempMax : newEquipment.tempMax}
+              value={isEditing ? currentEquipment?.param_maximo : newParameter.param_maximo}
               onChange={handleChange}
             />
             <input
-              type="text"
+              type="date"
               name="data"
-              placeholder="Data"
-              value={isEditing ? currentEquipment?.data : newEquipment.data}
+              value={isEditing ? currentEquipment?.data : newParameter.data}
               onChange={handleChange}
             />
             <button className={styles.saveButton} onClick={handleSave}>

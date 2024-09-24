@@ -36,13 +36,13 @@ module.exports = {
     async cadastrar(request, response) {
         try {
             // parâmetros recebidos no corpo da requisição
-            const { equip_id, param_tipo, param_valor, alerta_id } = request.body;
+            const { param_interface, param_maximo, param_minimo, equip_id } = request.body;
 
             // instrução SQL
-            const sql = `INSERT INTO parametro_alerta (equip_id, param_tipo, param_valor, alerta_id) VALUES (?, ?, ?, ?)`;
+            const sql = `INSERT INTO novo_equipamento_parametro2 (param_interface, param_maximo, param_minimo, equip_id) VALUES (?, ?, ?, ?);`;
 
             // definição dos dados a serem inseridos em um array
-            const values = [equip_id, param_tipo, param_valor, alerta_id];  
+            const values = [param_interface, param_maximo, param_minimo, equip_id];  
 
             // execução da instrução sql passando os parâmetros
             const execSql = await db.query(sql, values); 
@@ -58,7 +58,7 @@ module.exports = {
         } catch (error) {
             return response.status(500).json({
                 sucesso: false, 
-                mensagem: 'Erro na requisição.', 
+                mensagem: 'Erro no cadastro do parametro.', 
                 dados: error.message
             });
         }

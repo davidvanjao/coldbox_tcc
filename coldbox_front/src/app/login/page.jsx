@@ -7,42 +7,51 @@ import axios from 'axios';
 
 export default function Login() {
   const searchParams = useSearchParams();
-  const emailSent = searchParams.get('emailSent');
-  const [showMessage, setShowMessage] = useState(false);
-  const [loginInput, setLoginInput] = useState('');  // Estado para o campo de email ou username
-  const [senha, setSenha] = useState('');  // Estado para o campo de senha
-  const [error, setError] = useState('');
-  const router = useRouter();  // Usado para redirecionamento após o login
+  const emailSent = searchParams.get('emailSent'); 
+  const [showMessage, setShowMessage] = useState(false); 
+  const [loginInput, setLoginInput] = useState(''); 
+  const [senha, setSenha] = useState(''); 
+  const [error, setError] = useState('');  
+  const router = useRouter(); 
 
-  // Função para verificar se o input é um email
-  const isEmail = (value) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  // Expressão regular para validar email
-    return emailRegex.test(value);
-  };
+  //Verifica se o input é um e-mail
+  const isEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
-  // Função para efetuar login
+  //Função para efetuar login e buscar dados do usuário e empresa
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setError('');  // Limpa qualquer mensagem de erro anterior
+    e.preventDefault(); //Evita comportamento padrão do formulário
+    setError(''); // impa qualquer erro anterior
 
     try {
-      const loginField = isEmail(loginInput) ? 'user_email' : 'user_nome';  // Determina se é email ou username
+      const loginField = isEmail(loginInput) ? 'user_email' : 'user_nome'; //Verifica se o campo é um email ou nome de usuário
 
+      //Requisição para realizar login
       const response = await axios.post('http://127.0.0.1:3333/usuarios/login', {
-        [loginField]: loginInput,  // Envia o dado dinamicamente (email ou username)
-        user_senha: senha
+        [loginField]: loginInput,
+        user_senha: senha,
       });
 
       if (response.data.sucesso) {
-        //Salvar o nome de usuario para utilizar na tela principal
-        localStorage.setItem('userName', response.data.dados[0].user_nome);
-        localStorage.setItem('userId', response.data.dados[0].user_id);
+        const { user_id, user_nome } = response.data.dados[0];
 
+        //Armazena o nome e o ID do usuário no localStorage
+        localStorage.setItem('userName', user_nome);
+        localStorage.setItem('userId', user_id);
 
-        //Redireciona para a página de tempo real se o login for bem-sucedido
-        router.push('/tempoReal');
+        //Requisição para buscar o cli_id da empresa associada ao usuário
+        const empresaResponse = await axios.get(`http://127.0.0.1:3333/usuarios/dadosUsuarioEmpresa/${user_id}`);
+        if (empresaResponse.data.sucesso) {
+          const cliId = empresaResponse.data.dados[0].cli_id;
+
+          //Armazena o cli_id no localStorage
+          localStorage.setItem('cli_id', cliId);
+
+          //Redireciona para a página de Tempo Real após login bem-sucedido
+          router.push('/tempoReal');
+        } else {
+          setError('Erro ao buscar os dados da empresa.');
+        }
       } else {
-        // Exibe mensagem de erro se as credenciais estiverem incorretas
         setError('Login ou senha inválidos.');
       }
     } catch (error) {
@@ -62,22 +71,22 @@ export default function Login() {
           <span>ColdBox</span>
         </div>
 
+        {/* Mensagem de confirmação de e-mail enviado */}
         {showMessage && (
           <div className={styles.caixaMensagem}>
             <span className={styles.iconeVisto}>✔️</span>
-            <span>
-              Um e-mail foi enviado para <strong>{emailSent}</strong> para realizar a alteração da senha.
-            </span>
+            <span>Um e-mail foi enviado para <strong>{emailSent}</strong> para redefinir a senha.</span>
           </div>
         )}
 
+        {/* Formulário de login */}
         <form className={styles.formulario} onSubmit={handleLogin}>
           <input
             type="text"
             placeholder="Email ou Usuário"
             className={styles.inputCaixa}
             value={loginInput}
-            onChange={(e) => setLoginInput(e.target.value)}  // Atualiza o estado com o email ou username
+            onChange={(e) => setLoginInput(e.target.value)}  //Atualiza o campo de email ou username
             required
           />
           <input
@@ -85,13 +94,14 @@ export default function Login() {
             placeholder="Senha"
             className={styles.inputCaixa}
             value={senha}
-            onChange={(e) => setSenha(e.target.value)}  // Atualiza o estado com a senha
+            onChange={(e) => setSenha(e.target.value)}  //Atualiza o campo de senha
             required
           />
           <button type="submit" className="botaoEntrar">Entrar</button>
         </form>
 
-        {error && <div className={styles.error}>{error}</div>}  {/* Exibe mensagem de erro */}
+        {/* Exibe mensagem de erro, se houver */}
+        {error && <div className={styles.error}>{error}</div>}
 
         <div className={styles.extras}>
           <span>Ajuda</span>

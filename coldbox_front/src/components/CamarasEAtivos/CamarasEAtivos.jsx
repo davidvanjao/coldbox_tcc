@@ -38,25 +38,28 @@ const CamarasEAtivos = () => {
   
   // useEffect para buscar o cli_id do localStorage e carregar os dados
   useEffect(() => {
-
-    
-    const storedCliId = localStorage.getItem('cli_id'); // Recupera o cli_id do localStorage
+    // Função para buscar o cli_id do localStorage
+    const storedCliId = localStorage.getItem('cli_id');
+  
     if (storedCliId) {
-      setCliId(storedCliId); // Define o cli_id no estado
-      fetchEquipamentoDados(storedCliId); // Faz a requisição com o cli_id
+      setCliId(storedCliId);
+      fetchEquipamentoDados(storedCliId); // Faz a requisição quando o cli_id estiver disponível
+    } else {
+      console.error('cli_id não encontrado no localStorage');
     }
   }, []);
-
-  // Atualizar os dados a cada 1 minuto
+  
   useEffect(() => {
-    fetchEquipamentoDados(); // Carrega os dados inicialmente
-
-    const interval = setInterval(() => {
-      fetchEquipamentoDados(); // Faz a requisição a cada 1 minuto
-    }, 60000); // 60000 ms = 1 minuto
-
-    return () => clearInterval(interval); // Limpa o intervalo quando o componente não estiver sendo renderizado na tela
-  }, [cliId]);
+    if (cliId) {
+      const interval = setInterval(() => {
+        fetchEquipamentoDados(cliId); // Faz a requisição a cada 1 minuto com o cli_id correto
+      }, 60000);
+  
+      return () => clearInterval(interval);
+    }
+  }, [cliId]); // A função só será executada quando o cliId estiver disponível
+  
+  
 
   //Função para manipular a mudança das checkboxes
   const handleCheckboxChange = (equipNome) => {

@@ -2,29 +2,25 @@ const { json } = require('express');
 const db = require('../database/connection'); 
 
 module.exports = {
-    async listar(request, response) { /*atualizado - 23/09*/
+    async listar(request, response) { 
         try {
-            // instruções SQL
-            const sql = `SELECT * 
-            FROM 
-                novo_equipamento_parametro2 A,
-                novo_equipamento b
-            WHERE 
-                A.equip_id = b.equip_id`; 
-
-            //executa instruções SQL e armazena o resultado na variável usuários
+            // instruções SQL para buscar o modelo do equipamento
+            const sql = `SELECT A.*, B.equip_modelo 
+                         FROM novo_equipamento_parametro2 A
+                         JOIN novo_equipamento B ON A.equip_id = B.equip_id`;
+    
+            // executa instruções SQL
             const parametro = await db.query(sql); 
             const nItens = parametro[0].length;
-
+    
             return response.status(200).json({
                 sucesso: true, 
-                mensagem: 'Parametro.', 
+                mensagem: 'Parâmetros carregados.', 
                 dados: parametro[0], 
                 nItens                 
             });
-
+    
         } catch (error) {
-            //console.log(error);
             return response.status(500).json({
                 sucesso: false, 
                 mensagem: 'Erro na requisição.', 

@@ -23,16 +23,25 @@
     font-weight: 600;
 }
 
+/* Ajustando o botão de Adicionar Equipamento */
+
+/* Mantendo o nome addButton */
 .addButton {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
-  margin-left: 10px;
-}
+    background-color: #007bff; /* Azul padrão */
+    color: white;
+    border: none;
+    padding: 10px 15px; /* Tamanho adequado do botão */
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 10px;
+  }
+  
+  /* Efeito hover para o botão */
+  .addButton:hover {
+    background-color: #0056b3; /* Cor mais escura no hover */
+  }
+  
 
 .table {
     width: 100%;

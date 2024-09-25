@@ -27,6 +27,8 @@ const NavBarComponent = () => {
         localStorage.removeItem('userName'); // Remove o nome de usuario
         localStorage.removeItem('userId');   // Remove o ID do usuario
         localStorage.removeItem('cli_id');   // Remove o cli_id do usuário
+        localStorage.clear(); // Isso garante que todo o localStorage seja limpo no logout
+
         // Adicione outras limpezas necessárias (por exemplo, tokens de autenticação)
 
         // Redirecionar para a página de login

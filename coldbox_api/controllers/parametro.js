@@ -42,7 +42,7 @@ module.exports = {
         }
     },
 
-    async cadastrar(request, response) {
+    async cadastrar(request, response) { /*atualizado - 24/09*/
         try {
             // parâmetros recebidos no corpo da requisição
             const { param_interface, param_maximo, param_minimo, equip_id } = request.body;

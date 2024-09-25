@@ -6,10 +6,14 @@ select * from novo_nivel_acesso;
 select * from novo_usuario;
 
 select * from novo_equipamento_local;/*liga local com equipamento*/
-select * from novo_equipamento_dados;/*relaciona dados com equipamento*/
+select * from novo_equipamento_dados order by dados_id desc;/*relaciona dados com equipamento*/
 select * from novo_equipamento_parametro;/*parametros definidos para cada equipamento*/
 select * from novo_equipamento_parametro2;/*parametros definidos para cada equipamento---NOVO*/
 select * from novo_equipamento_alertas_enviados; /*alertas enviados e esperando acao do usuario*/
+
+
+/*codigo arduino*/
+INSERT INTO novo_equipamento_dados (dados_temp, equip_id) VALUES (?, ?)
 
 /*traz usuario e razao social*/
 SELECT a.user_id, a.user_nome,  b.cli_id, b.cli_razaoSocial, c.nivel_acesso
@@ -39,6 +43,23 @@ SELECT * FROM novo_equipamento_dados WHERE equip_id = '2' ORDER BY dados_data DE
 /*traz parametros cadastrados por equipamento*/
 SELECT * FROM novo_equipamento_parametro2 A, novo_equipamento B WHERE A.equip_id = b.equip_id;
 
-/*traz notificacoes enviadas e nao atendidas*/
+/*cadastrar novo parametro*/
+INSERT INTO novo_equipamento_parametro2 (param_interface, param_maximo, param_minimo, equip_id) VALUES (?, ?, ?, ?);
+
+/*traz total notificacoes enviadas e nao atendidas*/
 SELECT COUNT(alertEnviado_status) as notificacao FROM novo_equipamento_alertas_enviados WHERE equip_id = '1' AND alertEnviado_usuario_retorno IS NULL;
+
+/*traz notificacoes enviadas e nao atendidas*/
+SELECT A.alertEnviado_id, A.alertEnviado_data, C.alerta_tipo, D.dados_temp, A.alertEnviado_status, A.alertEnviado_usuario_retorno
+FROM 
+	novo_equipamento_alertas_enviados A,
+    novo_equipamento B,
+    novo_alerta C,
+    novo_equipamento_dados D    
+WHERE 
+	A.equip_id = '1' 
+AND A.equip_id = B.equip_id
+AND A.alerta_id = C.alerta_id
+AND A.dados_id = D.dados_id
+AND alertEnviado_usuario_retorno IS NULL;
     

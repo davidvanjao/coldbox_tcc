@@ -189,7 +189,7 @@ module.exports = {
         }
     },
 
-    //traz os equipamentos da empresa
+    //traz a ultima comunicacao com o equipamento
     async listarDadosUltimaComunicacao(request, response) {
         try {
 

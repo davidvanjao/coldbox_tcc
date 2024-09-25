@@ -13,7 +13,6 @@ export default function InfoEquipamento(props) {
 
     return (           
         <View style={styles.container}>
-            <Grafico equipamentoId={equipamentoId} />
             <EquipamentoStatus equipamentoId={equipamentoId} />
         </View>
     );

@@ -2,10 +2,10 @@ const { json } = require('express');
 const db = require('../database/connection'); 
 
 module.exports = {
-    async listar(request, response) {
+    async listar(request, response) {//ok
         try {
             // instruções SQL
-            const sql = `select nivel_id, nivel_acesso, nivel_descricao from nivel_acesso;`; 
+            const sql = `SELECT * FROM novo_nivel_acesso;`; 
 
             //executa instruções SQL e armazena o resultado na variável usuários
             const nivel = await db.query(sql); 
@@ -28,13 +28,13 @@ module.exports = {
         }
     },
 
-    async cadastrar(request, response) {
+    async cadastrar(request, response) {//ok
         try {
             // parâmetros recebidos no corpo da requisição
             const { nivel_acesso, nivel_descricao } = request.body;
 
             // instrução SQL
-            const sql = `INSERT INTO nivel_acesso (nivel_acesso, nivel_descricao) VALUES (?, ?)`;
+            const sql = `INSERT INTO novo_nivel_acesso (nivel_acesso, nivel_descricao) VALUES (?, ?);`;
 
             // definição dos dados a serem inseridos em um array
             const values = [nivel_acesso, nivel_descricao];  

@@ -4,13 +4,48 @@ const {body} = require('express-validator');
 
 //referência a controllers que serão utilizados nas rotas
 const UsuariosController = require('../controllers/usuarios'); 
+const ClienteController = require('../controllers/cliente'); 
 const NivelAcessoController = require('../controllers/nivel_acesso'); 
 const DadosController = require('../controllers/dados'); 
 const AlertaController = require('../controllers/alerta'); 
 const LogsController = require('../controllers/logs'); 
-const LocalizacaoController = require('../controllers/localizacao'); 
+const LocalController = require('../controllers/local'); 
 const EquipamentoController = require('../controllers/equipamento'); 
 const ParametroController = require('../controllers/parametro'); 
+
+router.get('/alerta', AlertaController.listar); //ok
+router.post('/alerta', AlertaController.cadastrar); //ok
+router.patch('/alerta/:alerta_id', AlertaController.editar); //ok
+router.delete('/alerta/:alerta_id', AlertaController.apagar); //ok
+
+
+router.get('/cliente', ClienteController.listar);//ok
+router.post('/cliente', ClienteController.cadastrar); //ok
+router.patch('/cliente/:cli_id', ClienteController.editar); //ok
+
+
+router.get('/equipamento', EquipamentoController.listar); //ok
+router.post('/equipamento',EquipamentoController.cadastrar); //ok
+router.patch('/equipamento/:equip_id', EquipamentoController.editar); //ok
+router.delete('/equipamento/:equip_id', EquipamentoController.apagar); //ok
+//traz os equipamentos da empresa
+router.get('/equipamento/dadosEquipamentoEmpresa/:cli_id', EquipamentoController.listarDadosEquipamentoEmpresa); 
+//traz a ultima comunicacao com o equipamento
+router.get('/equipamento/dadosUltimaComunicacao/:equip_id', EquipamentoController.listarDadosUltimaComunicacao); 
+
+//precisa enviar cli_id
+router.get('/local/:cli_id', LocalController.listar); //ok
+router.post('/local', LocalController.cadastrar); //ok
+router.patch('/local/:loc_id', LocalController.editar); //ok
+router.delete('/local/:local_id', LocalController.apagar); //ok
+
+router.get('/nivel_acesso', NivelAcessoController.listar); 
+router.post('/nivel_acesso', NivelAcessoController.cadastrar); 
+router.patch('/nivel_acesso/:nivel_id', NivelAcessoController.editar); 
+router.delete('/nivel_acesso/:nivel_id', NivelAcessoController.apagar); 
+
+
+
 
 
 router.get('/usuarios', UsuariosController.listar);
@@ -24,18 +59,8 @@ router.get('/usuarios/dadosUsuario/:user_id', UsuariosController.listarDadosUsua
 router.get('/usuarios/dadosUsuarioEmpresa/:user_id', UsuariosController.listarDadosUsuarioEmpresa); 
 
 
-router.get('/nivel_acesso', NivelAcessoController.listar); 
-router.post('/nivel_acesso', NivelAcessoController.cadastrar); 
-router.patch('/nivel_acesso/:nivel_id', NivelAcessoController.editar); 
-router.delete('/nivel_acesso/:nivel_id', NivelAcessoController.apagar); 
-
 router.get('/dados', DadosController.listar); 
 router.post('/dados', DadosController.cadastrar); 
-
-router.get('/alerta', AlertaController.listar); 
-router.post('/alerta', AlertaController.cadastrar); 
-router.patch('/alerta/:alerta_id', AlertaController.editar); 
-router.delete('/alerta/:alerta_id', AlertaController.apagar); 
 
 router.get('/logs', LogsController.listar); 
 router.post('/logs', LogsController.cadastrar); 
@@ -47,21 +72,6 @@ router.get('/logs/listarNotificacoesTotalEmAberto/:equip_id', LogsController.lis
 //traz as notificacoes que nao foram visualizadas
 router.get('/logs/listarNotificacoesNaoVisualizadas/:equip_id', LogsController.listarNotificacoesNaoVisualizadas); 
 
-router.get('/localizacao', LocalizacaoController.listar); 
-router.post('/localizacao', LocalizacaoController.cadastrar); 
-router.patch('/localizacao/:loc_id', LocalizacaoController.editar); 
-router.delete('/localizacao/:loc_id', LocalizacaoController.apagar); 
-
-router.get('/equipamento', EquipamentoController.listar); 
-router.post('/equipamento',EquipamentoController.cadastrar); 
-router.patch('/equipamento/:equip_id', EquipamentoController.editar); 
-router.delete('/equipamento/:equip_id', EquipamentoController.apagar); 
-
-//traz os equipamentos da empresa
-router.get('/equipamento/dadosEquipamentoEmpresa/:cli_id', EquipamentoController.listarDadosEquipamentoEmpresa); 
-
-//traz a ultima comunicacao com o equipamento
-router.get('/equipamento/dadosUltimaComunicacao/:equip_id', EquipamentoController.listarDadosUltimaComunicacao); 
 
 router.get('/parametro', ParametroController.listar); 
 router.post('/parametro',ParametroController.cadastrar); 

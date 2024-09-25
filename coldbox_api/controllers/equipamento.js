@@ -7,11 +7,11 @@ module.exports = {
             // instrução SQL com INNER JOIN para unir as tabelas "equipamento" e "dados"
             const sql = `SELECT 
                             a.equip_id, 
-                            a.equip_nome, 
                             a.equip_modelo, 
-                            a.equip_tipo, 
+                            a.equip_tipo,
+                            a.equip_ip,
+                            a.equip_mac,
                             a.equip_status, 
-                            a.equip_data,
                             a.equip_observacao, 
                             a.loc_id, 
                             b.loc_razaoSocial,
@@ -19,7 +19,7 @@ module.exports = {
                             d.dados_umid,
                             d.dados_data
                     FROM 
-                        equipamento a
+                        novo_equipamento a
                     INNER JOIN
                         localizacao b ON a.loc_id = b.loc_id
                     INNER JOIN
@@ -59,7 +59,7 @@ module.exports = {
             const { equip_nome, equip_modelo, equip_tipo, equip_status, equip_data, equip_observacao, loc_id } = request.body;
 
             // instrução SQL
-            const sql = `INSERT INTO equipamento (equip_nome, equip_modelo, equip_tipo, equip_status, equip_data, equip_observacao, loc_id) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+            const sql = `INSERT INTO novo_equipamento (equip_nome, equip_modelo, equip_tipo, equip_status, equip_data, equip_observacao, loc_id) VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
             // definição dos dados a serem inseridos em um array
             const values = [equip_nome, equip_modelo, equip_tipo, equip_status, equip_data, equip_observacao, loc_id];  
@@ -93,7 +93,7 @@ module.exports = {
             const { equip_id } = request.params; 
 
             // instruções SQL
-            const sql = `UPDATE equipamento SET equip_nome = ?, equip_modelo = ?, equip_tipo = ?, equip_status = ?, equip_data = ?, equip_observacao = ?, loc_id = ? WHERE equip_id = ?;`; 
+            const sql = `UPDATE novo_equipamento SET equip_nome = ?, equip_modelo = ?, equip_tipo = ?, equip_status = ?, equip_data = ?, equip_observacao = ?, loc_id = ? WHERE equip_id = ?;`; 
 
             // preparo do array com dados que serão atualizados
             const values = [equip_nome, equip_modelo, equip_tipo, equip_status, equip_data, equip_observacao, loc_id, equip_id]; 
@@ -122,7 +122,7 @@ module.exports = {
             const { equip_id } = request.params;
 
             // comando de exclusão
-            const sql = `DELETE FROM equipamento WHERE equip_id = ?;`;
+            const sql = `DELETE FROM novo_equipamento WHERE equip_id = ?;`;
 
             // array com parâmetros da exclusão
             const values = [equip_id];

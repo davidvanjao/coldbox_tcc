@@ -2,10 +2,10 @@ const { json } = require('express');
 const db = require('../database/connection'); 
 
 module.exports = {
-    async listar(request, response) { //ok 25-09
+    async listar(request, response) {// ok
         try {
             // instruções SQL
-            const sql = `SELECT * FROM NOVO_ALERTA;;`; 
+            const sql = `SELECT * FROM NOVO_CLIENTES;`; 
 
             //executa instruções SQL e armazena o resultado na variável usuários
             const alerta = await db.query(sql); 
@@ -13,7 +13,7 @@ module.exports = {
 
             return response.status(200).json({
                 sucesso: true, 
-                mensagem: 'LISTA DE ALERTAS.', 
+                mensagem: 'LISTA DE CLIENTES.', 
                 dados: alerta[0], 
                 nItens                 
             });
@@ -22,22 +22,22 @@ module.exports = {
             //console.log(error);
             return response.status(500).json({
                 sucesso: false, 
-                mensagem: 'ERRO NA REQUISICAO DO ALERTA.', 
+                mensagem: 'ERRO NA REQUISICAO DO CLIENTE.', 
                 dados: error.message
             });
         }
     },
 
-    async cadastrar(request, response) { //ok 25-09
+    async cadastrar(request, response) {//OK
         try {
             // parâmetros recebidos no corpo da requisição
-            const { alerta_tipo, alerta_descricao } = request.body;
+            const { cli_razaoSocial, cli_endereco, cli_cidade, cli_estado, cli_contrato } = request.body;
 
             // instrução SQL
-            const sql = `INSERT INTO NOVO_ALERTA (ALERTA_TIPO, ALERTA_DESCRICAO) VALUES (?, ?);`;
+            const sql = `INSERT INTO NOVO_CLIENTES (cli_razaoSocial, cli_endereco, cli_cidade, cli_estado, cli_contrato) VALUES (?, ?, ?, ?, ?);`;
 
             // definição dos dados a serem inseridos em um array
-            const values = [alerta_tipo, alerta_descricao];  
+            const values = [cli_razaoSocial, cli_endereco, cli_cidade, cli_estado, cli_contrato];  
 
             // execução da instrução sql passando os parâmetros
             const execSql = await db.query(sql, values); 
@@ -47,38 +47,38 @@ module.exports = {
 
             return response.status(200).json({
                 sucesso: true, 
-                mensagem: 'Alerta cadastrado com sucesso.', 
+                mensagem: 'CLIENTE cadastrado com sucesso.', 
                 dados: alerta_id
             });
         } catch (error) {
             return response.status(500).json({
                 sucesso: false, 
-                mensagem: 'Erro na requisição.', 
+                mensagem: 'Erro NO CADASTRO DO CLIENTE.', 
                 dados: error.message
             });
         }
     },
 
-    async editar(request, response) { //ok 25-09
+    async editar(request, response) {//ok
         try {
             // parâmetros recebidos pelo corpo da requisição
-            const { alerta_tipo, alerta_descricao } = request.body;
+            const { cli_razaoSocial, cli_endereco, cli_cidade, cli_estado, cli_contrato } = request.body;
 
             // parâmetro recebido pela URL via params ex: /usuario/1
-            const { alerta_id } = request.params; 
+            const { cli_id } = request.params; 
 
             // instruções SQL
-            const sql = `UPDATE NOVO_ALERTA SET ALERTA_TIPO = ?, ALERTA_DESCRICAO = ? WHERE ALERTA_ID = ?;`; 
+            const sql = `UPDATE NOVO_CLIENTES SET cli_razaoSocial = ?, cli_endereco = ?, cli_cidade = ?, cli_estado = ?, cli_contrato = ? WHERE cli_id = ?;`; 
 
             // preparo do array com dados que serão atualizados
-            const values = [alerta_tipo, alerta_descricao, alerta_id]; 
+            const values = [cli_razaoSocial, cli_endereco, cli_cidade, cli_estado, cli_contrato, cli_id]; 
 
             // execução e obtenção de confirmação da atualização realizada
             const atualizaDados = await db.query(sql, values); 
             
             return response.status(200).json({
                 sucesso: true, 
-                mensagem: `Alerta ${alerta_id} atualizado com sucesso!`, 
+                mensagem: `Cliente ${cli_id} atualizado com sucesso!`, 
                 dados: atualizaDados[0].affectedRows 
             });
 
@@ -91,32 +91,5 @@ module.exports = {
         }
     }, 
 
-    async apagar(request, response) { // ok 25-09
-        try {
-            // parâmetro passado via url na chamada da api pelo front-end
-            const { alerta_id } = request.params;
-
-            // comando de exclusão
-            const sql = `DELETE FROM NOVO_ALERTA WHERE ALERTA_ID = ?;`;
-
-            // array com parâmetros da exclusão
-            const values = [alerta_id];
-
-            // executa instrução no banco de dados
-            const excluir = await db.query(sql, values);
-
-            return response.status(200).json({
-                sucesso: true,
-                mensagem: `Alerta ${alerta_id} excluído com sucesso`,
-                dados: excluir[0].affectedRows
-            });
-        } catch (error) {
-            return response.status(500).json({
-                sucesso: false,
-                mensagem: 'Erro na requisição.',
-                dados: error.message
-            });
-        }
-    }
 }
 

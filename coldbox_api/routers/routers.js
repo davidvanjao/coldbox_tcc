@@ -41,8 +41,11 @@ router.get('/logs', LogsController.listar);
 router.post('/logs', LogsController.cadastrar); 
 router.patch('/logs/:logs_id', LogsController.editar); 
 
-//traz notificacoes em aberto
-router.get('/logs/listarNotificacoesEmAberto/:equip_id', LogsController.listarNotificacoesEmAberto); 
+//traz total notificacoes em aberto
+router.get('/logs/listarNotificacoesTotalEmAberto/:equip_id', LogsController.listarNotificacoesTotalEmAberto); 
+
+//traz as notificacoes que nao foram visualizadas
+router.get('/logs/listarNotificacoesNaoVisualizadas/:equip_id', LogsController.listarNotificacoesNaoVisualizadas); 
 
 router.get('/localizacao', LocalizacaoController.listar); 
 router.post('/localizacao', LocalizacaoController.cadastrar); 

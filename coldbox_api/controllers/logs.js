@@ -101,8 +101,8 @@ module.exports = {
         }
     }, 
 
-    //traz as notificacoes que nao foram visualizadas
-    async listarNotificacoesEmAberto(request, response) {
+    //traz o total de notificacoes que nao foram visualizadas - ok
+    async listarNotificacoesTotalEmAberto(request, response) {
         try {
 
             // parâmetro recebido pela URL via params ex: /usuario/1
@@ -136,12 +136,55 @@ module.exports = {
                 dados: error.message
             });
         }
+    },
+
+    //traz as notificacoes que nao foram visualizadas - ok
+    async listarNotificacoesNaoVisualizadas(request, response) {
+        try {
+
+            // parâmetro recebido pela URL via params ex: /usuario/1
+            const { equip_id } = request.params; 
+
+            // instruções SQL
+            const sql = `SELECT A.alertEnviado_id, A.alertEnviado_data, C.alerta_tipo, D.dados_temp, A.alertEnviado_status, A.alertEnviado_usuario_retorno
+            FROM 
+                novo_equipamento_alertas_enviados A,
+                novo_equipamento B,
+                novo_alerta C,
+                novo_equipamento_dados D    
+            WHERE 
+                A.equip_id = ? 
+            AND A.equip_id = B.equip_id
+            AND A.alerta_id = C.alerta_id
+            AND A.dados_id = D.dados_id
+            AND alertEnviado_usuario_retorno IS NULL;`; 
+
+            // preparo do array com dados que serão atualizados
+            const values = [equip_id]; 
+
+            //executa a query
+            const equipamento = await db.query(sql, values); 
+            console.log('Resultado da query:', equipamento);
+
+            //verifica se ha dados retornados
+            const nItens = equipamento[0].length;
+
+            return response.status(200).json({
+                sucesso: true, 
+                mensagem: 'Notificações em aberto.', 
+                dados: equipamento[0], 
+                nItens                 
+            });
+
+        } catch (error) {
+            console.error('Erro na função listarNotificacoesEmAberto:', error.message);
+            return response.status(500).json({
+                sucesso: false, 
+                mensagem: 'Erro na requisição.', 
+                dados: error.message
+            });
+        }
     }
-
-
-
-
-
 
 }
 

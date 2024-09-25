@@ -7,6 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 const porta = 3334;
+//teste
 
 app.listen(porta, () => {
     console.log(`Servidor iniciado na porta ${porta}`);

@@ -9,26 +9,43 @@ import GoogleChart from '../GoogleChart/GoogleChart';
 const CamarasEAtivos = () => {
   const [equipamentos, setEquipamentos] = useState([]); // Inicializa o estado com um array vazio
   const [equipamentosSelecionados,  setEquipamentosSelecionados] = useState([]); //Estado para os equipamentos selecionados
+  const [cliId, setCliId] = useState(null); // Estado para armazenar o cli_id
 
-  //Função para buscar dados da API 'equipamento'
-    const fetchEquipamentoDados  = async () => {
-      try {
-        const response = await axios.get('http://127.0.0.1:3333/equipamento'); //Faz a requisição GET
-        if (response.data.sucesso) {
-          //adcionando a propriedade 'selecionado' para cada equipamento
-          const dadosComSelecao = response.data.dados.map(item => ({
-            ...item,
-            selecionado: true //Por padrãos todos estarão selecionados
-          }))
-          setEquipamentos(dadosComSelecao); //Armazena os dados mais recentes da API com o estado 'selecionado'
-          setEquipamentosSelecionados(dadosComSelecao.map(item => item.equip_nome)); // Inicializa os selecionados
-        } else {
-          console.error(response.data.mensagem);
-        }
-      } catch (error) {
-        console.error('Erro ao buscar dados:', error);
+  //Função para buscar dados da API 'dadosEquipamentoEmpresa', trazendo o nome da camara e o modelo do equipamento
+  const fetchEquipamentoDados = async (cliId) => {
+    try {
+      if (!cliId) {
+        console.error('cli_id não encontrado.');
+        return;
       }
-    };
+      
+      const response = await axios.get(`http://127.0.0.1:3333/equipamento/dadosEquipamentoEmpresa/${cliId}`); // Faz a requisição GET
+      if (response.data.sucesso) {
+        // Adicionando a propriedade 'selecionado' para cada equipamento
+        const dadosComSelecao = response.data.dados.map(item => ({
+          ...item,
+          selecionado: true // Por padrão, todos estarão selecionados
+        }));
+        setEquipamentos(dadosComSelecao); // Armazena os dados mais recentes da API com o estado 'selecionado'
+        setEquipamentosSelecionados(dadosComSelecao.map(item => item.equip_nome)); // Inicializa os selecionados
+      } else {
+        console.error(response.data.mensagem);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar dados:', error);
+    }
+  };
+  
+  // useEffect para buscar o cli_id do localStorage e carregar os dados
+  useEffect(() => {
+
+    
+    const storedCliId = localStorage.getItem('cli_id'); // Recupera o cli_id do localStorage
+    if (storedCliId) {
+      setCliId(storedCliId); // Define o cli_id no estado
+      fetchEquipamentoDados(storedCliId); // Faz a requisição com o cli_id
+    }
+  }, []);
 
   // Atualizar os dados a cada 1 minuto
   useEffect(() => {
@@ -39,7 +56,7 @@ const CamarasEAtivos = () => {
     }, 60000); // 60000 ms = 1 minuto
 
     return () => clearInterval(interval); // Limpa o intervalo quando o componente não estiver sendo renderizado na tela
-  }, []);
+  }, [cliId]);
 
   //Função para manipular a mudança das checkboxes
   const handleCheckboxChange = (equipNome) => {
@@ -61,7 +78,7 @@ const CamarasEAtivos = () => {
     });
   };
 
-
+ 
   return (
     <div className='paiRetangulo'>
       <div className='painelInformacoes'>
@@ -97,10 +114,10 @@ const CamarasEAtivos = () => {
                       onChange={() => handleCheckboxChange(item.equip_nome)} // Manipulador de eventos para a checkbox
                     />
                   </td>
-                  <td>{item.equip_nome}</td>
+                  <td>{item.local_nome}</td>
                   <td>{item.equip_modelo}</td>
-                  <td className={item.alerta ? 'alertaTempErro' : 'alertaTempNormal'}>{item.dados_temp} C°</td>
-                  <td className='tdCentro'>{item.dados_umid}%</td>
+                  <td className={item.alerta ? 'alertaTempErro' : 'alertaTempNormal'}>0C°</td>
+                  <td className='tdCentro'>0%</td>
                   <td className='tdCentro'>
                     {item.alerta ? (
                       <FontAwesomeIcon icon={faExclamationTriangle} style={{ color: 'red' }} />

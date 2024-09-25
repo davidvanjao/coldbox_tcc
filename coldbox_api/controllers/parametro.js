@@ -1,6 +1,14 @@
 const { json } = require('express'); 
 const db = require('../database/connection'); 
 
+const moment = require('moment');
+
+const dataInput = (data) => {
+    // Converte para o formato americano (aaaa-mm-dd)
+    const dataInput = moment(data, 'YYYY/MM/DD').format('DD-MM-YYYY'); 
+    return dataInput;
+}
+
 module.exports = {
     async listar(request, response) { 
         try {
@@ -12,11 +20,16 @@ module.exports = {
             // executa instruções SQL
             const parametro = await db.query(sql); 
             const nItens = parametro[0].length;
+            // Itera sobre os parametro
+            const parametrosFormat = parametro[0].map(p => ({
+                ...p,
+                param_data: dataInput(p.param_data)
+            }));
     
             return response.status(200).json({
                 sucesso: true, 
                 mensagem: 'Parâmetros carregados.', 
-                dados: parametro[0], 
+                dados: parametrosFormat, 
                 nItens                 
             });
     

@@ -2,19 +2,26 @@ const { json } = require('express');
 const db = require('../database/connection'); 
 
 module.exports = {
-    async listar(request, response) {
+    async listar(request, response) {//ok
         try {
+
+            // parâmetro recebido pela URL via params ex: /usuario/1
+            const { cli_id } = request.params; 
+
             // instruções SQL
-            const sql = `select loc_id, loc_razaoSocial, loc_endereco, loc_cidade, loc_estado, loc_contrato, loc_data, loc_notas from localizacao;`; 
+            const sql = `SELECT * FROM novo_local WHERE cli_id = ?;`; 
+
+            // preparo do array com dados que serão atualizados
+            const values = [cli_id]; 
 
             //executa instruções SQL e armazena o resultado na variável usuários
-            const localizacao = await db.query(sql); 
-            const nItens = localizacao[0].length;
+            const local = await db.query(sql, values); 
+            const nItens = local[0].length;
 
             return response.status(200).json({
                 sucesso: true, 
-                mensagem: 'Localização.', 
-                dados: localizacao[0], 
+                mensagem: 'Local.', 
+                dados: local[0], 
                 nItens                 
             });
 
@@ -28,16 +35,16 @@ module.exports = {
         }
     },
 
-    async cadastrar(request, response) {
+    async cadastrar(request, response) {//ok
         try {
             // parâmetros recebidos no corpo da requisição
-            const { loc_razaoSocial, loc_endereco, loc_cidade, loc_estado, loc_contrato, loc_data, loc_notas } = request.body;
+            const { local_nome, local_descricao, cli_id } = request.body;
 
             // instrução SQL
-            const sql = `INSERT INTO localizacao (loc_razaoSocial, loc_endereco, loc_cidade, loc_estado, loc_contrato, loc_data, loc_notas) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+            const sql = `INSERT INTO novo_local (local_nome, local_descricao, cli_id) VALUES (?, ?, ?);`;
 
             // definição dos dados a serem inseridos em um array
-            const values = [loc_razaoSocial, loc_endereco, loc_cidade, loc_estado, loc_contrato, loc_data, loc_notas];  
+            const values = [local_nome, local_descricao, cli_id];  
 
             // execução da instrução sql passando os parâmetros
             const execSql = await db.query(sql, values); 
@@ -59,22 +66,20 @@ module.exports = {
         }
     },
 
-    //nao esta funcionando
-    async editar(request, response) {
+    async editar(request, response) { //ok
 
         try {
             // parâmetros recebidos pelo corpo da requisição
-            const { loc_razaoSocial, loc_endereco, loc_cidade, loc_estado, loc_contrato, loc_data, loc_notas } = request.body;
+            const { local_nome, local_descricao, cli_id } = request.body;
 
             // parâmetro recebido pela URL via params ex: /usuario/1
             const { loc_id } = request.params; 
-            console.log(loc_id)
 
             // instruções SQL
-            const sql = `UPDATE localizacao SET loc_razaoSocial = ?, loc_endereco = ?, loc_cidade = ?, loc_estado = ?, loc_contrato = ?, loc_data = ?, loc_notas = ? WHERE loc_id = ?;`; 
+            const sql = `UPDATE novo_local SET local_nome = ?, local_descricao = ?, cli_id = ? WHERE local_id = ?;`; 
 
             // preparo do array com dados que serão atualizados
-            const values = [loc_razaoSocial, loc_endereco, loc_cidade, loc_estado, loc_contrato, loc_data, loc_notas, loc_id]; 
+            const values = [local_nome, local_descricao, cli_id, loc_id]; 
 
             // execução e obtenção de confirmação da atualização realizada
             const atualizaDados = await db.query(sql, values); 
@@ -94,23 +99,23 @@ module.exports = {
         }
     }, 
 
-    async apagar(request, response) {
+    async apagar(request, response) { //ok
         try {
             // parâmetro passado via url na chamada da api pelo front-end
-            const { loc_id } = request.params;
+            const { local_id } = request.params;
 
             // comando de exclusão
-            const sql = `DELETE FROM localizacao WHERE loc_id = ?;`;
+            const sql = `DELETE FROM novo_local WHERE local_id = ?;`;
 
             // array com parâmetros da exclusão
-            const values = [loc_id];
+            const values = [local_id];
 
             // executa instrução no banco de dados
             const excluir = await db.query(sql, values);
 
             return response.status(200).json({
                 sucesso: true,
-                mensagem: `Localizacao ${loc_id} excluído com sucesso`,
+                mensagem: `Localizacao ${local_id} excluído com sucesso`,
                 dados: excluir[0].affectedRows
             });
         } catch (error) {

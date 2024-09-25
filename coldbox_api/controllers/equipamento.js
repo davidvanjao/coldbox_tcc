@@ -2,35 +2,9 @@ const { json } = require('express');
 const db = require('../database/connection'); 
 
 module.exports = {
-    async listar(request, response) {
-        try {
-            // instrução SQL com INNER JOIN para unir as tabelas "equipamento" e "dados"
-            const sql = `SELECT 
-                            a.equip_id, 
-                            a.equip_modelo, 
-                            a.equip_tipo,
-                            a.equip_ip,
-                            a.equip_mac,
-                            a.equip_status, 
-                            a.equip_observacao, 
-                            a.loc_id, 
-                            b.loc_razaoSocial,
-                            d.dados_temp,
-                            d.dados_umid,
-                            d.dados_data
-                    FROM 
-                        novo_equipamento a
-                    INNER JOIN
-                        localizacao b ON a.loc_id = b.loc_id
-                    INNER JOIN
-                        dados d ON a.equip_id = d.equip_id
-                    WHERE
-                        d.dados_data = (
-                            SELECT MAX(d2.dados_data)
-                            FROM dados d2
-                            WHERE d2.equip_id = d.equip_id
-                        );`; //Finalizando com um consulta para que o mesmo equip_id somente apareça uma vez mostrando o dado mais recente
-
+    async listar(request, response) {//ok
+        try {           
+            const sql = `SELECT * FROM novo_equipamento;`;
 
             //executa instruções SQL e armazena o resultado na variável usuários
             const equipamento = await db.query(sql); 
@@ -38,7 +12,7 @@ module.exports = {
 
             return response.status(200).json({
                 sucesso: true, 
-                mensagem: 'Equipamento.', 
+                mensagem: 'Lista equipamentos.', 
                 dados: equipamento[0], 
                 nItens                 
             });
@@ -53,16 +27,16 @@ module.exports = {
         }
     },
 
-    async cadastrar(request, response) {
+    async cadastrar(request, response) {//ok
         try {
             // parâmetros recebidos no corpo da requisição
-            const { equip_nome, equip_modelo, equip_tipo, equip_status, equip_data, equip_observacao, loc_id } = request.body;
+            const { equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao } = request.body;
 
             // instrução SQL
-            const sql = `INSERT INTO novo_equipamento (equip_nome, equip_modelo, equip_tipo, equip_status, equip_data, equip_observacao, loc_id) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+            const sql = `INSERT INTO novo_equipamento (equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao) VALUES (?, ?, ?, ?, ?, ?)`;
 
             // definição dos dados a serem inseridos em um array
-            const values = [equip_nome, equip_modelo, equip_tipo, equip_status, equip_data, equip_observacao, loc_id];  
+            const values = [equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao];  
 
             // execução da instrução sql passando os parâmetros
             const execSql = await db.query(sql, values); 
@@ -84,19 +58,19 @@ module.exports = {
         }
     },
 
-    async editar(request, response) {
+    async editar(request, response) { //ok
         try {
             // parâmetros recebidos pelo corpo da requisição
-            const { equip_nome, equip_modelo, equip_tipo, equip_status, equip_data, equip_observacao, loc_id} = request.body;
+            const { equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao} = request.body;
 
             // parâmetro recebido pela URL via params ex: /usuario/1
             const { equip_id } = request.params; 
 
             // instruções SQL
-            const sql = `UPDATE novo_equipamento SET equip_nome = ?, equip_modelo = ?, equip_tipo = ?, equip_status = ?, equip_data = ?, equip_observacao = ?, loc_id = ? WHERE equip_id = ?;`; 
+            const sql = `UPDATE novo_equipamento SET equip_modelo = ?, equip_tipo = ?, equip_ip = ?, equip_mac = ?, equip_status = ?, equip_observacao = ? WHERE equip_id = ?;`; 
 
             // preparo do array com dados que serão atualizados
-            const values = [equip_nome, equip_modelo, equip_tipo, equip_status, equip_data, equip_observacao, loc_id, equip_id]; 
+            const values = [equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao, equip_id]; 
 
             // execução e obtenção de confirmação da atualização realizada
             const atualizaDados = await db.query(sql, values); 
@@ -116,7 +90,7 @@ module.exports = {
         }
     }, 
 
-    async apagar(request, response) {
+    async apagar(request, response) { //ok
         try {
             // parâmetro passado via url na chamada da api pelo front-end
             const { equip_id } = request.params;

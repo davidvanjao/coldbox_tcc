@@ -13,7 +13,7 @@ select * from novo_equipamento_alertas_enviados; /*alertas enviados e esperando 
 
 
 /*codigo arduino*/
-INSERT INTO novo_equipamento_dados (dados_temp, equip_id) VALUES (?, ?)
+INSERT INTO novo_equipamento_dados (dados_temp, equip_id) VALUES (?, ?);
 
 /*traz usuario e razao social*/
 SELECT a.user_id, a.user_nome,  b.cli_id, b.cli_razaoSocial, c.nivel_acesso

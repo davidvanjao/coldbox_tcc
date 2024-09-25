@@ -5,10 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const ParametrosAtivos = () => {
-  const [equipments, setEquipments] = useState([]);
+  const [parametros, setParametros] = useState([]);
   const [allModels, setAllModels] = useState([]); // Para armazenar todos os modelos de equipamentos
   const [isEditing, setIsEditing] = useState(false);
-  const [currentEquipment, setCurrentEquipment] = useState(null);
+  const [currentParametro, setCurrentParametro] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState(null);
   const [newParameter, setNewParameter] = useState({
@@ -18,20 +18,24 @@ const ParametrosAtivos = () => {
     param_maximo: '',
     data: '',
   });
+
+  
   
 
   // Carregar os dados do banco ao montar o componente
   useEffect(() => {
-    const fetchEquipments = async () => {
+    listarNiveisAcesso();
+    ListarParametro();
+    const ListarParametro = async () => {
       try {
         const response = await axios.get('http://127.0.0.1:3333/parametro');
         if (response.data.sucesso) {
-          setEquipments(response.data.dados);
+          setParametros(response.data.dados);
         } else {
-          setError('Erro ao carregar os equipamentos.');
+          setError('Erro ao carregar os parametros.');
         }
       } catch (error) {
-        setError('Erro ao buscar equipamentos.');
+        setError('Erro ao buscar parametros.');
       }
     };
 
@@ -48,7 +52,7 @@ const ParametrosAtivos = () => {
       }
     };
 
-    fetchEquipments();
+    ListarParametro();
     fetchAllModels(); // Chama a função para buscar todos os modelos
   }, []);
 
@@ -56,15 +60,15 @@ const ParametrosAtivos = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://127.0.0.1:3333/parametro/${id}`);
-      setEquipments(equipments.filter((equipment) => equipment.param_id !== id));
+      setParametros(parametros.filter((parametros) => parametros.param_id !== id));
     } catch (error) {
       console.error('Erro ao deletar parâmetro:', error);
     }
   };
 
   // Função para iniciar a edição de um parâmetro
-  const handleEdit = (parameter) => {
-    setCurrentEquipment(parameter);
+  const handleEdit = (parametros) => {
+    setCurrentParametro(parametros);
     setIsEditing(true);
     setShowModal(true);
   };
@@ -81,7 +85,7 @@ const ParametrosAtivos = () => {
       const response = await axios.post('http://127.0.0.1:3333/parametro', newParameter);
       if (response.data.sucesso) {
         setShowModal(false);
-        setEquipments([...equipments, response.data.dados]); // Atualiza a lista de parâmetros
+        setParametros([...parametros, response.data.dados]); // Atualiza a lista de parâmetros
         resetForm();
       } else {
         setError('Erro ao adicionar parâmetro');
@@ -95,10 +99,10 @@ const ParametrosAtivos = () => {
   const handleSave = async () => {
     if (isEditing) {
       try {
-        await axios.put(`http://127.0.0.1:3333/parametro/${currentEquipment.param_id}`, currentEquipment);
-        setEquipments(
-          equipments.map((item) =>
-            item.param_id === currentEquipment.param_id ? currentEquipment : item
+        await axios.put(`http://127.0.0.1:3333/parametro/${currentParametro.param_id}`, currentParametro);
+        setParametros(
+          parametros.map((item) =>
+            item.param_id === currentParametro.param_id ? currentParametro : item
           )
         );
       } catch (error) {
@@ -115,7 +119,7 @@ const ParametrosAtivos = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (isEditing) {
-      setCurrentEquipment({ ...currentEquipment, [name]: value });
+      setCurrentParametro({ ...currentParametro, [name]: value });
     } else {
       setNewParameter({ ...newParameter, [name]: value });
     }
@@ -130,7 +134,7 @@ const ParametrosAtivos = () => {
       param_maximo: '',
       data: '',
     });
-    setCurrentEquipment(null);
+    setCurrentParametro(null);
   };
 
   return (
@@ -222,27 +226,27 @@ const ParametrosAtivos = () => {
               type="text"
               name="param_interface"
               placeholder="Nome/Interface"
-              value={isEditing ? currentEquipment?.param_interface : newParameter.param_interface}
+              value={isEditing ? currentParametro?.param_interface : newParameter.param_interface}
               onChange={handleChange}
             />
             <input
               type="text"
               name="param_minimo"
               placeholder="Temp. Min"
-              value={isEditing ? currentEquipment?.param_minimo : newParameter.param_minimo}
+              value={isEditing ? currentParametro?.param_minimo : newParameter.param_minimo}
               onChange={handleChange}
             />
             <input
               type="text"
               name="param_maximo"
               placeholder="Temp. Máx"
-              value={isEditing ? currentEquipment?.param_maximo : newParameter.param_maximo}
+              value={isEditing ? currentParametro?.param_maximo : newParameter.param_maximo}
               onChange={handleChange}
             />
             <input
               type="date"
               name="data"
-              value={isEditing ? currentEquipment?.data : newParameter.data}
+              value={isEditing ? currentParametro?.data : newParameter.data}
               onChange={handleChange}
             />
             <button className={styles.saveButton} onClick={handleSave}>

@@ -49,10 +49,13 @@ const BarraSuperior = () => {
         // console.log('Resposta completa da API:', response.data);
 
         if (response.data.sucesso && response.data.dados.length > 0) {
-          const { cli_razaoSocial, nivel_acesso } = response.data.dados[0]; // Acessar os dados
+          const { cli_razaoSocial, nivel_acesso, cli_id } = response.data.dados[0]; // Acessar os dados
           // console.log('Nome da empresa:', cli_razaoSocial); // Exibir o nome da empresa
           setEmpresaNome(cli_razaoSocial); // Definir o nome da empresa 
           SetNivelAcesso(nivel_acesso); //Define o nivel de acesso do usuario
+
+          //Armazenando o cli_id no localStorage, no primeiro momento utilizarei ele na tela de (CamarasEAtivos)
+          localStorage.setItem('cli_id', cli_id);
         } else {
           console.error('Erro ao buscar dados do usuário e empresa.');
         }

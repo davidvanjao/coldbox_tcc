@@ -19,19 +19,20 @@ const NavBarComponent = () => {
     const router = useRouter();
     const routePath = usePathname();
 
+    // Função do Logout
+    const handleLogout = (e) => {
+        e.preventDefault(); // Evita o comportamento padrão do link
 
-//Função do Logout
-const handleLogout = (e) => {
-    e.preventDefault(); //Evita o comportamento padrão do link
-    //Remover dados da sessão (Nome do usuario, tokens, etc)
-    localStorage.removeItem('userName') //Remove o nome de usuario
-    //adcionar aqui outras limpezas depois de prontas, como tokens de autenticação
+        // Remover dados do localStorage (Nome do usuario, tokens, etc)
+        localStorage.removeItem('userName'); // Remove o nome de usuario
+        localStorage.removeItem('userId');   // Remove o ID do usuario
+        localStorage.removeItem('cli_id');   // Remove o cli_id do usuário
+        // Adicione outras limpezas necessárias (por exemplo, tokens de autenticação)
 
-
-    //Redirecionar para a página de login
-    router.push('/login');
-    
+        // Redirecionar para a página de login
+        router.push('/login');
     }
+    
     return (
         <div className='sidebar'>
             <div className='logo'>

@@ -8,7 +8,7 @@ module.exports = {
     async listar(request, response) {
         try {
             // instruções SQL
-            const sql = `select user_id, user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil from novo_usuario;`; 
+            const sql = `select * from novo_usuario;`; 
 
             //executa instruções SQL e armazena o resultado na variável usuários
             const usuarios = await db.query(sql); 

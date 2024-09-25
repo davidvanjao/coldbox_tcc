@@ -18,6 +18,7 @@ const ParametrosAtivos = () => {
     param_maximo: '',
     data: '',
   });
+  
 
   // Carregar os dados do banco ao montar o componente
   useEffect(() => {
@@ -162,7 +163,7 @@ const ParametrosAtivos = () => {
               <td className={styles.td}>{item.param_interface}</td>
               <td className={styles.td}>{item.param_minimo}</td>
               <td className={styles.td}>{item.param_maximo}</td>
-              <td className={styles.td}>{item.data}</td>
+              <td className={styles.td}>{item.param_data}</td>
               <td className={styles.td}>
                 <button
                   className={styles.actionButton}

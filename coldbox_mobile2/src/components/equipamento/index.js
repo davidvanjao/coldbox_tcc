@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import styles from './styles';
 
+
 export default function Equipamento({id_usuario, id_cliente}) {
+
+    const navigation = useNavigation(); // Obtém o objeto navigation
     
     const [equipamentos, setEquipamentos] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -91,11 +95,11 @@ export default function Equipamento({id_usuario, id_cliente}) {
         }
     };
 
-    //tras a ultima comunicacao
+    //tras o total de notificacoes em aberto.
     const fetchNotificacaoAberto = async (equip_id) => {
 
         try {
-            const response = await fetch(`http://127.0.0.1:3333/equipamento/dadosUltimaComunicacao/${equip_id}`, {
+            const response = await fetch(`http://127.0.0.1:3333/logs/listarNotificacoesTotalEmAberto/${equip_id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -108,11 +112,11 @@ export default function Equipamento({id_usuario, id_cliente}) {
 
             const data = await response.json();
 
-            setExtraData(prevState => ({
+            setnotificacaoAberto(prevState => ({
                 ...prevState,
                 [equip_id]: {
                     ...data,
-                    horario: data.dados[0].dados_data
+                    totalNotificacao: data.dados[0].notificacao
                 }
             }));
 
@@ -121,13 +125,20 @@ export default function Equipamento({id_usuario, id_cliente}) {
         }
     };
 
+    //faz uma requisicao para cada equipamento
     useEffect(() => {
         // Faz uma requisição para cada equipamento
         equipamentos.forEach(item => {
             fetchExtraData(item.equip_id);
         });
-    }, [equipamentos]);
 
+
+        // Faz uma requisição para cada equipamento
+        equipamentos.forEach(item => {
+            fetchNotificacaoAberto(item.equip_id);
+        });
+
+    }, [equipamentos]);
 
 
     if (loading) {
@@ -141,7 +152,7 @@ export default function Equipamento({id_usuario, id_cliente}) {
                 <Pressable
                     key={item.equip_id} // Adicionando uma chave única
                     style={styles.equipamento}
-                    onPress={() => props.navigation.navigate('InfoEquipamento', { equipamentoId: item.equip_id })}
+                    onPress={() => navigation.navigate('InfoEquipamento', { equipamentoId: item.equip_id })}
                 >
                     <View style={styles.equipamentoInfo}>
                         <Text>Local: {item.local_nome}</Text> {/* Exibindo o nome do equipamento */}
@@ -155,7 +166,7 @@ export default function Equipamento({id_usuario, id_cliente}) {
 
                     </View>
                     <View style={styles.equipamentoStatus}>
-                        <Text style={styles.textoSimples}>5</Text> {/* Exibindo notificacoes */}
+                        <Text style={styles.textoSimples}>{notificacaoAberto[item.equip_id]?.totalNotificacao || '0'}</Text> {/* Exibindo notificacoes */}
                     </View>
                 </Pressable>
             ))}

@@ -11,15 +11,6 @@ select * from novo_equipamento_parametro;/*parametros definidos para cada equipa
 select * from novo_equipamento_parametro2;/*parametros definidos para cada equipamento---NOVO*/
 select * from novo_equipamento_alertas_enviados; /*alertas enviados e esperando acao do usuario*/
 
-select * from alerta;
-select * from equipamento;
-select * from nivel_acesso;
-select * from usuario;
-select * from localizacao;
-select * from dados;
-select * from parametro_alerta;
-select * from logs;
-
 CREATE TABLE `novo_equipamento_alertas_enviados` (
   `alertEnviado_id` int(11) NOT NULL AUTO_INCREMENT,
   
@@ -34,6 +25,7 @@ CREATE TABLE `novo_equipamento_alertas_enviados` (
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
 ALTER TABLE novo_equipamento_alertas_enviados ADD COLUMN nivel_data datetime DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE novo_equipamento_alertas_enviados ADD COLUMN dados_id int(11) after alerta_id;
 
 CREATE TABLE `novo_equipamento_parametro` (
   `param_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -59,7 +51,6 @@ CREATE TABLE `novo_equipamento_parametro2` (
 CREATE TABLE `novo_equipamento_dados` (
   `dados_id` int(11) NOT NULL AUTO_INCREMENT,
   `dados_temp` varchar(10) NOT NULL,
-  `dados_umid` varchar(10) NOT NULL,
   `dados_data` datetime DEFAULT CURRENT_TIMESTAMP,
   `equip_id` int(11) NOT NULL,
   PRIMARY KEY (`dados_id`)

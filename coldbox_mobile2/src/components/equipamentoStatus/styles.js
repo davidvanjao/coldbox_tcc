@@ -13,18 +13,5 @@ export default styles = StyleSheet.create({
       fontSize:15
     },
 
-    status: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems:'center',
-      
-      backgroundColor: 'yellow',
-      borderRadius:10,
-      padding:10,
-
-      marginTop:10,
-      marginBottom:10
-    }
       
 }); 

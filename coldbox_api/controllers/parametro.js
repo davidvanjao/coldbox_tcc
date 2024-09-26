@@ -10,26 +10,32 @@ const dataInput = (data) => {
 }
 
 module.exports = {
-    async listar(request, response) { 
+    async listar(request, response) { //ok
         try {
+
+            // parâmetro recebido pela URL via params ex: /usuario/1
+            const { equip_id } = request.params; 
+
             // instruções SQL para buscar o modelo do equipamento
-            const sql = `SELECT A.*, B.equip_modelo 
-                         FROM novo_equipamento_parametro2 A
-                         JOIN novo_equipamento B ON A.equip_id = B.equip_id`;
+            const sql = `SELECT a.param_id, a.param_interface, a.param_maximo, a.param_minimo, b.equip_id, b.equip_modelo, b.equip_tipo
+            FROM 
+                novo_equipamento_parametro2 a,
+                novo_equipamento b
+            WHERE
+                a.equip_id = b.equip_id
+            AND b.equip_id = ?`;
+
+            // preparo do array com dados que serão atualizados
+            const values = [equip_id]; 
     
             // executa instruções SQL
-            const parametro = await db.query(sql); 
+            const parametro = await db.query(sql, values); 
             const nItens = parametro[0].length;
-            // Itera sobre os parametro
-            const parametrosFormat = parametro[0].map(p => ({
-                ...p,
-                param_data: dataInput(p.param_data)
-            }));
     
             return response.status(200).json({
                 sucesso: true, 
-                mensagem: 'Parâmetros carregados.', 
-                dados: parametrosFormat, 
+                mensagem: 'Parâmetros', 
+                dados: parametro[0], 
                 nItens                 
             });
     
@@ -42,7 +48,7 @@ module.exports = {
         }
     },
 
-    async cadastrar(request, response) { /*atualizado - 24/09*/
+    async cadastrar(request, response) { //ok
         try {
             // parâmetros recebidos no corpo da requisição
             const { param_interface, param_maximo, param_minimo, equip_id } = request.body;
@@ -73,19 +79,19 @@ module.exports = {
         }
     },
 
-    async editar(request, response) {
+    async editar(request, response) { //ok
         try {
             // parâmetros recebidos pelo corpo da requisição
-            const {equip_id, param_tipo, param_valor, alerta_id} = request.body;
+            const {param_interface, param_maximo, param_minimo, equip_id} = request.body;
 
             // parâmetro recebido pela URL via params ex: /usuario/1
             const { param_id } = request.params; 
 
             // instruções SQL
-            const sql = `UPDATE parametro_alerta SET equip_id = ?, param_tipo = ?, param_valor = ?, alerta_id = ? WHERE param_id = ?;`; 
+            const sql = `UPDATE novo_equipamento_parametro2 SET param_interface = ?, param_maximo = ?, param_minimo = ?, equip_id = ? WHERE param_id = ?;`; 
 
             // preparo do array com dados que serão atualizados
-            const values = [equip_id, param_tipo, param_valor, alerta_id, param_id]; 
+            const values = [param_interface, param_maximo, param_minimo, equip_id, param_id]; 
 
             // execução e obtenção de confirmação da atualização realizada
             const atualizaDados = await db.query(sql, values); 
@@ -105,13 +111,13 @@ module.exports = {
         }
     }, 
 
-    async apagar(request, response) {
+    async apagar(request, response) { //ok
         try {
             // parâmetro passado via url na chamada da api pelo front-end
             const { param_id } = request.params;
 
             // comando de exclusão
-            const sql = `DELETE FROM parametro_alerta WHERE param_id = ?;`;
+            const sql = `DELETE FROM novo_equipamento_parametro2 WHERE param_id = ?;`;
 
             // array com parâmetros da exclusão
             const values = [param_id];

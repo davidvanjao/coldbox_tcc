@@ -39,10 +39,32 @@ router.post('/local', LocalController.cadastrar); //ok
 router.patch('/local/:loc_id', LocalController.editar); //ok
 router.delete('/local/:local_id', LocalController.apagar); //ok
 
-router.get('/nivel_acesso', NivelAcessoController.listar); 
-router.post('/nivel_acesso', NivelAcessoController.cadastrar); 
-router.patch('/nivel_acesso/:nivel_id', NivelAcessoController.editar); 
-router.delete('/nivel_acesso/:nivel_id', NivelAcessoController.apagar); 
+router.get('/nivel_acesso', NivelAcessoController.listar); //ok
+router.post('/nivel_acesso', NivelAcessoController.cadastrar); //ok
+router.patch('/nivel_acesso/:nivel_id', NivelAcessoController.editar); //ok
+router.delete('/nivel_acesso/:nivel_id', NivelAcessoController.apagar); //ok
+
+//precisa enviar equip_id
+router.get('/dados/:equip_id', DadosController.listar);//ok 
+router.post('/dados', DadosController.cadastrar); //ok
+
+//precisa enviar equip_id
+router.get('/parametro/:equip_id', ParametroController.listar); //ok
+router.post('/parametro',ParametroController.cadastrar); //ok
+router.patch('/parametro/:param_id', ParametroController.editar); //ok
+router.delete('/parametro/:param_id', ParametroController.apagar); //ok
+
+
+
+router.get('/logs', LogsController.listar); 
+router.post('/logs', LogsController.cadastrar); 
+router.patch('/logs/:logs_id', LogsController.editar); 
+
+//traz total notificacoes em aberto
+router.get('/logs/listarNotificacoesTotalEmAberto/:equip_id', LogsController.listarNotificacoesTotalEmAberto); 
+
+//traz as notificacoes que nao foram visualizadas
+router.get('/logs/listarNotificacoesNaoVisualizadas/:equip_id', LogsController.listarNotificacoesNaoVisualizadas); 
 
 
 
@@ -57,27 +79,6 @@ router.get('/usuarios/dadosUsuario/:user_id', UsuariosController.listarDadosUsua
 
 //traz nome de usuario e nome da empresa - ok 
 router.get('/usuarios/dadosUsuarioEmpresa/:user_id', UsuariosController.listarDadosUsuarioEmpresa); 
-
-
-router.get('/dados', DadosController.listar); 
-router.post('/dados', DadosController.cadastrar); 
-
-router.get('/logs', LogsController.listar); 
-router.post('/logs', LogsController.cadastrar); 
-router.patch('/logs/:logs_id', LogsController.editar); 
-
-//traz total notificacoes em aberto
-router.get('/logs/listarNotificacoesTotalEmAberto/:equip_id', LogsController.listarNotificacoesTotalEmAberto); 
-
-//traz as notificacoes que nao foram visualizadas
-router.get('/logs/listarNotificacoesNaoVisualizadas/:equip_id', LogsController.listarNotificacoesNaoVisualizadas); 
-
-
-router.get('/parametro', ParametroController.listar); 
-router.post('/parametro',ParametroController.cadastrar); 
-router.patch('/parametro/:param_id', ParametroController.editar); 
-router.delete('/parametro/:param_id', ParametroController.apagar); 
-
 
 
 module.exports = router;

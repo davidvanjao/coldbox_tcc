@@ -2,30 +2,26 @@ const { json } = require('express');
 const db = require('../database/connection'); 
 
 module.exports = {
-    async listar(request, response) {
+    async listar(request, response) {//ok
         try {
-            // instruções SQL 
-            const sql = `
-                        SELECT 
-                            a.dados_id, 
-                            c.loc_id, 
-                            c.loc_razaoSocial, 
-                            a.equip_id, 
-                            b.equip_nome,  
-                            a.dados_temp, 
-                            a.dados_umid, 
-                            a.dados_data
-                        FROM 
-                            dados a
-                        JOIN 
-                            equipamento b ON a.equip_id = b.equip_id
-                        JOIN 
-                            localizacao c ON b.loc_id = c.loc_id;
-                    `;
-                    
+
+            //parâmetro recebido pela URL via params ex: /usuario/1
+            const { equip_id } = request.params; 
+
+            //instruções SQL 
+            const sql = `SELECT a.dados_id, b.equip_modelo, b.equip_tipo, a.dados_temp, a.dados_data
+            FROM 
+                novo_equipamento_dados a,
+                novo_equipamento b
+            WHERE
+                a.equip_id = b.equip_id
+            AND b.equip_id = ?`;
+
+            // preparo do array com dados que serão atualizados
+            const values = [equip_id];                     
 
             //executa instruções SQL e armazena o resultado na variável usuários
-            const dadosEquipamento = await db.query(sql); 
+            const dadosEquipamento = await db.query(sql, values); 
             const nItens = dadosEquipamento[0].length;
 
             return response.status(200).json({
@@ -45,16 +41,16 @@ module.exports = {
         }
     },
 
-    async cadastrar(request, response) {
+    async cadastrar(request, response) {//ok
         try {
             // parâmetros recebidos no corpo da requisição
-            const { equip_id, dados_temp, dados_umid, dados_data} = request.body;
+            const { dados_temp, equip_id} = request.body;
 
             // instrução SQL
-            const sql = `INSERT INTO dados (equip_id, dados_temp, dados_umid, dados_data) VALUES (?, ?, ?, ?)`;
+            const sql = `INSERT INTO novo_equipamento_dados (dados_temp, equip_id) VALUES (?, ?)`;
 
             // definição dos dados a serem inseridos em um array
-            const values = [equip_id, dados_temp, dados_umid, dados_data];  
+            const values = [dados_temp, equip_id];  
 
             // execução da instrução sql passando os parâmetros
             const execSql = await db.query(sql, values); 

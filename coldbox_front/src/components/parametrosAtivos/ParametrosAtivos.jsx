@@ -11,22 +11,20 @@ const ParametrosAtivos = () => {
   const [currentParametro, setCurrentParametro] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState(null);
+  const [equipModelo, setEquipModelo] = useState([]); // Novo estado
   const [newParameter, setNewParameter] = useState({
+
     equip_id: '', // Alteramos o nome para equip_id
     param_interface: '',
     param_minimo: '',
     param_maximo: '',
     data: '',
   });
-
   
-  
-
   // Carregar os dados do banco ao montar o componente
   useEffect(() => {
-    listarNiveisAcesso();
-    ListarParametro();
-    const ListarParametro = async () => {
+    listarParametro();
+    async function listarParametro() {
       try {
         const response = await axios.get('http://127.0.0.1:3333/parametro');
         if (response.data.sucesso) {
@@ -39,22 +37,9 @@ const ParametrosAtivos = () => {
       }
     };
 
-    const fetchAllModels = async () => {
-      try {
-        const response = await axios.get('http://127.0.0.1:3333/equipamentos'); // Supondo que você tenha essa rota para obter todos os modelos
-        if (response.data.sucesso) {
-          setAllModels(response.data.dados); // Armazena todos os modelos de equipamentos
-        } else {
-          setError('Erro ao carregar os modelos de equipamentos.');
-        }
-      } catch (error) {
-        setError('Erro ao buscar modelos de equipamentos.');
-      }
-    };
-
-    ListarParametro();
-    fetchAllModels(); // Chama a função para buscar todos os modelos
-  }, []);
+    
+  }
+  );
 
   // Função para deletar um parâmetro
   const handleDelete = async (id) => {
@@ -141,9 +126,6 @@ const ParametrosAtivos = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h2>Parâmetros Ativos</h2>
-        <button className={styles.addButton} onClick={handleAdd}>
-          Adicionar Parâmetro
-        </button>
       </div>
       <table className={styles.table}>
         <thead>
@@ -158,7 +140,7 @@ const ParametrosAtivos = () => {
           </tr>
         </thead>
         <tbody>
-          {equipments.map((item) => (
+          {parametros.map((item) => (
             <tr key={item.param_id} className={styles.tr}>
               <td className={styles.td}>
                 <div className={styles.circularButton}></div>
@@ -193,25 +175,10 @@ const ParametrosAtivos = () => {
             <h3>{isEditing ? 'Editar Parâmetro' : 'Novo Parâmetro'}</h3>
             {error && <p className={styles.error}>{error}</p>}
             
-                        
-            {/* <label htmlFor="nivel_id">Nível de Acesso</label>
-            <select
-              name="nivel_id" // Nível de Acesso
-              id="nivel_id"
-              value={newUser.nivel_id}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="">Selecione o Nível</option>
-              <option value="1">ADMINISTRADOR</option>
-              <option value="2">USUARIO</option>
-              <option value="3">MOBILE</option>
-            </select> */}
-
-
+            <label htmlFor="equip_id">Modelos de Equipamento</label>
             <select
               name="equip_id"
-              value={isEditing ? currentEquipment?.equip_id : newParameter.equip_id}
+              value={isEditing ? currentParametro?.equip_id : newParameter.equip_id}
               onChange={handleChange}
             >
               <option value="">Selecione um Equipamento</option>

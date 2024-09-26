@@ -74,7 +74,7 @@ const Usuarios = () => {
 
     async function listarNiveisAcesso() {
         try {
-            const response = await axios.get('http://10.67.23.19:3333/nivel_acesso'); // URL da API para UFs
+            const response = await axios.get('http://127.0.0.1:3333/nivel_acesso'); // URL da API para UFs
             if (response.data.sucesso) {
                 setNiveisAcesso(response.data.dados);
             }

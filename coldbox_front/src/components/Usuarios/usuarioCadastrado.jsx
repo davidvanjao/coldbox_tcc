@@ -10,11 +10,13 @@ const Usuarios = () => {
     const [usuarios, setUsuarios] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [newUser, setNewUser] = useState({
+        user_id: '', 
         user_nome: '',
         user_email: '',
         user_tel: '',
         nivel_id: '',
-        user_senha: '',
+        user_senha: '', 
+        user_imagem_perfil: ''
     });
     const [error, setError] = useState(null);
     const [isEditMode, setIsEditMode] = useState(false);
@@ -40,38 +42,6 @@ const Usuarios = () => {
         }
     }
 
-//     async function listarNiveisAcesso(request, response) {
-//       try {
-//           const sql = `SELECT nivel_id, nivel_acesso FROM novo_nivel_acesso;`; // SQL para buscar níveis de acesso
-//           const niveis = await db.query(sql);
-//           const nItens = niveis[0].length;
-  
-//           return response.status(200).json({
-//               sucesso: true,
-//               mensagem: 'Lista de níveis de acesso.',
-//               dados: niveis[0],
-//               nItens
-//           });
-//       } catch (error) {
-//           return response.status(500).json({
-//               sucesso: false,
-//               mensagem: 'Erro na requisição.',
-//               dados: error.message
-//           });
-//       }
-//   }
-    // async function listaUfs() {
-    //     try {
-    //         const response = await axios.get('http://127.0.0.1:3333/ufs'); // URL da API para UFs
-    //         if (response.data.sucesso) {
-    //             setUfs(response.data.dados);
-    //         }
-    //     } catch (error) {
-    //         setError('Erro ao buscar UFs');
-    //         console.error(error);
-    //     }
-    // }
-
     async function listarNiveisAcesso() {
         try {
             const response = await axios.get('http://127.0.0.1:3333/nivel_acesso'); // URL da API para UFs
@@ -96,6 +66,7 @@ const Usuarios = () => {
                 setShowModal(false);
                 listarUsuarios();
                 setNewUser({
+                    user_id: '', 
                     user_nome: '',
                     user_email: '',
                     user_tel: '',
@@ -108,7 +79,33 @@ const Usuarios = () => {
             console.error(error);
         }
     };
+    
+    const edtUsuario = async () => {
+        try {
+            const response = await axios.patch('http://127.0.0.1:3333/usuarios/' + newUser.user_id, newUser);
+            if (response.data.sucesso) {
+                setShowModal(false);
+                listarUsuarios();
+                setNewUser({
+                    user_nome: '',
+                    user_email: '',
+                    user_tel: '',
+                    nivel_id: '',
+                    user_senha: '', 
+                    user_senha: ''
+                });
+            }
+        } catch (error) {
+            setError('Erro ao adicionar usuário');
+            console.error(error);
+        }
+    };
 
+    function openEditModal(user) {
+        setNewUser(user);
+        setShowModal(true);
+    }
+// console.log(newUser);
     return (
         <div className={styles.conteinerGrid}>
             <div className={styles.containerUsuarios}>
@@ -224,7 +221,7 @@ const Usuarios = () => {
 
                         <button
                             className={styles.saveButton}
-                            onClick={isEditMode ? updateUsuario : addUsuario}
+                            onClick={() => edtUsuario()}
                         >
                             {isEditMode ? 'Atualizar' : 'Salvar'}
                         </button>
@@ -232,6 +229,7 @@ const Usuarios = () => {
                         <button
                             className={styles.cancelButton}
                             onClick={() => {
+                
                                 setShowModal(false);
                                 setIsEditMode(false);
                                 setEditingUserId(null);

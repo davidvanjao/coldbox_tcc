@@ -59,7 +59,7 @@ module.exports = {
         }
     },
 
-    async editar(request, response) {
+    async editar(request, response) { //ok
         try {
             // parâmetros recebidos pelo corpo da requisição
             const { nivel_acesso, nivel_descricao } = request.body;
@@ -91,7 +91,7 @@ module.exports = {
         }
     }, 
 
-    async apagar(request, response) {
+    async apagar(request, response) { //ok
         try {
             // parâmetro passado via url na chamada da api pelo front-end
             const { nivel_id } = request.params;

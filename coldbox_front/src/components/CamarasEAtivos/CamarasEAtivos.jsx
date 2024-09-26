@@ -11,7 +11,29 @@ const CamarasEAtivos = () => {
   const [equipamentosSelecionados,  setEquipamentosSelecionados] = useState([]); //Estado para os equipamentos selecionados
   const [cliId, setCliId] = useState(null); // Estado para armazenar o cli_id
 
-  //Função para buscar dados da API 'dadosEquipamentoEmpresa', trazendo o nome da camara e o modelo do equipamento
+  //Estados para armazenar Temperatura e Umidade
+  const [dadosTemperatura, setDadosTemperatura] = useState({});
+  const [dadosUmidade, setDadosUmidade] = useState({});
+
+  //!Função para buscar os dados de Temperatura e Umidade
+  const buscarDados = async (equip_id) => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:3333/equipamento/dadosUltimaComunicacao/${equip_id}`);
+      if (response.data.sucesso) {
+        const dados = response.data.dados[0]; // Acessa o primeiro item do array de dados
+
+        //Atualiza os estados de temperatura e umidade com base no equipId
+        setDadosTemperatura(prevState => ({ ...prevState, [equip_id]: dados.dados_temp}));
+        setDadosUmidade(prevState => ({ ...prevState, [equip_id]: dados.dados_umid}));
+      } else {
+        console.error('Erro ao buscar os dados da ultima comunicação com o equipamento:', response.data.mensagem);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar os dados de temperatura e umidade:', error);
+    }
+  };
+
+  //!Função para buscar dados da API 'dadosEquipamentoEmpresa', trazendo o nome da camara e o modelo do equipamento
   const fetchEquipamentoDados = async (cliId) => {
     try {
       if (!cliId) {
@@ -28,6 +50,9 @@ const CamarasEAtivos = () => {
         }));
         setEquipamentos(dadosComSelecao); // Armazena os dados mais recentes da API com o estado 'selecionado'
         setEquipamentosSelecionados(dadosComSelecao.map(item => item.equip_nome)); // Inicializa os selecionados
+
+        //Para cada equipamento - buscar os dados de temperatura e umidade da ultima comunicação
+        dadosComSelecao.forEach(item => buscarDados(item.equip_id));
       } else {
         console.error(response.data.mensagem);
       }
@@ -36,14 +61,14 @@ const CamarasEAtivos = () => {
     }
   };
   
-  // useEffect para buscar o cli_id do localStorage e carregar os dados
+  //useEffect para buscar o cli_id do localStorage e carregar os dados
   useEffect(() => {
-    // Função para buscar o cli_id do localStorage
+    //Função para buscar o cli_id do localStorage
     const storedCliId = localStorage.getItem('cli_id');
   
     if (storedCliId) {
       setCliId(storedCliId);
-      fetchEquipamentoDados(storedCliId); // Faz a requisição quando o cli_id estiver disponível
+      fetchEquipamentoDados(storedCliId); //Faz a requisição quando o cli_id estiver disponível
     } else {
       console.error('cli_id não encontrado no localStorage');
     }
@@ -52,12 +77,12 @@ const CamarasEAtivos = () => {
   useEffect(() => {
     if (cliId) {
       const interval = setInterval(() => {
-        fetchEquipamentoDados(cliId); // Faz a requisição a cada 1 minuto com o cli_id correto
+        fetchEquipamentoDados(cliId); //Faz a requisição a cada 1 minuto com o cli_id correto
       }, 60000);
   
       return () => clearInterval(interval);
     }
-  }, [cliId]); // A função só será executada quando o cliId estiver disponível
+  }, [cliId]); //A função só será executada quando o cliId estiver disponível
   
   
 
@@ -119,8 +144,12 @@ const CamarasEAtivos = () => {
                   </td>
                   <td>{item.local_nome}</td>
                   <td>{item.equip_modelo}</td>
-                  <td className={item.alerta ? 'alertaTempErro' : 'alertaTempNormal'}>0C°</td>
-                  <td className='tdCentro'>0%</td>
+                  <td className={item.alerta ? 'alertaTempErro' : 'alertaTempNormal'}>
+                    {dadosTemperatura[item.equip_id] || 'N/A'}C°
+                  </td>
+                  <td className='tdCentro'>
+                    {dadosUmidade[item.equip_id] || 'N/A'}%
+                  </td>
                   <td className='tdCentro'>
                     {item.alerta ? (
                       <FontAwesomeIcon icon={faExclamationTriangle} style={{ color: 'red' }} />

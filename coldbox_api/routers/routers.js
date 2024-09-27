@@ -67,7 +67,7 @@ router.get('/logs/listarNotificacoesNaoVisualizadas/:equip_id', LogsController.l
 
 
 
-router.get('/usuarios', UsuariosController.listar);
+router.get('/usuarios/:cli_id', UsuariosController.listar);
 router.post('/usuarios', body('user_email').isEmail().withMessage('Por favor, forneça um email válido'),  UsuariosController.cadastrar); 
 router.patch('/usuarios/:user_id', UsuariosController.editar); 
 router.delete('/usuarios/:user_id', UsuariosController.apagar);  

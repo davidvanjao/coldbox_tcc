@@ -32,14 +32,14 @@ async function cadastrar(request, response) {
         // Loop pelos 4 equip_id (de 1 a 4)
         for (let equip_id = 1; equip_id <= 5; equip_id++) {
             const dados_temp = getRandomInRange(-4, 6);
-            //const dados_umid = getRandomInRange(50, 90);
+            const dados_umid = getRandomInRange(50, 90);
             //const data = new Date();
 
             // Instrução SQL
-            const sql = `INSERT INTO novo_equipamento_dados (dados_temp, equip_id) VALUES (?, ?)`;
+            const sql = `INSERT INTO novo_equipamento_dados (dados_temp, dados_umid, equip_id) VALUES (?, ?, ?)`;
 
             // Definição dos dados a serem inseridos em um array
-            const values = [dados_temp, equip_id,];
+            const values = [dados_temp, dados_umid, equip_id,];
 
             // Execução da instrução sql passando os parâmetros
             await db.query(sql, values); 

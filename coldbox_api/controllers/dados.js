@@ -9,13 +9,25 @@ module.exports = {
             const { equip_id } = request.params; 
 
             //instruções SQL 
-            const sql = `SELECT a.dados_id, b.equip_modelo, b.equip_tipo, a.dados_temp, a.dados_data
+            // const sql = `SELECT a.dados_id, b.equip_modelo, b.equip_tipo, a.dados_umid, a.dados_temp, a.dados_data
+            // FROM 
+            //     novo_equipamento_dados a,
+            //     novo_equipamento b
+            // WHERE
+            //     a.equip_id = b.equip_id
+            // AND b.equip_id = ?`;
+
+            const sql = `SELECT a.dados_id, c.local_nome, b.equip_modelo, b.equip_tipo, a.dados_temp, a.dados_umid, a.dados_data
             FROM 
                 novo_equipamento_dados a,
-                novo_equipamento b
+                novo_equipamento b,
+                novo_local c,
+                novo_equipamento_local d    
             WHERE
                 a.equip_id = b.equip_id
-            AND b.equip_id = ?`;
+            AND a.equip_id = d.equip_id
+            AND d.local_id = c.local_id
+            AND b.equip_id = ?;`;
 
             // preparo do array com dados que serão atualizados
             const values = [equip_id];                     
@@ -44,13 +56,13 @@ module.exports = {
     async cadastrar(request, response) {//ok
         try {
             // parâmetros recebidos no corpo da requisição
-            const { dados_temp, equip_id} = request.body;
+            const { dados_temp, dados_umid, equip_id} = request.body;
 
             // instrução SQL
-            const sql = `INSERT INTO novo_equipamento_dados (dados_temp, equip_id) VALUES (?, ?)`;
+            const sql = `INSERT INTO novo_equipamento_dados (dados_temp, dados_umid, equip_id) VALUES (?, ?, ?);`;
 
             // definição dos dados a serem inseridos em um array
-            const values = [dados_temp, equip_id];  
+            const values = [dados_temp, dados_umid, equip_id];  
 
             // execução da instrução sql passando os parâmetros
             const execSql = await db.query(sql, values); 

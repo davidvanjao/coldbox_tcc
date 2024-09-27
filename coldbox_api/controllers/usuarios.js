@@ -5,18 +5,25 @@ const { validationResult } = require('express-validator');
 
 
 module.exports = {
-    async listar(request, response) {
+    async listar(request, response) {//ok
         try {
+
+            // parâmetro recebido pela URL via params ex: /usuario/1
+            const { cli_id } = request.params; 
+
             // instruções SQL
-            const sql = `select * from novo_usuario;`; 
+            const sql = `select * from novo_usuario WHERE cli_id = ?;`; 
+
+            // preparo do array com dados que serão atualizados
+            const values = [cli_id]; 
 
             //executa instruções SQL e armazena o resultado na variável usuários
-            const usuarios = await db.query(sql); 
+            const usuarios = await db.query(sql, values); 
             const nItens = usuarios[0].length;
 
             return response.status(200).json({
                 sucesso: true, 
-                mensagem: 'Lista de usuários.', 
+                mensagem: 'Lista de usuários da empresa', 
                 dados: usuarios[0], 
                 nItens                 
             });
@@ -31,7 +38,7 @@ module.exports = {
         }
     },
 
-    async cadastrar(request, response) {
+    async cadastrar(request, response) { //ok
         try {
 
             const errors = validationResult(request);
@@ -42,15 +49,13 @@ module.exports = {
 
 
             // parâmetros recebidos no corpo da requisição
-            const { user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil } = request.body;
+            const { user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil, cli_id } = request.body;
 
             // instrução SQL
-            const sql = `INSERT INTO novo_usuario
-            (user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil) 
-            VALUES (?, ?, ?, ?, ?, ?);`;
+            const sql = `INSERT INTO novo_usuario (user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil, cli_id) VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
             // definição dos dados a serem inseridos em um array
-            const values = [user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil];  
+            const values = [user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil, cli_id];  
 
             // execução da instrução sql passando os parâmetros
             const execSql = await db.query(sql, values); 
@@ -73,21 +78,19 @@ module.exports = {
         }
     },
 
-    async editar(request, response) {
+    async editar(request, response) { //ok
         try {
             // parâmetros recebidos pelo corpo da requisição
-            const { user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil} = request.body;
+            const { user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil, user_status} = request.body;
 
             // parâmetro recebido pela URL via params ex: /usuario/1
             const { user_id } = request.params; 
 
             // instruções SQL
-            const sql = `UPDATE novo_usuario SET
-            user_nome = ?, user_senha = ?, user_email = ?, user_tel = ?, nivel_id = ?, user_imagem_perfil = ?
-            WHERE user_id = ?;`; 
+            const sql = `UPDATE novo_usuario SET user_nome = ?, user_senha = ?, user_email = ?, user_tel = ?, nivel_id = ?,  user_imagem_perfil = ?, user_status = ? WHERE user_id = ?;`; 
 
             // preparo do array com dados que serão atualizados
-            const values = [user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil, user_id]; 
+            const values = [user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil, user_status, user_id]; 
 
             // execução e obtenção de confirmação da atualização realizada
             const atualizaDados = await db.query(sql, values); 
@@ -107,7 +110,7 @@ module.exports = {
         }
     }, 
 
-    async apagar(request, response) {
+    async apagar(request, response) { //ok
         try {
             // parâmetro passado via url na chamada da api pelo front-end
             const { user_id } = request.params;
@@ -136,7 +139,7 @@ module.exports = {
     },
 
     //VERIFICA SE USUARIO E SENHA EXISTE - ok
-    async login(request, response) {
+    async login(request, response) { //ok
         try {
 
             const {user_email, user_senha} = request.body;
@@ -179,7 +182,7 @@ module.exports = {
     },
     
     //NOVO - TRAZ NOME DE USUARIO E NOME EMPRESA - ok
-    async listarDadosUsuarioEmpresa(request, response) {
+    async listarDadosUsuarioEmpresa(request, response) { //ok
         try {
 
             //const {user_id} = request.body;

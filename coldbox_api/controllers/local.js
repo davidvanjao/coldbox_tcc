@@ -38,24 +38,24 @@ module.exports = {
     async cadastrar(request, response) {//ok
         try {
             // parâmetros recebidos no corpo da requisição
-            const { param_interface, param_maximo, param_minimo, equip_id } = request.body;
+            const { local_nome, local_descricao, cli_id } = request.body;
 
             // instrução SQL
-            const sql = `INSERT INTO novo_equipamento_parametro2 (param_interface, param_maximo, param_minimo, equip_id) VALUES (?, ?, ?, ?);`;
+            const sql = `INSERT INTO novo_local (local_nome, local_descricao, cli_id) VALUES (?, ?, ?)`;
 
             // definição dos dados a serem inseridos em um array
-            const values = [param_interface, param_maximo, param_minimo, equip_id];  
+            const values = [local_nome, local_descricao, cli_id];  
 
             // execução da instrução sql passando os parâmetros
             const execSql = await db.query(sql, values); 
 
             //identificação do ID do registro inserido
-            const param_id = execSql[0].insertId;           
+            const local_id = execSql[0].insertId;           
 
             return response.status(200).json({
                 sucesso: true, 
                 mensagem: 'Parametro cadastrado com sucesso.', 
-                dados: param_id
+                dados: local_id
             });
         } catch (error) {
             return response.status(500).json({

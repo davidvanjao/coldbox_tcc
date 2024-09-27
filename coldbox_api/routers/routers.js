@@ -55,16 +55,13 @@ router.patch('/parametro/:param_id', ParametroController.editar); //ok
 router.delete('/parametro/:param_id', ParametroController.apagar); //ok
 
 
-
-router.get('/logs', LogsController.listar); 
-router.post('/logs', LogsController.cadastrar); 
-router.patch('/logs/:logs_id', LogsController.editar); 
-
+router.get('/logs/:equip_id', LogsController.listar); //ok
+router.post('/logs', LogsController.cadastrar); //ok
+router.patch('/logs/:alertEnviado_id', LogsController.editar); //ok
 //traz total notificacoes em aberto
-router.get('/logs/listarNotificacoesTotalEmAberto/:equip_id', LogsController.listarNotificacoesTotalEmAberto); 
-
+router.get('/logs/listarNotificacoesTotalEmAberto/:equip_id', LogsController.listarNotificacoesTotalEmAberto); //ok
 //traz as notificacoes que nao foram visualizadas
-router.get('/logs/listarNotificacoesNaoVisualizadas/:equip_id', LogsController.listarNotificacoesNaoVisualizadas); 
+router.get('/logs/listarNotificacoesNaoVisualizadas/:equip_id', LogsController.listarNotificacoesNaoVisualizadas); //ok
 
 
 

@@ -30,7 +30,7 @@ interval;
 async function cadastrar(request, response) {
     try {
         // Loop pelos 4 equip_id (de 1 a 4)
-        for (let equip_id = 1; equip_id <= 3; equip_id++) {
+        for (let equip_id = 1; equip_id <= 5; equip_id++) {
             const dados_temp = getRandomInRange(-4, 6);
             //const dados_umid = getRandomInRange(50, 90);
             //const data = new Date();

@@ -151,3 +151,63 @@
   font-weight: 600;
   line-height: 1.2;
 }
+
+/* --------------------------------------------------- */
+/* Terceira sessão */
+/* Terceira seção */
+.terceiraSecao {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: #f4f4f4; /* Ajuste a cor conforme sua paleta */
+}
+
+.tituloSecao {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.subtituloSecao {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 3rem;
+}
+
+.destaque {
+  color: #0886b2;
+}
+
+/* Container dos cards */
+.cardsContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 2rem; /* Espaçamento entre os cards */
+}
+
+/* Estilos para os cards */
+.card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 250px;
+  text-align: center;
+}
+
+.imagemCard {
+  width: 100%;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.tituloCard {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #0886b2;
+}
+
+.descricaoCard {
+  font-size: 0.9rem;
+  color: #333;
+}

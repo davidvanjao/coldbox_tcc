@@ -151,3 +151,119 @@
   font-weight: 600;
   line-height: 1.2;
 }
+
+
+
+/* -------------------------------------------------------- */
+/* TERCEIRA SESSÃO */
+/* Terceira seção */
+.terceiraSecao {
+  text-align: center;
+  padding: 6rem 2rem;
+  background-color: #f7f7f7;
+}
+
+.tituloSecao {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.subtituloSecao {
+  font-size: 1.2rem;
+  color: #0886b2;
+  margin-bottom: 3rem;
+}
+
+.destaque {
+  color: #0886b2;
+}
+
+/* Container dos cards */
+.cardsContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+}
+
+/* Estilos para os cards */
+.card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 280px;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Ajustes para as imagens específicas */
+.imagemCard {
+  position: absolute;
+  top: -50px; /* Ajusta a altura para posicionar melhor as imagens */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+/* Tamanhos personalizados para cada imagem */
+.imagemCard[src="/notificacoes.png"] {
+  width: 150px; /* Aumenta o tamanho para 150px */
+}
+
+.imagemCard[src="/logEventos.png"] {
+  width: 180px; /* Aumenta o tamanho para 180px */
+}
+
+.imagemCard[src="/appMonitoramento.png"] {
+  width: 150px; /* Aumenta o tamanho para 150px */
+}
+
+.imagemCard[src="/instrucoesAcao.png"] {
+  width: 120px; /* Mantém o tamanho correto para a imagem de instruções */
+}
+
+.tituloCard {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-top: 9rem; /* Aumenta o espaço para evitar que o título colida com a imagem */
+  color: #0886b2;
+}
+
+.descricaoCard {
+  font-size: 1.5rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .cardsContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .imagemCard {
+    width: 90px; /* Reduz as imagens em dispositivos móveis */
+    top: -20px;
+  }
+}

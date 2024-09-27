@@ -46,6 +46,45 @@ export default function LandingPage() {
             </p>
           </div>
         </div>  
+        <div className="terceiraSecao">
+          <h2 className="tituloSecao">O <span className="destaque">monitoramento online</span> não termina na falha detectada</h2>
+          <p className="subtituloSecao">Veja o que você terá acesso</p>
+
+          <div className="cardsContainer">
+            <div className="card">
+              <img src="/notificacoes.png" alt="Notificações" className="imagemCard" />
+              <h3 className="tituloCard">NOTIFICAÇÕES PUSH</h3>
+              <p className="descricaoCard">
+                Envio de notificações sobre falhas em tempo real diretamente do sistema ColdBox aos usuários.
+              </p>
+            </div>
+
+            <div className="card">
+              <img src="/logEventos.png" alt="Log de Eventos" className="imagemCard" />
+              <h3 className="tituloCard">LOG DE EVENTOS</h3>
+              <p className="descricaoCard">
+                Registro das falhas no sistema de eventos, com acesso ao histórico e exportação de relatórios gráficos.
+              </p>
+            </div>
+
+            <div className="card">
+              <img src="/appMonitoramento.png" alt="App de Monitoramento" className="imagemCard" />
+              <h3 className="tituloCard">APP DE MONITORAMENTO</h3>
+              <p className="descricaoCard">
+                Acesso ao app ColdBox e informações em tempo real de seus dispositivos monitorados.
+              </p>
+            </div>
+
+            <div className="card">
+              <img src="/instrucoesAcao.png" alt="Instruções de Ação" className="imagemCard" />
+              <h3 className="tituloCard">INSTRUÇÕES DE AÇÃO</h3>
+              <p className="descricaoCard">
+                Fornecimento de instruções sobre ações a serem tomadas em caso de falhas no sistema.
+              </p>
+            </div>
+          </div>
+        </div>
+
       </div>
     </>
   );

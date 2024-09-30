@@ -23,6 +23,7 @@ const Usuarios = () => {
     const [editingUserId, setEditingUserId] = useState(null);
     const [niveisAcesso, setNiveisAcesso] = useState([]); // Novo estado
     // const [ufs, setUfs] = useState([]); // Estado para UFs
+    const cliId = localStorage.getItem('cli_id');
 
     useEffect(() => {
         listarUsuarios();
@@ -32,7 +33,7 @@ const Usuarios = () => {
 
     async function listarUsuarios() {
         try {
-            const response = await axios.get('http://127.0.0.1:3333/usuarios');
+            const response = await axios.get('http://127.0.0.1:3333/usuarios/' + cliId);
             if (response.data.sucesso) {
                 setUsuarios(response.data.dados);
             }

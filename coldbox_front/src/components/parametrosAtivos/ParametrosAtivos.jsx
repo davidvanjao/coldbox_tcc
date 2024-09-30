@@ -6,6 +6,7 @@ import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const ParametrosAtivos = () => {
   const [parametros, setParametros] = useState([]);
+  const equipId = localStorage.getItem('equip_id');
   const [allModels, setAllModels] = useState([]); // Para armazenar todos os modelos de equipamentos
   const [isEditing, setIsEditing] = useState(false);
   const [currentParametro, setCurrentParametro] = useState(null);
@@ -13,6 +14,8 @@ const ParametrosAtivos = () => {
   const [error, setError] = useState(null);
   const [equipModelo, setEquipModelo] = useState([]); // Novo estado
   const [newParameter, setNewParameter] = useState({
+  
+
 
     equip_id: '', // Alteramos o nome para equip_id
     param_interface: '',
@@ -20,13 +23,13 @@ const ParametrosAtivos = () => {
     param_maximo: '',
     data: '',
   });
-  
+
   // Carregar os dados do banco ao montar o componente
   useEffect(() => {
     listarParametro();
     async function listarParametro() {
       try {
-        const response = await axios.get('http://127.0.0.1:3333/parametro');
+        const response = await axios.get('http://127.0.0.1:3333/parametro/' + equipId);
         if (response.data.sucesso) {
           setParametros(response.data.dados);
         } else {

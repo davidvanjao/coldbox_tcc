@@ -50,7 +50,7 @@ export default function Home({ route }) {
                     }
 
                     const data = await response.json();
-                    console.log('Dados do usuário:', data); // Verifica os dados recebidos
+                    //console.log('Dados do usuário:', data); // Verifica os dados recebidos
                     setDadosUsuario(data.dados); // Acessa o array "dados" dentro da resposta da API
 
                 } catch (error) {

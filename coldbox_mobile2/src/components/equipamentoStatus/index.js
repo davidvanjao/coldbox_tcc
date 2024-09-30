@@ -2,6 +2,8 @@ import { View, Text, ActivityIndicator, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useRoute } from '@react-navigation/native'; // Importa o useRoute
 
+import AsyncStorage from '@react-native-async-storage/async-storage'; //usado para gerar token
+
 import styles from './styles';
 
 export default function EquipamentoStatus() {
@@ -9,8 +11,50 @@ export default function EquipamentoStatus() {
     const route = useRoute(); // Usa o useRoute para acessar os parâmetros
     const { equipamentoId } = route.params; // Extrai o parâmetro passado (equipamentoId)
 
+
     const [statusEquipamento, setStatusEquipamento] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const [token, setToken] = useState(null); // Estado para armazenar o token
+
+        // Função para buscar o token do AsyncStorage
+        const getToken = async () => {
+            try {
+                const storedToken = await AsyncStorage.getItem('userToken');
+                if (storedToken !== null) {
+                    setToken(storedToken); // Atualiza o estado com o token
+                    console.log('Token recuperado:', storedToken);
+                } else {
+                    console.log('Nenhum token encontrado');
+                }
+            } catch (error) {
+                console.error('Erro ao recuperar o token:', error);
+            }
+        };
+    
+        // useEffect para buscar o token quando o componente for montado
+        useEffect(() => {
+            getToken();
+        }, []);
+
+    const usuarioVisualizou = (alertEnviado_id) => {(
+
+        alert(token)
+
+    )};
+
+    //funcao para formatar data
+    const formatarDataHoraBrasileira = (dataString) => {
+        const data = new Date(dataString);
+        return data.toLocaleString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        });
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -57,15 +101,24 @@ export default function EquipamentoStatus() {
             {/* Usando map para iterar sobre a lista de equipamentos */}
             {statusEquipamento.map((item) => (
                 <Pressable
-                    key={item.equip_id} // Adicionando uma chave única
-                    
-                    onPress={() => alert('teste')}
-                >
+                    key={item.equip_id} // Adicionando uma chave única    
+                    style={styles.campoStatus}                
+                    onPress={() => usuarioVisualizou(item.alertEnviado_id)}
+                    >
 
                     <View>
-                        <Text>{item.alerta_tipo}</Text>
-                        <Text>{item.alertEnviado_data}</Text>
-                        <Text>{item.dados_temp}</Text>
+                        <Text  style={styles.titulo}>{item.alerta_tipo}</Text>
+                        {/* Exibindo o horário formatado */}
+                        <Text>Horário: {item.alertEnviado_data 
+                            ? formatarDataHoraBrasileira(item.alertEnviado_data) 
+                            : 'Carregando...'}
+                        </Text>
+
+                        <Text>Temp. Registrada:  
+                            <Text style={{ fontWeight: 'bold', color: 'red', marginLeft:10 }}>
+                                {item.dados_temp}
+                            </Text>                            
+                        </Text>
                     </View>
 
                 </Pressable>

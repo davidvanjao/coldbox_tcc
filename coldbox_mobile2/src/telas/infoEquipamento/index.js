@@ -10,6 +10,7 @@ export default function InfoEquipamento(props) {
 
     const route = useRoute(); // Usa o useRoute para acessar os parâmetros
     const { equipamentoId } = route.params; // Extrai o parâmetro passado (equipamentoId)
+    
 
     return (           
         <View style={styles.container}>

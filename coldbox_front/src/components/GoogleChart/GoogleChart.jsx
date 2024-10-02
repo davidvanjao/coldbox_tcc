@@ -59,32 +59,47 @@ const GoogleChart = ({ exportButton }) => {
   //! Função para buscar os dados da API
   const fetchChartData = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:3333/dados'); // Faz uma requisição para obter os dados da API
+      const response = await axios.get('http://127.0.0.1:3333/dados/3'); // Faz uma requisição para obter os dados da API
       if (response.data.sucesso) { 
         const dados = response.data.dados; // Extrai os dados da resposta da API
 
         // Substitui os nomes completos pelos abreviados
-        const equipamentos = [...new Set(dados.map(item => abreviarNomeEquipamento(item.equip_nome)))];
+        const equipamentos = [...new Set(dados.map(item => abreviarNomeEquipamento(item.local_nome)))];
 
         // Inicializa o array de dados com os cabeçalhos
-        const chartDataArray = [['Hora', ...equipamentos]];
+        const chartDataArray = [['Data', ...equipamentos]];
 
-        // Armazena os dados reais por hora
+        // Armazena os dados reais pela data/hora
         const dataByTime = {};
 
         let currentMax = maxValue; // Inicializa o maior valor com o estado maxValue
 
+        
         // Preenche os dados com base nos horários reais
         dados.forEach(item => {
-          const horaReal = new Date(item.dados_data).getHours(); // Obtém a hora (numérica) a partir da data
-          const temp = parseFloat(item.dados_temp);
+          // Verifica se a string de data está no formato correto e converte para Date
+          let dataCompleta = new Date(item.dados_data);
 
-          if (!dataByTime[horaReal]) {
-            dataByTime[horaReal] = new Array(equipamentos.length).fill(null); // Cria um array de temperaturas
+          // Se a data não for válida, tente corrigir o formato
+          if (isNaN(dataCompleta.getTime())) {
+            dataCompleta = new Date(item.dados_data.replace(' ', 'T')); // Converte 'YYYY-MM-DD HH:MM:SS' para 'YYYY-MM-DDTHH:MM:SS'
           }
 
-          const equipIndex = equipamentos.indexOf(abreviarNomeEquipamento(item.equip_nome)); // Obtém o índice do equipamento abreviado
-          dataByTime[horaReal][equipIndex] = temp; // Atribui a temperatura ao horário e equipamento
+          if (isNaN(dataCompleta.getTime())) {  // Se ainda for inválida, log o erro
+            console.error(`Data inválida: ${item.dados_data}`);
+            return;
+          }
+          
+          const temp = parseFloat(item.dados_temp);
+
+          const formattedTime = `${dataCompleta.getHours()}:${dataCompleta.getMinutes()}:${dataCompleta.getSeconds()}`; // Formata a data completa
+
+          if (!dataByTime[formattedTime]) {
+            dataByTime[formattedTime] = new Array(equipamentos.length).fill(null); // Cria um array de temperaturas
+          }
+
+          const equipIndex = equipamentos.indexOf(abreviarNomeEquipamento(item.local_nome)); // Obtém o índice do equipamento abreviado
+          dataByTime[formattedTime][equipIndex] = temp; // Atribui a temperatura ao horário e equipamento
 
           if (temp > currentMax) { // Atualiza o maior valor de temperatura se necessário
             currentMax = temp;
@@ -92,8 +107,8 @@ const GoogleChart = ({ exportButton }) => {
         });
 
         // Insere os dados no array de dados do gráfico
-        Object.entries(dataByTime).forEach(([horaReal, temps]) => {
-          chartDataArray.push([parseInt(horaReal), ...temps]);
+        Object.entries(dataByTime).forEach(([formattedTime, temps]) => {
+          chartDataArray.push([formattedTime, ...temps]);
         });
 
         setChartData(chartDataArray); // Atualiza os dados do gráfico

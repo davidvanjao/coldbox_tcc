@@ -6,15 +6,27 @@ import styles from './styles';
 import EquipamentoStatus from '../../components/equipamentoStatus';
 import Grafico from '../../components/graficos';
 
-export default function InfoEquipamento(props) {
+export default function InfoEquipamento() {
 
     const route = useRoute(); // Usa o useRoute para acessar os parâmetros
-    const { equipamentoId } = route.params; // Extrai o parâmetro passado (equipamentoId)
-    
+    const { equipamentoId, id_usuario, id_cliente } = route.params; // Extrai os parâmetros passados
 
     return (           
         <View style={styles.container}>
-            <EquipamentoStatus equipamentoId={equipamentoId} />
+
+            <Grafico
+                equipamentoId={equipamentoId} 
+                id_usuario={id_usuario} 
+                id_cliente={id_cliente} 
+            />
+
+
+
+            <EquipamentoStatus
+                equipamentoId={equipamentoId} 
+                id_usuario={id_usuario} 
+                id_cliente={id_cliente} 
+            />
         </View>
     );
 };

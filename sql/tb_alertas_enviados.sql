@@ -21,7 +21,7 @@ WHERE
 	a.equip_id = b.equip_id
 AND a.alerta_id = c.alerta_id
 AND a.dados_id = d.dados_id
-AND a.alertEnviado_status = 'ENVIADO'
+AND a.alertEnviado_status != 'ENVIADO'
 #AND a.alertEnviado_usuario_retorno = e.user_id
 AND a.equip_id = '1';
 

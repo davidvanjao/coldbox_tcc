@@ -62,55 +62,43 @@ const GoogleChart = ({ exportButton }) => {
       const response = await axios.get('http://127.0.0.1:3333/dados/3'); // Faz uma requisição para obter os dados da API
       if (response.data.sucesso) { 
         const dados = response.data.dados; // Extrai os dados da resposta da API
-
+  
         // Substitui os nomes completos pelos abreviados
         const equipamentos = [...new Set(dados.map(item => abreviarNomeEquipamento(item.local_nome)))];
-
+  
         // Inicializa o array de dados com os cabeçalhos
-        const chartDataArray = [['Data', ...equipamentos]];
-
-        // Armazena os dados reais pela data/hora
+        const chartDataArray = [['Hora', ...equipamentos]];
+  
+        // Armazena os dados reais pela data/hora completa
         const dataByTime = {};
-
+  
         let currentMax = maxValue; // Inicializa o maior valor com o estado maxValue
-
-        
-        // Preenche os dados com base nos horários reais
+  
+        // Preenche os dados com base nos horários completos
         dados.forEach(item => {
-          // Verifica se a string de data está no formato correto e converte para Date
-          let dataCompleta = new Date(item.dados_data);
-
-          // Se a data não for válida, tente corrigir o formato
-          if (isNaN(dataCompleta.getTime())) {
-            dataCompleta = new Date(item.dados_data.replace(' ', 'T')); // Converte 'YYYY-MM-DD HH:MM:SS' para 'YYYY-MM-DDTHH:MM:SS'
-          }
-
-          if (isNaN(dataCompleta.getTime())) {  // Se ainda for inválida, log o erro
-            console.error(`Data inválida: ${item.dados_data}`);
-            return;
-          }
-          
+          // Converte a data para um objeto Date e pega a hora completa
+          const dataCompleta = new Date(item.dados_data);
+          const formattedTime = `${dataCompleta.getHours()}:${dataCompleta.getMinutes()}:${dataCompleta.getSeconds()}`; // Hora:minuto:segundo
+  
           const temp = parseFloat(item.dados_temp);
-
-          const formattedTime = `${dataCompleta.getHours()}:${dataCompleta.getMinutes()}:${dataCompleta.getSeconds()}`; // Formata a data completa
-
+  
           if (!dataByTime[formattedTime]) {
             dataByTime[formattedTime] = new Array(equipamentos.length).fill(null); // Cria um array de temperaturas
           }
-
-          const equipIndex = equipamentos.indexOf(abreviarNomeEquipamento(item.local_nome)); // Obtém o índice do equipamento abreviado
-          dataByTime[formattedTime][equipIndex] = temp; // Atribui a temperatura ao horário e equipamento
-
+  
+          const equipIndex = equipamentos.indexOf(abreviarNomeEquipamento(item.local_nome)); // Obtém o índice do equipamento
+          dataByTime[formattedTime][equipIndex] = temp; // Atribui a temperatura à hora completa
+  
           if (temp > currentMax) { // Atualiza o maior valor de temperatura se necessário
             currentMax = temp;
           }
         });
-
+  
         // Insere os dados no array de dados do gráfico
         Object.entries(dataByTime).forEach(([formattedTime, temps]) => {
           chartDataArray.push([formattedTime, ...temps]);
         });
-
+  
         setChartData(chartDataArray); // Atualiza os dados do gráfico
         setMaxValue(currentMax); // Atualiza o valor máximo
       }
@@ -118,7 +106,6 @@ const GoogleChart = ({ exportButton }) => {
       console.error('Erro ao buscar dados da API', error); // Lida com erros da API
     }
   };
-
   //! Carrega o script do Google Charts
   useEffect(() => {
     const script = document.createElement('script');

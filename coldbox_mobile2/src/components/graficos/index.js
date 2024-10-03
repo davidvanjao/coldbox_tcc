@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Dimensions, ActivityIndicator } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { useRoute } from '@react-navigation/native'; // Importa o useRoute
 
@@ -8,7 +8,58 @@ import styles from './styles';
 export default function Grafico() {
 
     const route = useRoute(); // Usa o useRoute para acessar os parâmetros
-    const { equipamentoId } = route.params; // Extrai o parâmetro passado (equipamentoId)
+    const { equipamentoId, id_usuario, id_cliente } = route.params; // Extrai os parâmetros passados
+
+    const [dadosEquipamento, setDadosEquipamento] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // Função para buscar informacoes do grafico
+    const fetchData = async () => {
+        try {
+            const response = await fetch(
+                `http://127.0.0.1:3333/dados/${equipamentoId}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error('Erro na requisição');
+            }
+
+            const data = await response.json();
+            setDadosEquipamento(data.dados); // Acessa o array "dados" dentro da resposta da API
+            setLoading(false);
+
+        } catch (error) {
+
+            alert('Erro ao buscar os dados');
+            setLoading(false);
+        }
+    };
+
+    // Fetch de dados com useEffect
+    useEffect(() => {
+        fetchData();
+
+        // Configura o intervalo para atualizar os dados a cada 10 segundos
+        const intervalId = setInterval(() => {
+            fetchData();
+        }, 10000); // Atualiza a cada 10 segundos (10.000 ms)
+
+        // Limpa o intervalo ao desmontar o componente
+        return () => clearInterval(intervalId);
+    }, [equipamentoId]);
+
+    
+    console.log(dadosEquipamento);
+
+    if (loading) {
+        return <ActivityIndicator size="large" color="#0000ff" />;
+    }
 
     return (        
         <View>
@@ -21,7 +72,7 @@ export default function Grafico() {
                     </Text>
                     <LineChart
                         data={{
-                            labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                            labels: ['21:00', '22:00', '23:00', '00:00', '01:00', '02:00', '03:00'],
                             datasets: [
                             {
                                 data: [22, 23, 21, 21, 22.5, 24, 22], // Dados de temperatura

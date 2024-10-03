@@ -11,7 +11,8 @@ const AlertaController = require('../controllers/alerta');
 const LogsController = require('../controllers/logs'); 
 const LocalController = require('../controllers/local'); 
 const EquipamentoController = require('../controllers/equipamento'); 
-const ParametroController = require('../controllers/parametro'); 
+const ParametroController = require('../controllers/parametro');
+const uploadFotoController = require('../controllers/uploadFoto'); 
 
 router.get('/alerta', AlertaController.listar); //ok
 router.post('/alerta', AlertaController.cadastrar); //ok
@@ -64,9 +65,6 @@ router.get('/logs/listarNotificacoesTotalEmAberto/:equip_id', LogsController.lis
 router.get('/logs/listarNotificacoesNaoVisualizadas/:equip_id', LogsController.listarNotificacoesNaoVisualizadas); //ok
 
 
-
-
-
 router.get('/usuarios/:cli_id', UsuariosController.listar);
 router.post('/usuarios', body('user_email').isEmail().withMessage('Por favor, forneça um email válido'),  UsuariosController.cadastrar); 
 router.patch('/usuarios/:user_id', UsuariosController.editar); 
@@ -76,6 +74,10 @@ router.get('/usuarios/dadosUsuario/:user_id', UsuariosController.listarDadosUsua
 
 //traz nome de usuario e nome da empresa - ok 
 router.get('/usuarios/dadosUsuarioEmpresa/:user_id', UsuariosController.listarDadosUsuarioEmpresa); 
+
+
+//Rota para upload de fotos
+router.post('/uploadFoto', uploadFotoController.upload);
 
 
 module.exports = router;

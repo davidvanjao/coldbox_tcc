@@ -10,6 +10,24 @@ select * from novo_equipamento_dados order by dados_id desc;/*relaciona dados co
 select * from novo_equipamento_parametro2;/*parametros definidos para cada equipamento---NOVO*/
 select * from novo_equipamento_alertas_enviados; /*alertas enviados e esperando acao do usuario*/
 
+describe novo_equipamento_dados;
+
+/*novo 2 lista dados*/
+SELECT 
+    DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS hora,
+    ROUND(AVG(CAST(a.dados_temp AS DECIMAL(5,2))), 2) AS media_temperatura,
+    ROUND(AVG(CAST(a.dados_umid AS DECIMAL(5,2))), 2) AS media_umidade
+FROM 
+    novo_equipamento_dados a
+WHERE
+    a.equip_id = 1
+AND DATE_FORMAT(a.dados_data, '%Y-%m-%d') = "2024-10-02"
+GROUP BY 
+    DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
+ORDER BY 
+    hora;
+
+
 /*novo lista dados*/
 SELECT a.dados_id, c.local_nome, b.equip_modelo, b.equip_tipo, a.dados_temp, a.dados_umid, a.dados_data
 FROM 
@@ -21,7 +39,7 @@ WHERE
 	a.equip_id = b.equip_id
 AND a.equip_id = d.equip_id
 AND d.local_id = c.local_id
-AND b.equip_id = 5;
+AND b.equip_id = 1;
 
 
 /*lista dados*/

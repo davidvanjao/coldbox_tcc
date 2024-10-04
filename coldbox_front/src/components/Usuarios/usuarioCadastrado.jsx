@@ -7,24 +7,25 @@ import { faPlus, faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 
 const Usuarios = () => {
+    const cliId = localStorage.getItem('cli_id');
+    const userId = localStorage.getItem('userId');
     const [usuarios, setUsuarios] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [newUser, setNewUser] = useState({
-        user_id: '', 
         user_nome: '',
         user_email: '',
         user_tel: '',
         nivel_id: '',
-        user_senha: '', 
+        user_senha: '',
         user_imagem_perfil: '',
-        cli_id: ''
+        cli_id: cliId
     });
+    console.log(newUser);
     const [error, setError] = useState(null);
     const [isEditMode, setIsEditMode] = useState(false);
     const [editingUserId, setEditingUserId] = useState(null);
     const [niveisAcesso, setNiveisAcesso] = useState([]); // Novo estado
     // const [ufs, setUfs] = useState([]); // Estado para UFs
-    const cliId = localStorage.getItem('cli_id');
 
     useEffect(() => {
         listarUsuarios();
@@ -36,14 +37,19 @@ const Usuarios = () => {
     async function listarUsuarios() {
         try {
             const response = await axios.get('http://127.0.0.1:3333/usuarios/' + cliId);
+            console.log(response.data); // Verifique a estrutura da resposta
             if (response.data.sucesso) {
                 setUsuarios(response.data.dados);
+                console.log('Usuários:', usuarios); // Verifique se o estado foi atualizado
+            } else {
+                setError('Erro ao listar usuários');
             }
         } catch (error) {
             setError('Erro ao listar usuários');
             console.error(error);
         }
     }
+
 
     async function listarNiveisAcesso() {
         try {
@@ -57,53 +63,110 @@ const Usuarios = () => {
         }
     }
 
+    const deleteUsuario = async (userId) => {
+        try {
+            const response = await axios.delete(`http://127.0.0.1:3333/usuarios/${userId}`);
+            if (response.data.sucesso) {
+                // Atualiza a lista de usuários após a deleção
+                setUsuarios((prevUsuarios) => prevUsuarios.filter(user => user.user_id !== userId));
+            } else {
+                setError('Erro ao deletar usuário');
+            }
+        } catch (error) {
+            setError('Erro ao deletar usuário');
+            console.error(error);
+        }
+    };
+
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewUser((prev) => ({ ...prev, [name]: value }));
+        console.log(newUser); // Verifique se o estado está sendo atualizado conforme esperado
     };
+
 
     async function cadastrarUsuarios() {
         try {
-            const response = await axios.get('http://127.0.0.1:3333/usuarios', newUser); 
+            const response = await axios.post('http://127.0.0.1:3333/usuarios', newUser); 
             if (response.data.sucesso) {
-            setNewUser(false);
-            setUsuarios([...usuarios, response.data.dados]); // Atualiza a lista de usuarios
-            resetForm();
-      } else {
-        setError('Erro ao adicionar usuario');
-      }
-    } catch (error) {
-      setError('Erro ao adicionar usuario');
-    }
-  };
-
-    
-    const edtUsuario = async () => {
-        try {
-            const response = await axios.patch('http://127.0.0.1:3333/usuarios/' + newUser.user_id, newUser);
-            if (response.data.sucesso) {
-                setShowModal(false);
-                listarUsuarios();
+                // Adiciona o novo usuário à lista imediatamente
+                setUsuarios((prevUsuarios) => [...prevUsuarios, response.data.dados]); 
+                // Limpa o formulário
                 setNewUser({
                     user_nome: '',
                     user_email: '',
                     user_tel: '',
                     nivel_id: '',
                     user_senha: '', 
-                    user_senha: ''
+                    user_imagem_perfil: '',
+                    cli_id: cliId
                 });
+                setShowModal(false); // Fecha o modal após a adição
+                setError(null); // Limpa qualquer mensagem de erro
+            } else {
+                setError('Erro ao adicionar usuário');
             }
         } catch (error) {
             setError('Erro ao adicionar usuário');
             console.error(error);
         }
+    }
+    
+
+    const edtUsuario = async () => {
+        try {
+            const response = await axios.patch(`http://127.0.0.1:3333/usuarios/${newUser.user_id}`, newUser);
+            if (response.data.sucesso) {
+                // Atualiza a lista de usuários com os dados editados
+                setUsuarios((prevUsuarios) => 
+                    prevUsuarios.map(user => 
+                        user.user_id === newUser.user_id ? response.data.dados : user
+                    )
+                );
+                setShowModal(false); // Fecha o modal após a edição
+                setNewUser({
+                    user_nome: '',
+                    user_email: '',
+                    user_tel: '',
+                    nivel_id: '',
+                    user_senha: '',
+                    user_imagem_perfil: '',
+                    cli_id: cliId
+                });
+                setError(null); // Limpa qualquer mensagem de erro
+            } else {
+                setError('Erro ao atualizar usuário');
+            }
+        } catch (error) {
+            setError('Erro ao atualizar usuário');
+            console.error(error);
+        }
     };
+    
 
     function openEditModal(user) {
+        setError(null); // Limpa o erro ao abrir o modal
         setNewUser(user);
         setShowModal(true);
     }
-// console.log(newUser);
+
+    function openAddModal() {
+        setError(null); // Limpa o erro ao abrir o modal para adicionar
+        setNewUser({
+            user_nome: '',
+            user_email: '',
+            user_tel: '',
+            nivel_id: '',
+            user_senha: '',
+            user_imagem_perfil: '',
+            cli_id: cliId
+        });
+        setShowModal(true);
+        setIsEditMode(false);
+    }
+
+    // console.log(newUser);
     return (
         <div className={styles.conteinerGrid}>
             <div className={styles.containerUsuarios}>
@@ -111,10 +174,9 @@ const Usuarios = () => {
                     <span className={styles.tag}>Usuários</span>
                     <button
                         className={styles.addButton}
-                        onClick={() => setShowModal(true)}
+                        onClick={openAddModal}  // Use openAddModal para adicionar novos usuários
                     >
                         <FontAwesomeIcon icon={faPlus} /> Adicionar Usuário
-                        
                     </button>
                 </div>
                 <div className={styles.tabelaGeral}>
@@ -130,13 +192,13 @@ const Usuarios = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {usuarios.map((item, index) => (
-                                <tr key={index} className={index % 2 === 0 ? styles.evenRow : styles.oddRow}>
+                            {usuarios.map((item) => (
+                                <tr key={item.user_id} className={item.index % 2 === 0 ? styles.evenRow : styles.oddRow}>
                                     <td className={styles.td}>{item.user_nome}</td>
                                     <td className={styles.td}>{item.user_email}</td>
                                     <td className={styles.td}>{item.user_tel}</td>
                                     <td className={styles.td}>{niveisAcesso.find(n => n.nivel_id === item.nivel_id)?.nivel_acesso || 'N/A'}</td>
-                                    <td className={styles.td}>{'*'.repeat(item.user_senha.length)}</td>
+                                    <td className={styles.td}>{'*'.repeat(item.user_senha ? item.user_senha.length : 0)}</td>
                                     <td className={styles.td}>
                                         <FontAwesomeIcon
                                             icon={faPen}
@@ -146,7 +208,7 @@ const Usuarios = () => {
                                         <FontAwesomeIcon
                                             icon={faTrash}
                                             className={styles.deleteIcon}
-                                            onClick={() => deleteUsuario(item.user_id, index)}
+                                            onClick={() => deleteUsuario(item.user_id)}
                                         />
                                     </td>
                                 </tr>
@@ -220,7 +282,9 @@ const Usuarios = () => {
 
                         <button
                             className={styles.saveButton}
-                            onClick={() => edtUsuario()}
+                            onClick={() => {
+                                isEditMode ? edtUsuario() : cadastrarUsuarios(); // Verifica o modo de edição antes de salvar
+                            }}
                         >
                             {isEditMode ? 'Atualizar' : 'Salvar'}
                         </button>
@@ -228,7 +292,7 @@ const Usuarios = () => {
                         <button
                             className={styles.cancelButton}
                             onClick={() => {
-                
+
                                 setShowModal(false);
                                 setIsEditMode(false);
                                 setEditingUserId(null);

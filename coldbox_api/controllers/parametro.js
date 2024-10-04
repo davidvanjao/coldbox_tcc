@@ -12,24 +12,16 @@ const dataInput = (data) => {
 module.exports = {
     async listar(request, response) { //ok
         try {
-
-            // parâmetro recebido pela URL via params ex: /usuario/1
-            const { equip_id } = request.params; 
-
-            // instruções SQL para buscar o modelo do equipamento
+            // instruções SQL para buscar todos os parâmetros sem filtro de equip_id
             const sql = `SELECT a.param_id, a.param_interface, a.param_maximo, a.param_minimo, b.equip_id, b.equip_modelo, b.equip_tipo
             FROM 
                 novo_equipamento_parametro2 a,
                 novo_equipamento b
             WHERE
-                a.equip_id = b.equip_id
-            AND b.equip_id = ?`;
-
-            // preparo do array com dados que serão atualizados
-            const values = [equip_id]; 
+                a.equip_id = b.equip_id`;
     
-            // executa instruções SQL
-            const parametro = await db.query(sql, values); 
+            // executa instruções SQL sem parâmetros
+            const parametro = await db.query(sql); 
             const nItens = parametro[0].length;
     
             return response.status(200).json({
@@ -47,6 +39,7 @@ module.exports = {
             });
         }
     },
+    
 
     async cadastrar(request, response) { //ok
         try {

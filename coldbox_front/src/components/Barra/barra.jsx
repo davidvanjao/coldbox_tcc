@@ -74,7 +74,7 @@ const BarraSuperior = () => {
     try {
       const response = await axios.get(`http://127.0.0.1:3333/usuarios/dadosUsuario/${userId}`);
       if (response.data.sucesso) {
-        const { user_nome, user_email, user_tel, user_senha, nivel_id, user_status, user_imagem_perfil } = response.data.dados;
+        const { user_nome, user_email, user_tel, user_senha, nivel_id, user_status } = response.data.dados;
 
         //Separa o nome completo em nome e sobrenome
         const [primeiroNome, ...restante] = user_nome.split(' ');
@@ -85,12 +85,6 @@ const BarraSuperior = () => {
         setSenha(user_senha);
         setNivelId(nivel_id); 
         setStatus(user_status);
-        
-        //Definindo a foto de perfil(URL do banco)
-        if (user_imagem_perfil) {
-          setFotoPerfil(user_imagem_perfil);
-        }
-
       } else {
         alert('Erro ao buscar dados do usuário.');
       }
@@ -108,87 +102,48 @@ const BarraSuperior = () => {
   const mudarFotoPerfil = (event) => {
     const arquivo = event.target.files[0];
     if (arquivo) {
-      setArquivoSelecionado(arquivo); //Armazena o arquivo selecionado
+      setArquivoSelecionado(URL.createObjectURL(arquivo)); //Atualiza a imagem de perfil temporariamente
     }
   };
 
-  // Função para fazer upload da foto de perfil
-  const uploadFotoPerfil = async () => {
-    if (!arquivoSelecionado) {
-      return null;
-    }
+  //Salva as mudanças feitas no perfil
+  const salvarAlteracoesPerfil = async (e) => {
+    e.preventDefault();
 
-    const formData = new FormData();
-    formData.append('file', arquivoSelecionado); // Certifique-se de que 'arquivoSelecionado' está correto
-
-    try {
-      const response = await axios.post('http://localhost:3333/uploadFoto', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      console.log('Upload bem-sucedido:', response.data);
-      
-      return response.data.url; // Retorne a URL da imagem
-    } catch (error) {
-      console.error('Erro ao fazer upload da foto:', error);
-      alert('Erro ao fazer upload da foto');
-      return null;
-    }
-  };
-
-
-
-// Salva as mudanças feitas no perfil
-const salvarAlteracoesPerfil = async (e) => {
-  e.preventDefault();
-
-  if (!userId) {
-    alert('ERRO: ID do usuário não encontrado.');
-    return;
-  }
-
-  const nomeCompleto = `${nome} ${sobrenome}`; // Combina nome e sobrenome
-
-  let fotoUrl = fotoPerfil; // Mantém a URL atual se não houver nova foto
-  if (arquivoSelecionado) {
-    fotoUrl = await uploadFotoPerfil(); // Faz o upload da nova foto e recebe a URL
-    if (!fotoUrl) {
-      alert('Erro ao fazer upload da foto');
+    if (!userId) {
+      alert('ERRO: ID do usuário não encontrado.');
       return;
     }
-  }
 
-  const dadosAtualizados = {
-    user_nome: nomeCompleto,
-    user_email: email,
-    user_tel: telefone,
-    user_senha: senha,
-    nivel_id: nivelId,
-    user_status: status,
-    user_imagem_perfil: fotoUrl, // Atualiza a URL da foto de perfil no banco
-  };
+    const nomeCompleto = `${nome} ${sobrenome}`; //Combina nome e sobrenome
 
-  try {
-    // Requisição para atualizar o perfil do usuário
-    const response = await axios.patch(`http://127.0.0.1:3333/usuarios/${userId}`, dadosAtualizados);
-    if (response.data.sucesso) {
-      alert('Perfil atualizado com sucesso');
-      console.log('Perfil atualizado com sucesso');
+    const dadosAtualizados = {
+      user_nome: nomeCompleto,
+      user_email: email,
+      user_tel: telefone,
+      user_senha: senha,
+      nivel_id: nivelId,
+      user_status: status,
+    };
 
-      setNomeUsuario(nomeCompleto); // Atualiza o nome exibido na barra superior
-      localStorage.setItem('userName', nomeCompleto); // Atualiza o nome no localStorage
-      setFotoPerfil(fotoUrl); // Atualiza a URL da foto
-      fecharModal(); // Fecha o modal
-    } else {
-      alert('Erro ao atualizar o perfil.');
+
+    try {
+      //Requisição para atualizar o perfil do usuario
+      const response = await axios.patch(`http://127.0.0.1:3333/usuarios/${userId}`, dadosAtualizados);
+      if (response.data.sucesso) {
+        alert('Perfil atualizado com sucesso');
+        console.log('Perfil atualizado com sucesso');
+
+        setNomeUsuario(nomeCompleto); //Atualiza o nome exibido na barra superior
+        localStorage.setItem('userName', nomeCompleto); //Atualiza o nome no localStorage
+        fecharModal(); //Fecha o modal
+      } else {
+        alert('Erro ao atualizar o perfil.');
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar o perfil', error);
     }
-  } catch (error) {
-    console.error('Erro ao atualizar o perfil', error);
-  }
-};
-
+  };
 
   return (
     <div className='barraSuperior'>
@@ -204,7 +159,7 @@ const salvarAlteracoesPerfil = async (e) => {
 
       <div className='perfilUsuario'>
         <div className='informacaoUsuario'>
-          <img src={fotoPerfil || '/user.png'} alt="Usuário" />
+          <img src={arquivoSelecionado || fotoPerfil} alt="Usuário" />
           <div>
             <h3>{nomeUsuario || 'Usuário'}</h3> {/* Exibe o nome recuperado ou 'Usuário' como fallback */}
             <span>{nivelAcesso || 'Nível de Acesso'}</span>
@@ -223,11 +178,10 @@ const salvarAlteracoesPerfil = async (e) => {
 
             {/* Área de edição da foto de perfil */}
             <div className="fotoDePerfil">
-              <img src={arquivoSelecionado ? URL.createObjectURL(arquivoSelecionado) : fotoPerfil} alt="Foto de Perfil" className="imagemDePerfil" />
+              <img src={arquivoSelecionado || fotoPerfil} alt="Foto de Perfil" className="imagemDePerfil" />
               <div className="sobreposicaoParaEditar">
                 <input
                   type="file"
-                  name="file"
                   accept="image/*"
                   onChange={mudarFotoPerfil}
                   style={{ display: 'none' }}

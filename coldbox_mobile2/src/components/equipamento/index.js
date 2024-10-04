@@ -152,8 +152,15 @@ export default function Equipamento({id_usuario, id_cliente}) {
                 <Pressable
                     key={item.equip_id} // Adicionando uma chave única
                     style={styles.equipamento}
-                    onPress={() => navigation.navigate('InfoEquipamento', { equipamentoId: item.equip_id })}
-                >
+
+                    //variaveis sendo passadas para info equipamentos
+                    onPress={() => navigation.navigate('InfoEquipamento', { 
+                        equipamentoId: item.equip_id, 
+                        id_usuario: id_usuario, 
+                        id_cliente: id_cliente
+                    })}
+
+>
                     <View style={styles.equipamentoInfo}>
                         <Text>Local: {item.local_nome}</Text> {/* Exibindo o nome do equipamento */}
                         <Text>{item.local_descricao}</Text> {/* Exibindo o local */}

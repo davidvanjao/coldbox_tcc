@@ -16,7 +16,8 @@ const Usuarios = () => {
         user_tel: '',
         nivel_id: '',
         user_senha: '', 
-        user_imagem_perfil: ''
+        user_imagem_perfil: '',
+        cli_id: ''
     });
     const [error, setError] = useState(null);
     const [isEditMode, setIsEditMode] = useState(false);
@@ -27,6 +28,7 @@ const Usuarios = () => {
 
     useEffect(() => {
         listarUsuarios();
+        cadastrarUsuarios();
         listarNiveisAcesso(); // Chama a função para buscar níveis de acesso
         // listaUfs(); // Chama a função para buscar UFs
     }, []);
@@ -60,26 +62,21 @@ const Usuarios = () => {
         setNewUser((prev) => ({ ...prev, [name]: value }));
     };
 
-    const addUsuario = async () => {
+    async function cadastrarUsuarios() {
         try {
-            const response = await axios.post('http://127.0.0.1:3333/usuarios', newUser);
+            const response = await axios.get('http://127.0.0.1:3333/usuarios', newUser); 
             if (response.data.sucesso) {
-                setShowModal(false);
-                listarUsuarios();
-                setNewUser({
-                    user_id: '', 
-                    user_nome: '',
-                    user_email: '',
-                    user_tel: '',
-                    nivel_id: '',
-                    user_senha: '',
-                });
-            }
-        } catch (error) {
-            setError('Erro ao adicionar usuário');
-            console.error(error);
-        }
-    };
+            setNewUser(false);
+            setUsuarios([...usuarios, response.data.dados]); // Atualiza a lista de usuarios
+            resetForm();
+      } else {
+        setError('Erro ao adicionar usuario');
+      }
+    } catch (error) {
+      setError('Erro ao adicionar usuario');
+    }
+  };
+
     
     const edtUsuario = async () => {
         try {
@@ -117,6 +114,7 @@ const Usuarios = () => {
                         onClick={() => setShowModal(true)}
                     >
                         <FontAwesomeIcon icon={faPlus} /> Adicionar Usuário
+                        
                     </button>
                 </div>
                 <div className={styles.tabelaGeral}>

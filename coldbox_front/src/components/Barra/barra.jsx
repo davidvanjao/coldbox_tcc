@@ -18,6 +18,7 @@ const BarraSuperior = () => {
   const [senha, setSenha] = useState(''); 
   const [nivelAcesso, setNivelAcesso] = useState(''); 
   const [nivelId, setNivelId] = useState(''); 
+  const [status, setStatus] = useState('');
   const [userId, setUserId] = useState(null); 
 
   //Busca o nome e ID do usuário no localStorage
@@ -73,7 +74,7 @@ const BarraSuperior = () => {
     try {
       const response = await axios.get(`http://127.0.0.1:3333/usuarios/dadosUsuario/${userId}`);
       if (response.data.sucesso) {
-        const { user_nome, user_email, user_tel, user_senha, nivel_id } = response.data.dados;
+        const { user_nome, user_email, user_tel, user_senha, nivel_id, user_status } = response.data.dados;
 
         //Separa o nome completo em nome e sobrenome
         const [primeiroNome, ...restante] = user_nome.split(' ');
@@ -83,6 +84,7 @@ const BarraSuperior = () => {
         setTelefone(user_tel);
         setSenha(user_senha);
         setNivelId(nivel_id); 
+        setStatus(user_status);
       } else {
         alert('Erro ao buscar dados do usuário.');
       }
@@ -121,6 +123,7 @@ const BarraSuperior = () => {
       user_tel: telefone,
       user_senha: senha,
       nivel_id: nivelId,
+      user_status: status,
     };
 
 
@@ -129,6 +132,8 @@ const BarraSuperior = () => {
       const response = await axios.patch(`http://127.0.0.1:3333/usuarios/${userId}`, dadosAtualizados);
       if (response.data.sucesso) {
         alert('Perfil atualizado com sucesso');
+        console.log('Perfil atualizado com sucesso');
+
         setNomeUsuario(nomeCompleto); //Atualiza o nome exibido na barra superior
         localStorage.setItem('userName', nomeCompleto); //Atualiza o nome no localStorage
         fecharModal(); //Fecha o modal

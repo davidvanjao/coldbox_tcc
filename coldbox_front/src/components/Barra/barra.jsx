@@ -50,7 +50,7 @@ const BarraSuperior = () => {
           setNivelAcesso(nivel_acesso);
 
           //Armazena o cli_id no localStorage
-          // localStorage.setItem('cli_id', cli_id);
+          localStorage.setItem('cli_id', cli_id);
         } else {
           console.error('Erro ao buscar dados do usuário e da empresa.');
         }

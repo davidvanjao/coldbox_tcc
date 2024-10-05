@@ -29,7 +29,7 @@ const Usuarios = () => {
 
     useEffect(() => {
         listarUsuarios();
-        cadastrarUsuarios();
+        // cadastrarUsuarios();
         listarNiveisAcesso(); // Chama a função para buscar níveis de acesso
         // listaUfs(); // Chama a função para buscar UFs
     }, []);
@@ -143,7 +143,12 @@ const Usuarios = () => {
         } catch (error) {
             setError('Erro ao atualizar usuário');
             console.error(error);
+        }finally{
+            listarUsuarios();
+            // cadastrarUsuarios();
+            listarNiveisAcesso(); // Chama a função para buscar níveis de acesso
         }
+    
     }
     
     function openEditModal(user) {

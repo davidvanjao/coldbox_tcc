@@ -114,14 +114,14 @@ const Usuarios = () => {
     }
     
 
-    const edtUsuario = async () => {
+    async function edtUsuario() {
         try {
-            const response = await axios.patch(`http://127.0.0.1:3333/usuarios/${newUser.user_id}`, newUser);
+            const response = await axios.patch(`http://127.0.0.1:3333/usuarios/${editingUserId}`, newUser);
             if (response.data.sucesso) {
                 // Atualiza a lista de usuários com os dados editados
                 setUsuarios((prevUsuarios) => 
                     prevUsuarios.map(user => 
-                        user.user_id === newUser.user_id ? response.data.dados : user
+                        user.user_id === editingUserId ? response.data.dados : user
                     )
                 );
                 setShowModal(false); // Fecha o modal após a edição
@@ -135,6 +135,8 @@ const Usuarios = () => {
                     cli_id: cliId
                 });
                 setError(null); // Limpa qualquer mensagem de erro
+                setIsEditMode(false); // Reseta o estado de edição
+                setEditingUserId(null); // Reseta o ID do usuário que está sendo editado
             } else {
                 setError('Erro ao atualizar usuário');
             }
@@ -142,14 +144,16 @@ const Usuarios = () => {
             setError('Erro ao atualizar usuário');
             console.error(error);
         }
-    };
+    }
     
-
     function openEditModal(user) {
         setError(null); // Limpa o erro ao abrir o modal
         setNewUser(user);
         setShowModal(true);
+        setIsEditMode(true); // Adicione esta linha
+        setEditingUserId(user.user_id); // Adicione esta linha
     }
+    
 
     function openAddModal() {
         setError(null); // Limpa o erro ao abrir o modal para adicionar

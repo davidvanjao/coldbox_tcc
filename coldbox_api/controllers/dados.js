@@ -17,17 +17,32 @@ module.exports = {
             //     a.equip_id = b.equip_id
             // AND b.equip_id = ?`;
 
-            const sql = `SELECT a.dados_id, c.local_nome, b.equip_modelo, b.equip_tipo, a.dados_temp, a.dados_umid, a.dados_data
+            // const sql = `SELECT a.dados_id, c.local_nome, b.equip_modelo, b.equip_tipo, a.dados_temp, a.dados_umid, a.dados_data
+            // FROM 
+            //     novo_equipamento_dados a,
+            //     novo_equipamento b,
+            //     novo_local c,
+            //     novo_equipamento_local d    
+            // WHERE
+            //     a.equip_id = b.equip_id
+            // AND a.equip_id = d.equip_id
+            // AND d.local_id = c.local_id
+            // AND b.equip_id = ?;`;
+
+            const sql = `SELECT 
+                DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS data_hora,
+                DATE_FORMAT(a.dados_data, '%H:00') AS hora,
+                ROUND(AVG(CAST(a.dados_temp AS DECIMAL(5,2))), 2) AS media_temperatura,
+                ROUND(AVG(CAST(a.dados_umid AS DECIMAL(5,2))), 2) AS media_umidade
             FROM 
-                novo_equipamento_dados a,
-                novo_equipamento b,
-                novo_local c,
-                novo_equipamento_local d    
+                novo_equipamento_dados a
             WHERE
-                a.equip_id = b.equip_id
-            AND a.equip_id = d.equip_id
-            AND d.local_id = c.local_id
-            AND b.equip_id = ?;`;
+                a.equip_id = ?
+            AND DATE_FORMAT(a.dados_data, '%Y-%m-%d') = "2024-10-05"
+            GROUP BY 
+                DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
+            ORDER BY 
+                hora;`;
 
             // preparo do array com dados que serão atualizados
             const values = [equip_id];                     

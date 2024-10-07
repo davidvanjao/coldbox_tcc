@@ -30,7 +30,8 @@ module.exports = {
             // AND b.equip_id = ?;`;
 
             const sql = `SELECT 
-                DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS hora,
+                DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS data_hora,
+                DATE_FORMAT(a.dados_data, '%H:00') AS hora,
                 ROUND(AVG(CAST(a.dados_temp AS DECIMAL(5,2))), 2) AS media_temperatura,
                 ROUND(AVG(CAST(a.dados_umid AS DECIMAL(5,2))), 2) AS media_umidade
             FROM 

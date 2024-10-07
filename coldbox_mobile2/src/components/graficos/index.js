@@ -54,8 +54,10 @@ export default function Grafico() {
         return () => clearInterval(intervalId);
     }, [equipamentoId]);
 
+    // Extrair dados e rótulos do array "dadosEquipamento"
+    const labels = dadosEquipamento.map(dado => dado.hora); // Supondo que você tenha um campo "horario"
+    const data = dadosEquipamento.map(dado => dado.media_temperatura); // Supondo que você tenha um campo "temperatura"
     
-    console.log(dadosEquipamento);
 
     if (loading) {
         return <ActivityIndicator size="large" color="#0000ff" />;
@@ -71,14 +73,16 @@ export default function Grafico() {
                         Variação de Temperatura (°C) em tempo real.
                     </Text>
                     <LineChart
+
                         data={{
-                            labels: ['21:00', '22:00', '23:00', '00:00', '01:00', '02:00', '03:00'],
+                            labels: labels, // Usando os horários recebidos da API
                             datasets: [
                             {
-                                data: [22, 23, 21, 21, 22.5, 24, 22], // Dados de temperatura
+                                data: data, // Usando as temperaturas recebidas da API
                             },
                             ],
                         }}
+
                         width={Dimensions.get('window').width - 65} // Largura ajustada com margem de 20 de cada lado
                         height={250} // Altura do gráfico
                         yAxisLabel="°C " // Rótulo no eixo Y indicando a unidade de medida

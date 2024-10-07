@@ -1,0 +1,17 @@
+.bodyLocal{
+    background-color: #C0C0C0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 250px ;
+  }
+
+  .containerGridLocal {
+    display: grid;
+    grid-template: repeat(6, 1fr) / repeat(5, 1fr);
+    padding: 1rem;
+    width: 100%;
+    gap: 1.5rem;
+  }

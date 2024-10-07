@@ -163,7 +163,7 @@ const GoogleChart = ({ exportButton }) => {
           gridlines: { count: 5 } // Quantidade de linhas de grade
         },
         vAxis: {
-          viewWindow: { min: -4, max: 6 }, // Intervalo de temperatura (-4°C a 6°C)
+          viewWindow: { min: -10, max: 6 }, // Intervalo de temperatura (-4°C a 6°C)
           format: '#,##0°C'
         },
         chartArea: {

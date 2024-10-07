@@ -10,7 +10,7 @@ import DispositivosAtivos from '@/components/dispositivosAtivos/DispositivosAtiv
 
 
 
-export default function tempoReal() {
+export default function dispositivos() {
   return (
     <div className='bodyGrafico'>
         <NavBar />

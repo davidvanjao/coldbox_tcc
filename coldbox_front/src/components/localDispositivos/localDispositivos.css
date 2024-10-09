@@ -1,0 +1,149 @@
+/* Estilização principal do container */
+.containerTabela {
+    border-radius: 10px;
+    grid-row: 2 / span 5;
+    grid-column: 1 / -1;
+    /* box-sizing: border-box; Inclui padding e bordas na altura total */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    /* width: 100%; */
+    /* height: 100vh; O container ocupará 100% da altura da viewport */
+    background-color: #f9f9f9; /* Ajuste a cor de fundo conforme necessário */
+    position: relative; /* Para posicionar o botão absoluto dentro deste container */
+  }
+  
+  /* Cabeçalho da tabela */
+  .cabecalhoTabela {
+    background-color: #E6E6E6;
+    padding: 15px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .titulo {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  /* Estilização da tabela */
+  .tabela {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+  }
+  
+  /* Estilização das colunas da tabela */
+  .coluna {
+    padding: 15px;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid #dddddd;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  /* Estilização das linhas da tabela */
+  .linha:nth-child(even) {
+    background-color: #f5f5f5;
+  }
+  
+  .linha:nth-child(odd) {
+    background-color: #eeeeee;
+  }
+  
+  /* Estilização das células da tabela */
+  .celula {
+    padding: 15px;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 16px;
+  }
+  
+  /* --------------------------------------------------------------- */
+  /* Estilização do botão para abrir o modal */
+.botaoAdicionarLocal {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 8px 10px;
+    background-color: #4285F4;
+    color: white;
+    font-size: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  /* Estilização da sobreposição para o modal */
+  .sobreposicaoModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Estilização do conteúdo do modal */
+  .conteudoModal {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 400px;
+  }
+  
+  /* Estilização dos campos de entrada no modal */
+  .campoEntrada,
+  .campoTexto {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  
+  .campoTexto {
+    resize: vertical;
+  }
+  
+  /* Estilização do título do modal */
+  .tituloModal {
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 18px;
+  }
+  
+  /* Estilização dos botões no modal */
+  .acoesModal {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .acoesModal .botaoCancelar {
+    background-color: #f44336;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .acoesModal .botaoAdicionar {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  

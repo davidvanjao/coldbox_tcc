@@ -8,7 +8,6 @@ const ParametrosAtivos = () => {
   const equipId = localStorage.getItem('equip_id');
   const [parametros, setParametros] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
   const [editingItemId, setEditingItemId] = useState(null);
   const [newParameter, setNewParameter] = useState({
     equip_id: equipId, 
@@ -32,22 +31,64 @@ const ParametrosAtivos = () => {
   };
 
   useEffect(() => {
-    listarParametro(); // Chama a função listarParametro
+    listarParametro();
   }, []);
 
   const handleEdit = (item) => {
-    setNewParameter(item); // Preenche o formulário com os dados do item a ser editado
-    setIsEditing(true); // Define que estamos no modo de edição
-    setEditingItemId(item.param_id); // Guarda o ID do item que está sendo editado
+    setNewParameter({
+        equip_id: item.equip_id,
+        param_interface: item.param_interface,
+        param_minimo: item.param_minimo,
+        param_maximo: item.param_maximo
+    });
+    setEditingItemId(item.param_id); // Define o ID do parâmetro que está sendo editado
     setShowEditModal(true); // Abre o modal de edição
   };
+
+  // Função para editar parâmetros
+  async function edtParametro() {
+    try {
+      const response = await axios.patch(`http://127.0.0.1:3333/parametro/${editingItemId}`, newParameter);
+      if (response.data.sucesso) {
+        // Atualiza a lista de parâmetros com os dados editados
+        atualizarParametroNaLista(response.data.dados);
+        resetFormulario();
+        setShowEditModal(false); // Fecha o modal após a edição
+      } else {
+        console.error('Erro ao atualizar parâmetro.');
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar parâmetro:', error);
+    } finally {
+      listarParametro(); // Atualiza a lista após a edição
+    }
+  }
+
+  // Função para atualizar a lista de parâmetros
+  function atualizarParametroNaLista(parametroAtualizado) {
+    setParametros((prevParametros) => 
+      prevParametros.map(param => 
+        param.param_id === editingItemId ? parametroAtualizado : param
+      )
+    );
+  }
+
+  // Função para resetar o formulário
+  function resetFormulario() {
+    setNewParameter({
+      equip_id: equipId, 
+      param_interface: '',
+      param_minimo: '',
+      param_maximo: ''
+    });
+    setEditingItemId(null); // Reseta o ID do parâmetro que está sendo editado
+  }
 
   const handleDelete = async (paramId) => {
     try {
       const response = await axios.delete(`http://127.0.0.1:3333/parametro/${paramId}`);
       if (response.data.sucesso) {
-        // Atualiza a lista de parâmetros após a exclusão
-        setParametros((prevParametros) => prevParametros.filter(param => param.param_id !== paramId));
+        setParametros(parametros.filter(param => param.param_id !== paramId));
       } else {
         console.error('Erro ao deletar parâmetro');
       }
@@ -56,36 +97,32 @@ const ParametrosAtivos = () => {
     }
   };
 
-  const handleSave = async () => {
+  const handleSaveNew = async () => {
     try {
-      const url = isEditing 
-        ? `http://127.0.0.1:3333/parametro/${editingItemId}` 
-        : 'http://127.0.0.1:3333/parametro';
-      const method = isEditing ? 'put' : 'post';
-      const response = await axios[method](url, newParameter);
-
+      const response = await axios.post('http://127.0.0.1:3333/parametro', newParameter);
       if (response.data.sucesso) {
-        listarParametro(); // Atualiza a lista de parâmetros
-        setShowEditModal(false); // Fecha o modal
-        setIsEditing(false); // Reseta o modo de edição
-        setEditingItemId(null); // Limpa o ID do item que está sendo editado
-        setNewParameter({ // Reseta os campos do novo parâmetro
-          equip_id: equipId, 
-          param_interface: '',
-          param_minimo: '',
-          param_maximo: '',
-        });
+        listarParametro();
+        closeModal();
       } else {
-        console.error('Erro ao salvar o parâmetro.');
+        console.error('Erro ao salvar o novo parâmetro.');
       }
     } catch (error) {
-      console.error('Erro ao salvar o parâmetro:', error);
+      console.error('Erro ao salvar o novo parâmetro:', error);
     }
+  };
+
+  const handleUpdate = async () => {
+    await edtParametro(); // Chama a função edtParametro ao atualizar
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewParameter((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const closeModal = () => {
+    setShowEditModal(false);
+    resetFormulario();
   };
 
   return (
@@ -117,12 +154,16 @@ const ParametrosAtivos = () => {
               <td className={styles.td}>{item.param_maximo}</td>
               <td className={styles.td}>{item.param_data}</td>
               <td className={styles.td}>
-                <button className={styles.actionButton} onClick={() => handleEdit(item)}>
-                  <FontAwesomeIcon icon={faPen} />
-                </button>
-                <button className={styles.actionButton} onClick={() => handleDelete(item.param_id)}>
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
+                <FontAwesomeIcon 
+                  icon={faPen} 
+                  className={styles.editIcon} 
+                  onClick={() => handleEdit(item)} 
+                />
+                <FontAwesomeIcon 
+                  icon={faTrash} 
+                  className={styles.deleteIcon} 
+                  onClick={() => handleDelete(item.param_id)} 
+                />
               </td>
             </tr>
           ))}
@@ -132,7 +173,7 @@ const ParametrosAtivos = () => {
       {showEditModal && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <h2>{isEditing ? 'Editar Parâmetro' : 'Adicionar Novo Parâmetro'}</h2>
+            <h2>{editingItemId ? 'Editar Parâmetro' : 'Adicionar Novo Parâmetro'}</h2>
             <label htmlFor="param_interface">Equipamento</label>
             <input
               type="text"
@@ -160,17 +201,10 @@ const ParametrosAtivos = () => {
               onChange={handleChange}
               required
             />
-            <button className={styles.saveButton} onClick={handleSave}>
-              {isEditing ? 'Atualizar' : 'Salvar'}
+            <button className={styles.saveButton} onClick={editingItemId ? handleUpdate : handleSaveNew}>
+              {editingItemId ? 'Atualizar' : 'Salvar'}
             </button>
-            <button
-              className={styles.cancelButton}
-              onClick={() => {
-                setShowEditModal(false); // Fecha o modal
-                setIsEditing(false); // Reseta o modo de edição
-                setEditingItemId(null); // Limpa o ID do item que está sendo editado
-              }}
-            >
+            <button className={styles.cancelButton} onClick={closeModal}>
               Cancelar
             </button>
           </div>

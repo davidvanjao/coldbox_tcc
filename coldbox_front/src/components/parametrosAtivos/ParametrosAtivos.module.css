@@ -1,12 +1,12 @@
 .container {
-  border-radius: 10px;
-  grid-row: 2 / span 3;
-  grid-column: 1 / -1;
-  display: flex;
-  flex-direction: column;
-}
-
-.header {
+    border-radius: 10px;
+    grid-row: 2 / span 3;
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -14,86 +14,61 @@
     padding: 15px 10px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    width: 100%; /* Faz com que o header ocupe toda a largura do container */
-}
-
-.header h2 {    
+    width: 100%;
+  }
+  
+  .header h2 {
     padding: 5px 10px;
     font-size: 18px;
     font-weight: 600;
-}
-
-/* Ajustando o botão de Adicionar Equipamento */
-
-/* Mantendo o nome addButton */
-.addButton {
-    background-color: #007bff; /* Azul padrão */
+  }
+  
+  .addButton {
+    background-color: #007bff;
     color: white;
     border: none;
-    padding: 10px 15px; /* Tamanho adequado do botão */
+    padding: 10px 15px;
     font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
     margin-left: 10px;
   }
   
-  /* Efeito hover para o botão */
   .addButton:hover {
-    background-color: #0056b3; /* Cor mais escura no hover */
+    background-color: #0056b3;
   }
   
-
-.table {
+  .table {
     width: 100%;
     border-collapse: collapse;
     background-color: #ffffff;
-}
-
-.th, .td {
+  }
+  
+  .th, .td {
     padding: 10px;
     border-bottom: 1px solid #dddddd;
-}
-
-.th {
+  }
+  
+  .th {
     text-align: left;
     font-weight: bold;
-}
-
-.td {
+  }
+  
+  .td {
     text-align: left;
     vertical-align: middle;
-}
-
-.tr:hover {
+  }
+  
+  .evenRow {
     background-color: #f5f5f5;
-}
-
-.circularButton {
-    width: 50px;
-    height: 50px;
-    background-color: #808080;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-}
-
-.actionButton {
-    background-color: transparent;
-    border: none;
-    margin-left: 10px;
-    cursor: pointer;
-    color: #333;
-}
-
-.actionButton:hover {
-    color: #007BFF;
-}
-
-/* Modal styles */
-.modal {
+  }
+  
+  .oddRow {
+    background-color: #eeeeee;
+  }
+  
+  /* Modal styles */
+  .modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -103,41 +78,61 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Garantir que o modal fique sobre outros elementos */
-}
-
-.modalContent {
+    z-index: 1000;
+  }
+  
+  .modalContent {
     background-color: #fff;
-    padding: 20px;
+    padding: 30px;
     border-radius: 10px;
+    width: 500px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 300px;
-    position: relative; /* Adicionado para posicionar corretamente o conteúdo do modal */
-}
-
-.modalContent h3 {
-    margin-top: 0;
+  }
+  
+  .modalContent h2 {
+    margin-bottom: 20px;
     text-align: center;
-}
-
-.modalContent input {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.saveButton {
+    font-size: 20px;
+  }
+  
+  .modalContent label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+  }
+  
+  .modalContent input {
     width: 100%;
     padding: 10px;
-    background-color: #4CAF50;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  
+  .modalActions {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .modalActions button {
+    padding: 10px 20px;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
-
-.saveButton:hover {
-    background-color: #45a049;
-}
+    font-size: 16px;
+  }
+  
+  .modalActions button:last-child {
+    background-color: red;
+  }
+  
+  .editIcon {
+    color: #007bff;
+    cursor: pointer;
+    font-size: 18px;
+    margin-left: 10px;
+  }
+  

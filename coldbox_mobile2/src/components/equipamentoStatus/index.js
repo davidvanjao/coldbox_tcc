@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 import styles from './styles';
 
-export default function EquipamentoStatus({ equipamentoId, id_usuario}) {
+export default function EquipamentoStatus({ equipamentoId, id_usuario, reloadKey}) {
 
     const [statusEquipamento, setStatusEquipamento] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -80,7 +80,7 @@ export default function EquipamentoStatus({ equipamentoId, id_usuario}) {
     // Fetch de dados com useEffect
     useEffect(() => {
         fetchData(); // Busque os dados ao montar o componente ou quando `equipamentoId` mudar
-    }, [equipamentoId]); // Adiciona `equipamentoId` como dependência
+    }, [equipamentoId, reloadKey]); // Adiciona `equipamentoId` como dependência
 
     if (loading) {
         return <ActivityIndicator size="large" color="#0000ff" />;

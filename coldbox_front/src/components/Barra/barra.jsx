@@ -166,7 +166,7 @@ const BarraSuperior = () => {
           </div>
         </div>
         <button className='botaoConfiguracao' onClick={abrirModalEdicao}>
-          <FontAwesomeIcon icon={faGear} className='iconeConfig' />
+          <FontAwesomeIcon icon={faGear} size='2x' className='iconeConfig' />
         </button>
       </div>
 

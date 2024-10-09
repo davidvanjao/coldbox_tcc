@@ -1,6 +1,9 @@
 import React, { useEffect, useState} from "react";
 import axios from "axios";
 import './localDispositivos.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+
 
 const LocalDispositivos = () => {
     const [locais, setLocais] = useState([]);
@@ -26,7 +29,7 @@ const LocalDispositivos = () => {
         }
     }, [cli_id]);
 
-    // Função para lidar com o preenchimento dos campos do modal
+    //Função para lidar com o preenchimento dos campos do modal
     const lidarComMudanca = (evento) => {
         const { name, value } = evento.target;
         setNovoLocal((prev) => ({ ...prev, [name]: value }));
@@ -55,6 +58,12 @@ const LocalDispositivos = () => {
         <div className='containerTabela'>
             <div className='cabecalhoTabela'>
                 <span className='titulo'>Locais Ativos</span>
+                    {/* Adicionando o botão para abrir o modal */}
+                    <button 
+                        className='botaoAdicionarLocal' 
+                        onClick={() => setExibirModal(true)}>
+                        <FontAwesomeIcon icon={faPlus} /> Adicionar Local
+                    </button>
             </div>
             <div className='tabelaLocais'>
                 <table className='tabela'>
@@ -80,27 +89,29 @@ const LocalDispositivos = () => {
                 <div className='sobreposicaoModal'>
                     <div className='conteudoModal'>
                         <h2 className='tituloModal'>Adicionar Nova Localização</h2>
+                        <p className="descricaoModal">Adicione uma nova localização para a criação de um novo dispositivo</p>
+                        <div className='camposLocalizacao'>
+                            <label htmlFor="local_nome">Nome do Local:</label>
+                            <input
+                                type="text"
+                                name="local_nome"
+                                id="local_nome"
+                                value={novoLocal.local_nome}
+                                onChange={lidarComMudanca}
+                                required
+                            />
+                        </div>
 
-                        <label htmlFor="local_nome">Nome do Local</label>
-                        <input
-                            type="text"
-                            name="local_nome"
-                            id="local_nome"
-                            value={novoLocal.local_nome}
-                            onChange={lidarComMudanca}
-                            className='campoEntrada'
-                            required
-                        />
-
-                        <label htmlFor="local_descricao">Descrição do Local</label>
-                        <textarea
-                            name="local_descricao"
-                            id="local_descricao"
-                            value={novoLocal.local_descricao}
-                            onChange={lidarComMudanca}
-                            className='campoTexto'
-                            required
-                        />
+                        <div className='camposLocalizacao'>
+                            <label htmlFor="local_descricao">Descrição do Local:</label>
+                            <input
+                                name="local_descricao"
+                                id="local_descricao"
+                                value={novoLocal.local_descricao}
+                                onChange={lidarComMudanca}
+                                required
+                            />
+                        </div>
 
                         <div className='acoesModal'>
                         <button onClick={() => setExibirModal(false)} className='botaoCancelar'>

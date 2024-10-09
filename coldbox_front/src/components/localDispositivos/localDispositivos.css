@@ -1,4 +1,3 @@
-/* Estilização principal do container */
 .containerTabela {
     border-radius: 10px;
     grid-row: 2 / span 5;
@@ -16,15 +15,18 @@
   /* Cabeçalho da tabela */
   .cabecalhoTabela {
     background-color: #E6E6E6;
-    padding: 15px;
+    padding: 15px 10px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    /* display: flex;
+    justify-content: flex-end; /* Alinha o conteúdo à direita */
+    /* align-items: center;  */
+    position: relative; /* Necessário para o posicionamento absoluto do botão */
   }
   
+  
   .titulo {
+    padding: 5px 10px;
     font-size: 18px;
     font-weight: 600;
   }
@@ -64,86 +66,103 @@
   }
   
   /* --------------------------------------------------------------- */
-  /* Estilização do botão para abrir o modal */
+/* Estilização do botão para abrir o modal */
 .botaoAdicionarLocal {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    padding: 8px 10px;
-    background-color: #4285F4;
-    color: white;
-    font-size: 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  /* Estilização da sobreposição para o modal */
-  .sobreposicaoModal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  /* Estilização do conteúdo do modal */
-  .conteudoModal {
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    width: 400px;
-  }
-  
-  /* Estilização dos campos de entrada no modal */
-  .campoEntrada,
-  .campoTexto {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-  }
-  
-  .campoTexto {
-    resize: vertical;
-  }
-  
-  /* Estilização do título do modal */
-  .tituloModal {
-    margin-bottom: 20px;
-    font-weight: bold;
-    font-size: 18px;
-  }
-  
-  /* Estilização dos botões no modal */
-  .acoesModal {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .acoesModal .botaoCancelar {
-    background-color: #f44336;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .acoesModal .botaoAdicionar {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
+  position: absolute;
+  right: 15px; /* Ajuste para alinhar à direita */
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px 10px;
+  background-color: #4285F4; /* Cor azul */
+  color: white;
+  font-size: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 10;
+  /* display: flex; */
+  /* align-items: center; */
+  /* gap: 5px; Espaço entre o ícone e o texto */
+}
+
+
+/* Estilização do modal para adicionar localização */
+.sobreposicaoModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+}
+
+.conteudoModal {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 450px;
+}
+
+/* Estilização dos campos de entrada no modal */
+.camposLocalizacao {
+  margin-bottom: 15px;
+}
+
+.camposLocalizacao label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.camposLocalizacao input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+
+/* Estilização do título do modal */
+.tituloModal {
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Estilização dos botões no modal */
+.acoesModal {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px; 
+}
+
+.acoesModal .botaoCancelar {
+  background-color: #f44336;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.acoesModal .botaoAdicionar {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+
+/*Estilo para a descrição */
+.descricaoModal {
+  font-size: 14px;
+  color: #666;
+  margin-top: -10px; /* Ajuste para aproximar da linha do título */
+  margin-bottom: 20px; /* Espaçamento abaixo da descrição */
+  line-height: 1.2; /* Espaçamento entre as linhas */
+}

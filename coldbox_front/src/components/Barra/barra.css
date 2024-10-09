@@ -52,7 +52,7 @@
   .informacaoUsuario {
     display: flex;
     align-items: center;
-    margin-right: 15px; /* Espaço entre a imagem e o botão */
+    margin-right: 10px; /* Espaço entre a imagem e o botão */
   }
   
   .informacaoUsuario img {
@@ -87,8 +87,6 @@
   .iconeConfig {
     background-color: transparent;
     border: none;
-    width: 25px; /* Tamanho do ícone de configurações */
-    height: 25px;
     color: #000000;
   }
   

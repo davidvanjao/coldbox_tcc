@@ -3,17 +3,13 @@ import { View, Text, ActivityIndicator, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './styles';
 
-
-export default function Equipamento({id_usuario, id_cliente}) {
-
-    const navigation = useNavigation(); // Obtém o objeto navigation
-    
+export default function Equipamento({ id_usuario, id_cliente }) {
+    const navigation = useNavigation(); // Objeto de navegação
     const [equipamentos, setEquipamentos] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [extraData, setExtraData] = useState({}); // Armazena dados adicionais por equipamento
-    const [notificacaoAberto, setnotificacaoAberto] = useState({}); // Armazena dados adicionais por equipamento
+    const [dadosAdicionais, setDadosAdicionais] = useState({}); // Estado combinado para dados adicionais e notificações
 
-    //funcao para formatar data
+    // Função para formatar data e hora no formato brasileiro
     const formatarDataHoraBrasileira = (dataString) => {
         const data = new Date(dataString);
         return data.toLocaleString('pt-BR', {
@@ -26,9 +22,9 @@ export default function Equipamento({id_usuario, id_cliente}) {
         });
     };
 
-    //tras os equipamentos
+    // Função para buscar equipamentos e dados adicionais
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchEquipamentos = async () => {
             try {
                 const response = await fetch(`http://127.0.0.1:3333/equipamento/dadosEquipamentoEmpresa/${id_cliente}`, {
                     method: 'GET',
@@ -38,108 +34,60 @@ export default function Equipamento({id_usuario, id_cliente}) {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Erro na requisição');
+                    throw new Error('Erro ao buscar equipamentos');
                 }
 
                 const data = await response.json();
-                // Verifique se a resposta está sendo recebida corretamente
-                //console.log(data);  // Certifique-se de ver os dados da API aqui
-                setEquipamentos(data.dados); // Acessa o array "dados" dentro da resposta da API
-                setLoading(false);
+                setEquipamentos(data.dados); // Define os equipamentos
+                setLoading(false); // Encerra o carregamento
 
+                // Busca dados adicionais e notificações paralelamente
+                const extraDataPromises = data.dados.map(async (equipamento) => {
+                    const [extraDataResponse, notificacaoResponse] = await Promise.all([
+                        fetch(`http://127.0.0.1:3333/equipamento/dadosUltimaComunicacao/${equipamento.equip_id}`, {
+                            method: 'GET',
+                            headers: { 'Content-Type': 'application/json' },
+                        }),
+                        fetch(`http://127.0.0.1:3333/logs/listarNotificacoesTotalEmAberto/${equipamento.equip_id}`, {
+                            method: 'GET',
+                            headers: { 'Content-Type': 'application/json' },
+                        }),
+                    ]);
+
+                    const extraData = await extraDataResponse.json();
+                    const notificacaoData = await notificacaoResponse.json();
+
+                    return {
+                        equip_id: equipamento.equip_id,
+                        horario: extraData.dados[0]?.dados_data,
+                        totalNotificacao: notificacaoData.dados[0]?.notificacao || 0,
+                    };
+                });
+
+                const allExtraData = await Promise.all(extraDataPromises);
+                
+                // Armazena os dados adicionais no estado
+                const dadosAdicionaisMap = allExtraData.reduce((acc, curr) => {
+                    acc[curr.equip_id] = curr;
+                    return acc;
+                }, {});
+
+                setDadosAdicionais(dadosAdicionaisMap);
             } catch (error) {
-                //alert('Erro ao buscar os dados');
+                console.error('Erro ao buscar dados:', error);
                 setLoading(false);
             }
         };
 
-        fetchData();
+        fetchEquipamentos();
 
-        //Configura o intervalo para atualizar os dados a cada X milissegundos
-        const intervalId = setInterval(() => {
-            fetchData();
-        }, 10000); // Atualiza a cada 10 segundos (10.000 ms)
+        // Atualiza os dados a cada 10 segundos
+        const intervalId = setInterval(fetchEquipamentos, 10000);
 
-        //Limpa o intervalo ao desmontar o componente
+        // Limpa o intervalo ao desmontar o componente
         return () => clearInterval(intervalId);
 
     }, [id_cliente]);
-
-    //tras a ultima comunicacao
-    const fetchExtraData = async (equip_id) => {
-
-        try {
-            const response = await fetch(`http://127.0.0.1:3333/equipamento/dadosUltimaComunicacao/${equip_id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error('Erro na requisição');
-            }
-
-            const data = await response.json();
-
-            setExtraData(prevState => ({
-                ...prevState,
-                [equip_id]: {
-                    ...data,
-                    horario: data.dados[0].dados_data
-                }
-            }));
-
-        } catch (error) {
-            console.error(`Erro ao buscar dados adicionais para o equipamento ${equip_id}:`, error);
-        }
-    };
-
-    //tras o total de notificacoes em aberto.
-    const fetchNotificacaoAberto = async (equip_id) => {
-
-        try {
-            const response = await fetch(`http://127.0.0.1:3333/logs/listarNotificacoesTotalEmAberto/${equip_id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error('Erro na requisição');
-            }
-
-            const data = await response.json();
-
-            setnotificacaoAberto(prevState => ({
-                ...prevState,
-                [equip_id]: {
-                    ...data,
-                    totalNotificacao: data.dados[0].notificacao
-                }
-            }));
-
-        } catch (error) {
-            console.error(`Erro ao buscar dados adicionais para o equipamento ${equip_id}:`, error);
-        }
-    };
-
-    //faz uma requisicao para cada equipamento
-    useEffect(() => {
-        // Faz uma requisição para cada equipamento
-        equipamentos.forEach(item => {
-            fetchExtraData(item.equip_id);
-        });
-
-
-        // Faz uma requisição para cada equipamento
-        equipamentos.forEach(item => {
-            fetchNotificacaoAberto(item.equip_id);
-        });
-
-    }, [equipamentos]);
-
 
     if (loading) {
         return <ActivityIndicator size="large" color="#0000ff" />;
@@ -147,33 +95,31 @@ export default function Equipamento({id_usuario, id_cliente}) {
 
     return (
         <View>
-            {/* Usando map para iterar sobre a lista de equipamentos */}
+            {/* Mapeando e exibindo os equipamentos */}
             {equipamentos.map((item) => (
                 <Pressable
-                    key={item.equip_id} // Adicionando uma chave única
+                    key={item.equip_id} // Chave única para cada equipamento
                     style={styles.equipamento}
-
-                    //variaveis sendo passadas para info equipamentos
                     onPress={() => navigation.navigate('InfoEquipamento', { 
                         equipamentoId: item.equip_id, 
-                        id_usuario: id_usuario, 
-                        id_cliente: id_cliente
+                        id_usuario, 
+                        id_cliente 
                     })}
-
->
+                >
                     <View style={styles.equipamentoInfo}>
-                        <Text>Local: {item.local_nome}</Text> {/* Exibindo o nome do equipamento */}
-                        <Text>{item.local_descricao}</Text> {/* Exibindo o local */}
-                        <Text>Id: {item.equip_id}</Text> {/* Exibindo o id do equipamento*/}
+                        <Text>Local: {item.local_nome}</Text>
+                        <Text>{item.local_descricao}</Text>
+                        <Text>Id: {item.equip_id}</Text>
 
-                        {/* Exibindo o horário formatado */}
-                        <Text>Horário: {extraData[item.equip_id]?.horario 
-                            ? formatarDataHoraBrasileira(extraData[item.equip_id].horario) 
+                        {/* Exibe o horário formatado ou carregando */}
+                        <Text>Horário: {dadosAdicionais[item.equip_id]?.horario 
+                            ? formatarDataHoraBrasileira(dadosAdicionais[item.equip_id].horario) 
                             : 'Carregando...'}</Text>
-
                     </View>
                     <View style={styles.equipamentoStatus}>
-                        <Text style={styles.textoSimples}>{notificacaoAberto[item.equip_id]?.totalNotificacao || '0'}</Text> {/* Exibindo notificacoes */}
+                        <Text style={styles.textoSimples}>
+                            {dadosAdicionais[item.equip_id]?.totalNotificacao || '0'}
+                        </Text>
                     </View>
                 </Pressable>
             ))}

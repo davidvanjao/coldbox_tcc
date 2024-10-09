@@ -7,13 +7,9 @@ import Sair from '../telas/sair';
 const Drawer = createDrawerNavigator();
 
 export default function RoutesDrawer({route}) {
-
-  //initialParams={route.params.info} usado para passar parametro
-
-
   return (
     <Drawer.Navigator>
-      <Drawer.Screen name="Home" component={Home}/>
+      <Drawer.Screen name="Início" component={Home}/>
       <Drawer.Screen name="Sobre" component={Sobre}/>
       <Drawer.Screen name="Sair" component={Sair}/>
     </Drawer.Navigator>

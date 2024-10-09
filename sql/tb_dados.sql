@@ -14,19 +14,20 @@ describe novo_equipamento_dados;
 
 /*novo 2 lista dados*/
 SELECT 
-    DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS data_hora,
-    DATE_FORMAT(a.dados_data, '%H:00') AS hora,
-    ROUND(AVG(CAST(a.dados_temp AS DECIMAL(5,2))), 2) AS media_temperatura,
-    ROUND(AVG(CAST(a.dados_umid AS DECIMAL(5,2))), 2) AS media_umidade
+	DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS data_hora,
+	DATE_FORMAT(a.dados_data, '%H:00') AS hora,
+	ROUND(AVG(CAST(a.dados_temp AS DECIMAL(5,2))), 2) AS media_temperatura,
+	ROUND(AVG(CAST(a.dados_umid AS DECIMAL(5,2))), 2) AS media_umidade
 FROM 
-    novo_equipamento_dados a
+	novo_equipamento_dados a
 WHERE
-    a.equip_id = 1
-AND DATE_FORMAT(a.dados_data, '%Y-%m-%d') = "2024-10-05"
+	a.equip_id = 1
+/*AND DATE_FORMAT(a.dados_data, '%Y-%m-%d') = "2024-10-05"*/
+AND DATE_FORMAT(a.dados_data, '%Y-%m-%d') = CURDATE()  -- Usa a data atual
 GROUP BY 
-    DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
+	DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
 ORDER BY 
-    hora;
+	hora;
 
 
 /*novo lista dados*/

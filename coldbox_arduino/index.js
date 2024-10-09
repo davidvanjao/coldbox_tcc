@@ -35,6 +35,11 @@ async function cadastrar(request, response) {
             const dados_umid = getRandomInRange(50, 90);
             //const data = new Date();
 
+            const param_minimo = -2;
+            const param_max = 5;
+
+            const alerta_id = 1;
+
             // Instrução SQL
             const sql = `INSERT INTO novo_equipamento_dados (dados_temp, dados_umid, equip_id) VALUES (?, ?, ?)`;
 
@@ -42,9 +47,42 @@ async function cadastrar(request, response) {
             const values = [dados_temp, dados_umid, equip_id,];
 
             // Execução da instrução sql passando os parâmetros
-            await db.query(sql, values); 
+            const execSql = await db.query(sql, values); 
+
+            const dados_id = execSql[0].insertId;   
+
+
+            if(dados_temp < param_minimo || dados_temp > param_max) {
+
+                emitirAlerta(equip_id, alerta_id, dados_id)
+                console.log('Emitiu alerta - ' + equip_id);
+            }
+
+
+
+
         }
         
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+//grava um alerta
+async function emitirAlerta(equip_id, alerta_id, dados_id) {//ok
+    try {
+  
+
+
+        // instrução SQL
+        const sql = `INSERT INTO novo_equipamento_alertas_enviados (equip_id, alerta_id, dados_id) VALUES (?, ?, ?);`;
+
+        // definição dos dados a serem inseridos em um array
+        const values = [equip_id, alerta_id, dados_id];  
+
+        // execução da instrução sql passando os parâmetros
+        await db.query(sql, values);    
+
     } catch (error) {
         console.log(error);
     }
@@ -53,3 +91,4 @@ async function cadastrar(request, response) {
 function getRandomInRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+

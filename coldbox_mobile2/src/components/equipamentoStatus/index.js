@@ -1,11 +1,9 @@
 import { View, Text, ActivityIndicator, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { useRoute } from '@react-navigation/native'; // Importa o useRoute
+
 import styles from './styles';
 
-export default function EquipamentoStatus() {
-    const route = useRoute(); // Usa o useRoute para acessar os parâmetros
-    const { equipamentoId, id_usuario, id_cliente } = route.params; // Extrai os parâmetros passados
+export default function EquipamentoStatus({ equipamentoId, id_usuario}) {
 
     const [statusEquipamento, setStatusEquipamento] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -81,16 +79,8 @@ export default function EquipamentoStatus() {
 
     // Fetch de dados com useEffect
     useEffect(() => {
-        fetchData();
-
-        // Configura o intervalo para atualizar os dados a cada 10 segundos
-        const intervalId = setInterval(() => {
-            fetchData();
-        }, 10000); // Atualiza a cada 10 segundos (10.000 ms)
-
-        // Limpa o intervalo ao desmontar o componente
-        return () => clearInterval(intervalId);
-    }, [equipamentoId]);
+        fetchData(); // Busque os dados ao montar o componente ou quando `equipamentoId` mudar
+    }, [equipamentoId]); // Adiciona `equipamentoId` como dependência
 
     if (loading) {
         return <ActivityIndicator size="large" color="#0000ff" />;

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, TextInput, Image} from 'react-native';
-
+import { View, Text, Pressable, TextInput, Image, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; //usando para navegacao
 import AsyncStorage from '@react-native-async-storage/async-storage'; //usado para gerar token
 
@@ -9,28 +8,45 @@ import styles from './styles';
 export default function Login() {
 
     const navigation = useNavigation();
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false); // Adiciona estado de carregamento
 
+    // Verifica se já existe um token armazenado ao carregar o componente
     useEffect(() => {
-        //Verifica se já existe um token armazenado ao carregar o componente
         const checkSession = async () => {
-            const token = await AsyncStorage.getItem('userToken');
-            if (token) {
-                // Se houver um token, navegue diretamente para a tela principal
-                navigation.navigate('Home');
+            try {
+                const token = await AsyncStorage.getItem('userToken');
+                if (token) {
+                    navigation.navigate('Home'); // Se houver token, navegue para Home
+                }
+            } catch (error) {
+                console.error('Erro ao recuperar token:', error);
             }
         };
         checkSession();
-    }, []);
+    }, [navigation]);
+
+    // Função para validar o formato do e-mail
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
 
     const handleLogin = async () => {
-        
-        if(email === '' || password === ''){
-            alert('Erro Por favor, preencha todos os campos.');
+
+        if (!validateEmail(email)) {
+            alert('Erro: Por favor, insira um e-mail válido.');
             return;
         }
+
+        if (password.length < 3) {
+            alert('Erro: A senha deve ter pelo menos 6 caracteres.');
+            return;
+        }
+
+        setLoading(true); // Ativa o carregamento
+
 
         try {
             const response = await fetch('http://localhost:3333/usuarios/login', {
@@ -45,29 +61,27 @@ export default function Login() {
             });  
     
             if(!response.ok) {
-                throw new Error('Erro ao fazer login');
+                throw new Error('Erro ao fazer login. Verifique suas credenciais.');
             }
     
             const data = await response.json();
-            //Aqui você pode adicionar a lógica para salvar o token de autenticação e navegar para outra tela
             const token = data.dados[0].user_id;//token criado é o mesmo do id do usuario logado.
             const user_id = data.dados[0].user_id;
             
             //Armazena o token no AsyncStorage
             await AsyncStorage.setItem('userToken', token);
 
-            const info = {
-                user_id: user_id,  // Parâmetro enviado
-                token: token,      // Outro parâmetro enviado
-            }
-
-            // Exemplo de envio de parâmetros ao navegar para a tela 'Home'
-            navigation.navigate('Home', {info});
+            // Envia parâmetros ao navegar para a tela Home
+            navigation.navigate('Home', {
+                info: { user_id, token }
+            });
 
             console.log('Navegando para Home com user_id:', user_id, 'e token:', token);
             
-        } catch(error) {
-            alert('Erro Credenciais inválidas');
+        } catch (error) {
+            alert('Erro: Credenciais inválidas.');
+        } finally {
+            setLoading(false); // Desativa o carregamento
         }
     
     };
@@ -88,6 +102,7 @@ export default function Login() {
                     autoCapitalize="none"
                     value={email}
                     onChangeText={setEmail}
+                    keyboardType="email-address" // Define o teclado apropriado para e-mails
                 />
 
                 <Text style={styles.title}>Senha</Text>
@@ -100,9 +115,14 @@ export default function Login() {
                     autoCapitalize="none"
                 />
 
-                <Pressable style={styles.button} onPress={handleLogin}>
-                    <Text style={styles.buttonText}>Acessar</Text>
-                </Pressable>
+                {/* Mostra um ActivityIndicator se estiver carregando */}
+                {loading ? (
+                    <ActivityIndicator size="large" color="#0000ff" />
+                ) : (
+                    <Pressable style={styles.button} onPress={handleLogin}>
+                        <Text style={styles.buttonText}>Acessar</Text>
+                    </Pressable>
+                )}
 
                 <View style={styles.campoImagem}>
                     <Image
@@ -112,12 +132,7 @@ export default function Login() {
                         }}
                     />
                 </View>
-
             </View>
-
-
-
-
         </View>
     );
 };

@@ -12,6 +12,18 @@ export default function InfoEquipamento() {
     const route = useRoute(); // Usa o useRoute para acessar os parâmetros
     const { equipamentoId, id_usuario, id_cliente } = route.params; // Extrai os parâmetros passados
 
+    const [reloadKey, setReloadKey] = useState(0); // Chave para forçar a atualização
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            // Atualiza o estado com um novo valor para forçar o re-render
+            setReloadKey(prevKey => prevKey + 1);
+        }, 10000); // A cada 10 segundos (10.000 ms)
+
+        // Limpa o intervalo quando o componente for desmontado
+        return () => clearInterval(intervalId);
+    }, []);
+
 
     return (           
         <View style={styles.container}>
@@ -21,8 +33,6 @@ export default function InfoEquipamento() {
                 id_usuario={id_usuario} 
                 id_cliente={id_cliente} 
             />
-
-
 
             <EquipamentoStatus
                 equipamentoId={equipamentoId} 

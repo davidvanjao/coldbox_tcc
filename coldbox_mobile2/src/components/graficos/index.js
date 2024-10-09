@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Dimensions, ActivityIndicator } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { useRoute } from '@react-navigation/native'; // Importa o useRoute
 
 import styles from './styles';
 
-export default function Grafico() {
-
-    const route = useRoute(); // Usa o useRoute para acessar os parâmetros
-    const { equipamentoId, id_usuario, id_cliente } = route.params; // Extrai os parâmetros passados
+export default function Grafico({ equipamentoId }) {
 
     const [dadosEquipamento, setDadosEquipamento] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -43,16 +39,8 @@ export default function Grafico() {
 
     // Fetch de dados com useEffect
     useEffect(() => {
-        fetchData();
-
-        // Configura o intervalo para atualizar os dados a cada 10 segundos
-        const intervalId = setInterval(() => {
-            fetchData();
-        }, 10000); // Atualiza a cada 10 segundos (10.000 ms)
-
-        // Limpa o intervalo ao desmontar o componente
-        return () => clearInterval(intervalId);
-    }, [equipamentoId]);
+        fetchData(); // Buscar dados ao carregar o componente ou quando `equipamentoId` mudar
+    }, [equipamentoId]);  // Adiciona `equipamentoId` como dependência
 
     // Extrair dados e rótulos do array "dadosEquipamento"
     const labels = dadosEquipamento.map(dado => dado.hora); // Supondo que você tenha um campo "horario"

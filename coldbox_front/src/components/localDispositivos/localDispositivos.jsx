@@ -2,12 +2,14 @@ import React, { useEffect, useState} from "react";
 import axios from "axios";
 import './localDispositivos.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faPen } from '@fortawesome/free-solid-svg-icons';
 
 
 const LocalDispositivos = () => {
     const [locais, setLocais] = useState([]);
     const [exibirModal, setExibirModal] = useState(false); //Estado p/ controlar o modal
+    const [editando, setEditando] = useState(false); //Estado apara editar um local
+    const [localSelecionado, setLocalSelecionado] = useState(null); //Armazena o local que esta sendo editado
     const [novoLocal, setNovoLocal] = useState({
         local_nome: '',
         local_descricao: '',
@@ -52,7 +54,45 @@ const LocalDispositivos = () => {
         } else {
             alert ('Por favor, preencha todos os campos!');
         }
-    }
+    };
+    
+    //Abrir o modal para editar com os dados do local já carregados
+    const editarLocal = (local) => {
+        setNovoLocal({ local_nome: local.local_nome, local_descricao: local.local_descricao});
+        setLocalSelecionado(local.local_id); //Armazenando o local_id
+        setEditando(true); 
+        setExibirModal(true);
+    };
+
+    // Função para fechar o modal e resetar o estado
+    const fecharModal = () => {
+    setExibirModal(false);
+    setEditando(false); // Redefine o estado de edição
+    setLocalSelecionado(null); // Limpa o local selecionado
+    setNovoLocal({ local_nome: '', local_descricao: '' }); // Limpa os campos do formulário
+};
+
+    //Requisição para atualizar a localização
+    const atualizarLocal = () => {
+        if (novoLocal.local_nome && novoLocal.local_descricao && localSelecionado) {
+            axios.patch(`http://127.0.0.1:3333/local/${localSelecionado}`, {
+                local_nome: novoLocal.local_nome,
+                local_descricao: novoLocal.local_descricao,
+                cli_id: cli_id, //Incluindo do localStorage
+            })
+            .then(() => {
+                setExibirModal(locais.map(local =>
+                    local.local_id === localSelecionado ? { ...local, ...novoLocal} : local
+                ));
+                fecharModal(); //Fecha o modal após atualizar o local
+            })
+            .catch((error) => {
+                console.error('Erro ao atualizar a localização:', error);
+            });
+        } else {
+            alert('Por favor, preencha todos os campos!');
+        }
+    };
 
     return (
         <div className='containerTabela'>
@@ -78,6 +118,13 @@ const LocalDispositivos = () => {
                             <tr key={local.local_id} className='linha'>
                                 <td className='celula'>{local.local_nome}</td>
                                 <td className='celula'>{local.local_descricao}</td>
+                                <td className='celula'>
+                                    <FontAwesomeIcon
+                                        icon={faPen}
+                                        className='iconeEditar'
+                                        onClick={() => editarLocal(local)} // Chama a função para editar o local
+                                    />
+                                </td>
                             </tr>
                         ))}
                     </tbody>
@@ -88,8 +135,12 @@ const LocalDispositivos = () => {
             {exibirModal && (
                 <div className='sobreposicaoModal'>
                     <div className='conteudoModal'>
-                        <h2 className='tituloModal'>Adicionar Nova Localização</h2>
-                        <p className="descricaoModal">Adicione uma nova localização para a criação de um novo dispositivo</p>
+                        <h2 className='tituloModal'>
+                            {editando ? 'Editar Localização' : 'Adicionar Nova Localização'}
+                        </h2>
+                        <p className="descricaoModal">
+                            {editando ? 'Atualize as informações da localização' : 'Adicione uma nova localização para a criação de um novo dispositivo'}
+                        </p>
                         <div className='camposLocalizacao'>
                             <label htmlFor="local_nome">Nome do Local:</label>
                             <input
@@ -114,12 +165,12 @@ const LocalDispositivos = () => {
                         </div>
 
                         <div className='acoesModal'>
-                        <button onClick={() => setExibirModal(false)} className='botaoCancelar'>
-                            Cancelar
-                        </button>
-                        <button onClick={adicionarLocal} className='botaoAdicionar'>
-                            Adicionar
-                        </button>
+                            <button onClick={() => setExibirModal(false)} className='botaoCancelar'>
+                                Cancelar
+                            </button>
+                            <button onClick={editando ? atualizarLocal : adicionarLocal} className='botaoAdicionar'>
+                                {editando ? 'Atualizar' : 'Adicionar'}
+                            </button>
                         </div>
                     </div>
                 </div>

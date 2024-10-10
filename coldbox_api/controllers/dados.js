@@ -38,7 +38,7 @@ module.exports = {
                 novo_equipamento_dados a
             WHERE
                 a.equip_id = ?
-            AND DATE_FORMAT(a.dados_data, '%Y-%m-%d') = "2024-10-05"
+            AND DATE_FORMAT(a.dados_data, '%Y-%m-%d') = "2024-10-09"
             GROUP BY 
                 DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
             ORDER BY 

@@ -75,6 +75,8 @@ const LocalDispositivos = () => {
     //Requisição para atualizar a localização
     const atualizarLocal = () => {
         if (novoLocal.local_nome && novoLocal.local_descricao && localSelecionado) {
+            alert('Perfil atualizado com sucesso');
+            console.log('Perfil atualizado com sucesso');
             axios.patch(`http://127.0.0.1:3333/local/${localSelecionado}`, {
                 local_nome: novoLocal.local_nome,
                 local_descricao: novoLocal.local_descricao,
@@ -122,7 +124,7 @@ const LocalDispositivos = () => {
                                     <FontAwesomeIcon
                                         icon={faPen}
                                         className='iconeEditar'
-                                        onClick={() => editarLocal(local)} // Chama a função para editar o local
+                                        onClick={() => editarLocal(local)} //Chama a função para editar o local
                                     />
                                 </td>
                             </tr>

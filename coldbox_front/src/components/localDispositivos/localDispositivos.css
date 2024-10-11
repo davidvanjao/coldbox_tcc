@@ -166,3 +166,9 @@
   margin-bottom: 20px; /* Espaçamento abaixo da descrição */
   line-height: 1.2; /* Espaçamento entre as linhas */
 }
+
+.iconeEditar {
+  cursor: pointer;
+  font-size: 20px; /* Aumenta o tamanho do ícone */
+  margin-left: 10;
+}

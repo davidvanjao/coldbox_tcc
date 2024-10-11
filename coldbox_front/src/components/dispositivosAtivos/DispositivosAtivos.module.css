@@ -184,9 +184,7 @@
 }
 
 /* Ajuste do tamanho do ícone de edição */
-/* Ajuste do tamanho do ícone de edição */
 .editIcon {
-
   cursor: pointer;
   font-size: 20px; /* Aumenta o tamanho do ícone */
   margin-left: 10px;

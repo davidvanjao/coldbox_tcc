@@ -38,7 +38,9 @@ module.exports = {
                 novo_equipamento_dados a
             WHERE
                 a.equip_id = ?
+<<<<<<< HEAD
             AND DATE_FORMAT(a.dados_data, '%Y-%m-%d') = CURDATE()  -- Usa a data atual
+>>>>>>> 4a0872c415c7a07904fb8821543f95a8a5196ecd
             GROUP BY 
                 DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
             ORDER BY 

@@ -24,7 +24,7 @@ router.post('/cliente', ClienteController.cadastrar); //ok
 router.patch('/cliente/:cli_id', ClienteController.editar); //ok
 
 
-router.get('/equipamento', EquipamentoController.listar); //ok
+router.get('/equipamento/:cli_id', EquipamentoController.listar); //ok
 router.post('/equipamento',EquipamentoController.cadastrar); //ok
 router.patch('/equipamento/:equip_id', EquipamentoController.editar); //ok
 router.delete('/equipamento/:equip_id', EquipamentoController.apagar); //ok

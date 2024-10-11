@@ -38,9 +38,53 @@ module.exports = {
                 novo_equipamento_dados a
             WHERE
                 a.equip_id = ?
-<<<<<<< HEAD
             AND DATE_FORMAT(a.dados_data, '%Y-%m-%d') = CURDATE()  -- Usa a data atual
->>>>>>> 4a0872c415c7a07904fb8821543f95a8a5196ecd
+            GROUP BY 
+                DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
+            ORDER BY 
+                hora;`;
+
+            // preparo do array com dados que serão atualizados
+            const values = [equip_id];                     
+
+            //executa instruções SQL e armazena o resultado na variável usuários
+            const dadosEquipamento = await db.query(sql, values); 
+            const nItens = dadosEquipamento[0].length;
+
+            return response.status(200).json({
+                sucesso: true, 
+                mensagem: 'Dados por equipamento.', 
+                dados: dadosEquipamento[0], 
+                nItens                 
+            });
+
+        } catch (error) {
+            //console.log(error);
+            return response.status(500).json({
+                sucesso: false, 
+                mensagem: 'Erro na requisição.', 
+                dados: error.message
+            });
+        }
+    },
+
+    async listarMobile(request, response) {//ok
+        try {
+
+            //parâmetro recebido pela URL via params ex: /usuario/1
+            const { equip_id } = request.params; 
+
+            //instruções SQL 
+            const sql = `SELECT 
+                DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS data_hora,
+                DATE_FORMAT(a.dados_data, '%H') AS hora,
+                ROUND(AVG(CAST(a.dados_temp AS DECIMAL(5,2))), 2) AS media_temperatura,
+                ROUND(AVG(CAST(a.dados_umid AS DECIMAL(5,2))), 2) AS media_umidade
+            FROM 
+                novo_equipamento_dados a
+            WHERE
+                a.equip_id = ?
+            AND a.dados_data >= DATE_SUB(NOW(), INTERVAL 6 HOUR)  -- Considera as últimas 6 horas
             GROUP BY 
                 DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
             ORDER BY 

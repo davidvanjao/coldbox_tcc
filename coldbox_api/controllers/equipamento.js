@@ -3,11 +3,30 @@ const db = require('../database/connection');
 
 module.exports = {
     async listar(request, response) {//ok
-        try {           
-            const sql = `SELECT * FROM novo_equipamento;`;
+
+
+        try {   
+
+            // parâmetro recebido pela URL via params ex: /usuario/1
+            const { cli_id } = request.params; 
+            
+            
+
+            const sql = `SELECT a.equip_id, a.equip_modelo, a.equip_tipo, a.equip_ip, a.equip_mac, a.equip_status, a.equip_observacao, b.local_nome, b.local_descricao
+            FROM 
+                novo_equipamento a,
+                novo_local b, 
+                novo_equipamento_local c
+            WHERE 
+                c.equip_id = a.equip_id
+            AND c.local_id = b.local_id
+            AND b.cli_id = ?;`;
+
+            // preparo do array com dados que serão atualizados
+            const values = [cli_id]; 
 
             //executa instruções SQL e armazena o resultado na variável usuários
-            const equipamento = await db.query(sql); 
+            const equipamento = await db.query(sql, values); 
             const nItens = equipamento[0].length;
 
             return response.status(200).json({

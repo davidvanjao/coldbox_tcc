@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './DispositivosAtivos.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash, faPen, faCircle  } from '@fortawesome/free-solid-svg-icons';
-import dispositivosFicticios from './dispositivosFicticios';
+import axios from 'axios';
+// import dispositivosFicticios from './dispositivosFicticios';
+
+
 
 const DispositivosAtivos = () => {
   // const [dispositivos, setDispositivos] = useState([]);
-  const [dispositivos, setDispositivos] = useState(dispositivosFicticios);
+  const [dispositivos, setDispositivos] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newDevice, setNewDevice] = useState({
     status: 'offline',
@@ -17,6 +20,22 @@ const DispositivosAtivos = () => {
     equip_mac: '',
     equip_observacao: '',
   });
+
+  useEffect(() => {
+    const cli_id = localStorage.getItem('cli_id'); //Pegando o cli_id do local storage
+
+    if(cli_id) {
+      axios.get(`http://127.0.0.1:3333/equipamento/${cli_id}`)
+        .then(response => {
+          setDispositivos(response.data.dados);
+        })
+        .catch(error => {
+          console.error('Erro ao buscar os dispositivos', error);
+        });
+      } else {
+        console.error('Cli_id não encontrado.')
+      }
+    }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -73,7 +92,7 @@ const DispositivosAtivos = () => {
                 <td className={styles.td}>
                   <FontAwesomeIcon
                     icon={faCircle}
-                    className={item.status === 'online' ? styles.online : styles.offline}
+                    className={item.status === 'A' ? styles.online : styles.offline}
                   />
                 </td>
                 <td className={styles.td}>{item.local_nome}</td>
@@ -81,7 +100,7 @@ const DispositivosAtivos = () => {
                 <td className={styles.td}>{item.equip_tipo}</td>
                 <td className={styles.td}>{item.equip_ip}</td>
                 <td className={styles.td}>{item.equip_mac}</td>
-                <td className={styles.td}>{item.equip_observacao}</td>
+                <td className={styles.td}>{item.equip_observacao || 'Sem observação'}</td>
                 <td className={styles.td}>
                   <FontAwesomeIcon
                     icon={faPen}

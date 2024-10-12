@@ -68,6 +68,7 @@ module.exports = {
         }
     },
 
+    //grafico mobile
     async listarMobile(request, response) {//ok
         try {
 
@@ -83,12 +84,13 @@ module.exports = {
             FROM 
                 novo_equipamento_dados a
             WHERE
-                a.equip_id = ?
-            AND a.dados_data >= DATE_SUB(NOW(), INTERVAL 6 HOUR)  -- Considera as últimas 6 horas
+                a.equip_id = 1
+            AND DATE_FORMAT(a.dados_data, '%Y-%m-%d') = CURDATE()  -- Usa a data atual
             GROUP BY 
                 DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
             ORDER BY 
-                hora;`;
+                hora DESC
+            LIMIT 6`;
 
             // preparo do array com dados que serão atualizados
             const values = [equip_id];                     

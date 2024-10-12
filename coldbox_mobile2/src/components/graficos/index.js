@@ -13,7 +13,7 @@ export default function Grafico({ equipamentoId }) {
     const fetchData = async () => {
         try {
             const response = await fetch(
-                `http://127.0.0.1:3333/dados/${equipamentoId}`,
+                `http://127.0.0.1:3333/dados/mobile/${equipamentoId}`,
                 {
                     method: 'GET',
                     headers: {

@@ -46,6 +46,7 @@ router.delete('/nivel_acesso/:nivel_id', NivelAcessoController.apagar); //ok
 
 //precisa enviar equip_id
 router.get('/dados/:equip_id', DadosController.listar);//ok 
+router.get('/dados/mobile/:equip_id', DadosController.listarMobile);//ok 
 router.post('/dados', DadosController.cadastrar); //ok
 
 //precisa enviar equip_id

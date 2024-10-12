@@ -22,9 +22,17 @@ const CamarasEAtivos = () => {
       if (response.data.sucesso) {
         const dados = response.data.dados[0]; // Acessa o primeiro item do array de dados
 
-        //Atualiza os estados de temperatura e umidade com base no equipId
-        setDadosTemperatura(prevState => ({ ...prevState, [equip_id]: dados.dados_temp}));
-        setDadosUmidade(prevState => ({ ...prevState, [equip_id]: dados.dados_umid}));
+        if (dados) {
+          //Verifica se os dados de temperatura e umidade estão presentes
+          const temperatura = dados.dados_temp !== undefined ? dados.dados_temp : 'N/A';
+          const umidade = dados.dados_umid !== undefined ? dados.dados_umid : 'N/A';
+
+          //Atualiza os estados de temperatura e umidade com base no equipId
+          setDadosTemperatura(prevState => ({ ...prevState, [equip_id]: temperatura }));
+          setDadosUmidade(prevState => ({ ...prevState, [equip_id]: umidade }));
+        } else {
+          console.error('Nenhum dado encontrado para o equipamento:', equip_id);
+        }
       } else {
         console.error('Erro ao buscar os dados da ultima comunicação com o equipamento:', response.data.mensagem);
       }
@@ -32,6 +40,7 @@ const CamarasEAtivos = () => {
       console.error('Erro ao buscar os dados de temperatura e umidade:', error);
     }
   };
+
 
   //!Função para buscar dados da API 'dadosEquipamentoEmpresa', trazendo o nome da camara e o modelo do equipamento
   const fetchEquipamentoDados = async (cliId) => {

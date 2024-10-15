@@ -141,7 +141,7 @@ const LocalDispositivos = () => {
                             {editando ? 'Editar Localização' : 'Adicionar Nova Localização'}
                         </h2>
                         <p className="descricaoModal">
-                            {editando ? 'Atualize as informações da localização' : 'Adicione uma nova localização para a criação de um novo dispositivo'}
+                            {editando ? 'Atualize as informações da localização' : 'Adicione uma nova localização para a configuração de um novo dispositivo'}
                         </p>
                         <div className='camposLocalizacao'>
                             <label htmlFor="local_nome">Nome do Local:</label>

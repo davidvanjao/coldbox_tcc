@@ -4,7 +4,6 @@ const db = require('../database/connection');
 module.exports = {
     async listar(request, response) {//ok
 
-
         try {   
 
             // parâmetro recebido pela URL via params ex: /usuario/1

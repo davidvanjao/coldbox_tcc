@@ -15,7 +15,7 @@ const LocalDispositivos = () => {
         local_descricao: '',
     });
 
-    // pegando o cli_id do localStorage
+    //Pegando o cli_id do localStorage
     const cli_id = localStorage.getItem('cli_id');
 
     //requisição para buscar os locais cadastrados, puxando o cli_id do localStorage
@@ -37,6 +37,16 @@ const LocalDispositivos = () => {
         setNovoLocal((prev) => ({ ...prev, [name]: value }));
     };
 
+    //Função para limpar o formulario
+    const limparFormulario = () => {
+        setNovoLocal({
+            local_nome: '',
+            local_descricao: '',
+        });
+        setEditando(false);
+        setLocalSelecionado(null);
+    };
+
     //Requisição para adcionar uma nova localização
     const adicionarLocal = () => {
         if (novoLocal.local_nome && novoLocal.local_descricao) {
@@ -45,8 +55,9 @@ const LocalDispositivos = () => {
                 cli_id: cli_id, //Incluindo o cli_id que vem do localStorage    
             })
             .then(() => {
-                setExibirModal(false) //Fechar o modal se cadastrar o novo local
                 setLocais([...locais, { ...novoLocal, cli_id}]);
+                setExibirModal(false); //Fechar o modal se cadastrar o novo local
+                limparFormulario();
             })
             .catch((error) => {
                 console.error('Erro ao adcionar uma nova localização:', error);
@@ -58,19 +69,27 @@ const LocalDispositivos = () => {
     
     //Abrir o modal para editar com os dados do local já carregados
     const editarLocal = (local) => {
-        setNovoLocal({ local_nome: local.local_nome, local_descricao: local.local_descricao});
+        setNovoLocal({ 
+            local_nome: local.local_nome, 
+            local_descricao: local.local_descricao
+        });
         setLocalSelecionado(local.local_id); //Armazenando o local_id
         setEditando(true); 
         setExibirModal(true);
     };
 
-    // Função para fechar o modal e resetar o estado
+    //Função para fechar o modal e resetar o estado
     const fecharModal = () => {
-    setExibirModal(false);
-    setEditando(false); // Redefine o estado de edição
-    setLocalSelecionado(null); // Limpa o local selecionado
-    setNovoLocal({ local_nome: '', local_descricao: '' }); // Limpa os campos do formulário
-};
+        setExibirModal(false);
+        limparFormulario();//Limpar os dados ao fechar o modalç
+    }
+
+    // const fecharModal = () => {
+    // setExibirModal(false);
+    // setEditando(false); // Redefine o estado de edição
+    // setLocalSelecionado(null); // Limpa o local selecionado
+    // setNovoLocal({ local_nome: '', local_descricao: '' }); // Limpa os campos do formulário
+    // };
 
     //Requisição para atualizar a localização
     const atualizarLocal = () => {

@@ -31,7 +31,9 @@ router.delete('/equipamento/:equip_id', EquipamentoController.apagar); //ok
 //traz os equipamentos da empresa
 router.get('/equipamento/dadosEquipamentoEmpresa/:cli_id', EquipamentoController.listarDadosEquipamentoEmpresa); 
 //traz a ultima comunicacao com o equipamento
-router.get('/equipamento/dadosUltimaComunicacao/:equip_id', EquipamentoController.listarDadosUltimaComunicacao); 
+router.get('/equipamento/dadosUltimaComunicacao/:equip_id', EquipamentoController.listarDadosUltimaComunicacao);
+//NOVA ROTA EM TESTE:
+router.post('/equipamento/cadastrarEquipComLocal', EquipamentoController.cadastrarEquipamentoELocal);
 
 //precisa enviar cli_id
 router.get('/local/:cli_id', LocalController.listar); //ok

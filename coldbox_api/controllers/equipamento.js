@@ -216,8 +216,63 @@ module.exports = {
                 dados: error.message
             });
         }
-    }
+    },
 
+    //Nova API em teste. Ela realizará o cadastro da localização e do equipamento, e depois vai realizar o vinculo
+    async cadastrarEquipamentoELocal(req, res) {
+        try {
+            // Validação dos parâmetros recebidos no corpo da requisição
+            const { equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao, local_nome, local_descricao, cli_id } = req.body;
+    
+            // Verifica se todos os campos obrigatórios foram fornecidos
+            if (!equip_modelo || !equip_tipo || !equip_ip || !equip_mac || !local_nome || !local_descricao || !cli_id) {
+                return res.status(400).json({
+                    sucesso: false,
+                    mensagem: 'Por favor, preencha todos os campos obrigatórios para o equipamento e a localização.'
+                });
+            }
+    
+            // Verificar se o IP ou MAC do equipamento já existem (prevenindo duplicação)
+            const sqlVerificarEquipamento = `SELECT * FROM novo_equipamento WHERE equip_ip = ? OR equip_mac = ?`;
+            const equipamentoExistente = await db.query(sqlVerificarEquipamento, [equip_ip, equip_mac]);
+    
+            if (equipamentoExistente[0].length > 0) {
+                return res.status(400).json({
+                    sucesso: false,
+                    mensagem: 'Já existe um equipamento cadastrado com o mesmo IP ou MAC.'
+                });
+            }
+    
+            // Inserir a nova localização
+            const sqlLocal = `INSERT INTO novo_local (local_nome, local_descricao, cli_id) VALUES (?, ?, ?)`;
+            const valuesLocal = [local_nome, local_descricao, cli_id];
+            const resultLocal = await db.query(sqlLocal, valuesLocal);
+            const local_id = resultLocal[0].insertId; // ID da nova localização
+    
+            // Inserir o equipamento
+            const sqlEquipamento = `INSERT INTO novo_equipamento (equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao) VALUES (?, ?, ?, ?, ?, ?)`;
+            const valuesEquipamento = [equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status || 'A', equip_observacao || null];
+            const resultEquipamento = await db.query(sqlEquipamento, valuesEquipamento);
+            const equip_id = resultEquipamento[0].insertId; // ID do novo equipamento
+    
+            // Inserir o vínculo entre equipamento e localização na tabela de junção
+            const sqlVinculo = `INSERT INTO novo_equipamento_local (equip_id, local_id) VALUES (?, ?)`;
+            await db.query(sqlVinculo, [equip_id, local_id]);
+    
+            return res.status(200).json({
+                sucesso: true,
+                mensagem: 'Equipamento e localização cadastrados e vinculados com sucesso!',
+                dados: { equip_id, local_id }
+            });
+    
+        } catch (error) {
+            return res.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro ao cadastrar equipamento e localização',
+                dados: error.message
+            });
+        }
+    }
 
 }
 

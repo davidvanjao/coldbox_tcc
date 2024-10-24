@@ -272,6 +272,57 @@ module.exports = {
                 dados: error.message
             });
         }
+    },
+
+    //Editar o equipamento/Localização cadastrada
+    async editar(request, response) {
+        const connection = await db.getConnection(); // Para garantir atomicidade na transação
+        try {
+            await connection.beginTransaction();
+    
+            // parâmetros recebidos pelo corpo da requisição
+            const { equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao, local_nome, local_descricao } = request.body;
+    
+            // parâmetro recebido pela URL via params
+            const { equip_id } = request.params;
+    
+            // 1. Atualizar o equipamento
+            const sqlEquipamento = `UPDATE novo_equipamento 
+                                    SET equip_modelo = ?, equip_tipo = ?, equip_ip = ?, equip_mac = ?, equip_status = ?, equip_observacao = ? 
+                                    WHERE equip_id = ?;`;
+    
+            const valuesEquipamento = [equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao, equip_id];
+    
+            await connection.query(sqlEquipamento, valuesEquipamento);
+    
+            // 2. Atualizar a localização, se os dados de localização forem fornecidos
+            if (local_nome && local_descricao) {
+                const sqlAtualizarLocalizacao = `UPDATE novo_local l
+                                                 JOIN novo_equipamento_local el ON l.local_id = el.local_id
+                                                 SET l.local_nome = ?, l.local_descricao = ?
+                                                 WHERE el.equip_id = ?;`;
+    
+                const valuesLocalizacao = [local_nome, local_descricao, equip_id];
+                await connection.query(sqlAtualizarLocalizacao, valuesLocalizacao);
+            }
+    
+            await connection.commit(); // Finaliza a transação
+    
+            return response.status(200).json({
+                sucesso: true,
+                mensagem: `Equipamento e localização ${equip_id} atualizados com sucesso!`,
+            });
+    
+        } catch (error) {
+            await connection.rollback(); // Em caso de erro, desfaz a transação
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro ao atualizar o equipamento e localização.',
+                dados: error.message
+            });
+        } finally {
+            connection.release(); // Libera a conexão do pool
+        }
     }
 
 }

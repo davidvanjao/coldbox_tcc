@@ -26,14 +26,16 @@ router.patch('/cliente/:cli_id', ClienteController.editar); //ok
 
 router.get('/equipamento/:cli_id', EquipamentoController.listar); //ok
 router.post('/equipamento',EquipamentoController.cadastrar); //ok
-router.patch('/equipamento/:equip_id', EquipamentoController.editar); //ok
+// router.patch('/equipamento/:equip_id', EquipamentoController.editar); //ok
 router.delete('/equipamento/:equip_id', EquipamentoController.apagar); //ok
 //traz os equipamentos da empresa
 router.get('/equipamento/dadosEquipamentoEmpresa/:cli_id', EquipamentoController.listarDadosEquipamentoEmpresa); 
 //traz a ultima comunicacao com o equipamento
 router.get('/equipamento/dadosUltimaComunicacao/:equip_id', EquipamentoController.listarDadosUltimaComunicacao);
-//NOVA ROTA EM TESTE:
+//Cadastrar equipamento/localização
 router.post('/equipamento/cadastrarEquipComLocal', EquipamentoController.cadastrarEquipamentoELocal);
+//Editar equipamento/localização
+router.patch('/equipamento/:equip_id', EquipamentoController.editar);
 
 //precisa enviar cli_id
 router.get('/local/:cli_id', LocalController.listar); //ok

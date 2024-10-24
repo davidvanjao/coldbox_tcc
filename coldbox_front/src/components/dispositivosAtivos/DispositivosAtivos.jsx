@@ -7,15 +7,20 @@ import axios from 'axios';
 const DispositivosAtivos = () => {
   const [dispositivos, setDispositivos] = useState([]);
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [editando, setEditando] = useState(false);
+  const [equipamentoSelecionado, setEquipamentoSelecionado] = useState(null);
   const [novoDispositivo, setNovoDispositivo] = useState({
     modeloEquipamento: '',
     tipoSensor: '',
     ipEquipamento: '',
     macEquipamento: '',
     observacaoEquipamento: '',
+    localNome: '',
+    localDescricao: ''
   });
 
-  // Carrega os dispositivos já cadastrados com base no cli_id do localStorage
+
+  //Carrega os dispositivos já cadastrados com base no cli_id do localStorage
   useEffect(() => {
     const cli_id = localStorage.getItem('cli_id'); // Pega o cli_id do localStorage
 
@@ -33,38 +38,90 @@ const DispositivosAtivos = () => {
     }
   }, []);
 
-  // Lida com as mudanças nos campos de input do modal
+  //Lida com as mudanças nos campos de input do modal
   const lidarComMudanca = (e) => {
     const { name, value } = e.target;
     setNovoDispositivo((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Função para adicionar um novo dispositivo via requisição POST
-  const adicionarDispositivo = () => {
-    axios
-      .post('http://127.0.0.1:3333/equipamento', {
-        equip_modelo: novoDispositivo.modeloEquipamento,
-        equip_tipo: novoDispositivo.tipoSensor,
-        equip_ip: novoDispositivo.ipEquipamento,
-        equip_mac: novoDispositivo.macEquipamento,
-        equip_status: 'A', // Define como "ativo" por padrão
-        equip_observacao: novoDispositivo.observacaoEquipamento || null,
-      })
-      .then((response) => {
-        setDispositivos([...dispositivos, response.data.dados]); // Adiciona o novo dispositivo à lista
-        setMostrarModal(false); // Fecha o modal
-        // Reseta o formulário
-        setNovoDispositivo({
-          modeloEquipamento: '',
-          tipoSensor: '',
-          ipEquipamento: '',
-          macEquipamento: '',
-          observacaoEquipamento: '',
+  // Função para salvar o dispositivo (criar ou editar)
+  const salvarDispositivo = () => {
+    const cli_id = localStorage.getItem('cli_id');
+
+    if (editando) {
+      axios
+        .patch(`http://127.0.0.1:3333/equipamento/${equipamentoSelecionado}`, {
+          equip_modelo: novoDispositivo.modeloEquipamento,
+          equip_tipo: novoDispositivo.tipoSensor,
+          equip_ip: novoDispositivo.ipEquipamento,
+          equip_mac: novoDispositivo.macEquipamento,
+          equip_status: 'A',
+          equip_observacao: novoDispositivo.observacaoEquipamento || null,
+        })
+        .then((response) => {
+          const novosDispositivos = dispositivos.map((dispositivo) =>
+            dispositivo.equip_id === equipamentoSelecionado ? { ...dispositivo, ...response.data.dados } : dispositivo
+          );
+          setDispositivos(novosDispositivos);
+          setMostrarModal(false);
+          setNovoDispositivo({
+            modeloEquipamento: '',
+            tipoSensor: '',
+            ipEquipamento: '',
+            macEquipamento: '',
+            observacaoEquipamento: '',
+          });
+          setEditando(false);
+          setEquipamentoSelecionado(null);
+        })
+        .catch((error) => {
+          console.error('Erro ao editar o dispositivo', error);
         });
-      })
-      .catch((error) => {
-        console.error('Erro ao adicionar o dispositivo', error);
-      });
+    } else {
+      axios
+        .post('http://127.0.0.1:3333/equipamento/cadastrarEquipComLocal', {
+          equip_modelo: novoDispositivo.modeloEquipamento,
+          equip_tipo: novoDispositivo.tipoSensor,
+          equip_ip: novoDispositivo.ipEquipamento,
+          equip_mac: novoDispositivo.macEquipamento,
+          equip_status: 'A',
+          equip_observacao: novoDispositivo.observacaoEquipamento || null,
+          local_nome: novoDispositivo.localNome,
+          local_descricao: novoDispositivo.localDescricao,
+          cli_id: cli_id,
+        })
+        .then((response) => {
+          setDispositivos([...dispositivos, response.data.dados]);
+          setMostrarModal(false);
+          setNovoDispositivo({
+            modeloEquipamento: '',
+            tipoSensor: '',
+            ipEquipamento: '',
+            macEquipamento: '',
+            observacaoEquipamento: '',
+            localNome: '',
+            localDescricao: ''
+          });
+        })
+        .catch((error) => {
+          console.error('Erro ao adicionar o dispositivo', error);
+        });
+    }
+  };
+
+  const editarDispositivo = (dispositivo) => {
+    setNovoDispositivo({
+      modeloEquipamento: dispositivo.equip_modelo,
+      tipoSensor: dispositivo.equip_tipo,
+      ipEquipamento: dispositivo.equip_ip,
+      macEquipamento: dispositivo.equip_mac,
+      observacaoEquipamento: dispositivo.equip_observacao,
+      localNome: dispositivo.local_nome,
+      localDescricao: dispositivo.local_descricao,
+    });
+    setEquipamentoSelecionado(dispositivo.equip_id);
+    setEditando(true);
+    setMostrarModal(true);
   };
 
   return (
@@ -108,7 +165,7 @@ const DispositivosAtivos = () => {
                   <FontAwesomeIcon
                     icon={faPen}
                     className={styles.editIcon}
-                    onClick={() => console.log('Editar dispositivo', index)}
+                    onClick={() => editarDispositivo(item)} 
                   />
                 </td>
               </tr>
@@ -163,16 +220,38 @@ const DispositivosAtivos = () => {
             />
 
             <label htmlFor="observacaoEquipamento">Descrição</label>
-            <textarea
+            <input
               name="observacaoEquipamento"
               id="observacaoEquipamento"
               value={novoDispositivo.observacaoEquipamento}
               onChange={lidarComMudanca}
             />
 
+            <label htmlFor="localNome">Nome da Localização</label>
+            <input
+              type="text"
+              name="localNome"
+              id="localNome"
+              value={novoDispositivo.localNome}
+              onChange={lidarComMudanca}
+              required
+            />
+
+            <label htmlFor="localDescricao">Descrição da Localização</label>
+            <input
+              type="text"
+              name="localDescricao"
+              id="localDescricao"
+              value={novoDispositivo.localDescricao}
+              onChange={lidarComMudanca}
+              required
+            />
+
             <div className={styles.modalAddDispositivo}>
               <button type="fecharModal" onClick={() => setMostrarModal(false)}>Fechar</button>
-              <button type="adicionarDisp" onClick={adicionarDispositivo}>Adicionar</button>
+              <button type="adicionarDisp" onClick={salvarDispositivo}>
+                {editando ? 'Salvar Alterações' : 'Adicionar'}
+              </button>
             </div>
           </div>
         </div>

@@ -76,37 +76,37 @@ module.exports = {
         }
     },
 
-    async editar(request, response) { //ok
-        try {
-            // parâmetros recebidos pelo corpo da requisição
-            const { equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao} = request.body;
+    // async editar(request, response) { //ok
+    //     try {
+    //         // parâmetros recebidos pelo corpo da requisição
+    //         const { equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao} = request.body;
 
-            // parâmetro recebido pela URL via params ex: /usuario/1
-            const { equip_id } = request.params; 
+    //         // parâmetro recebido pela URL via params ex: /usuario/1
+    //         const { equip_id } = request.params; 
 
-            // instruções SQL
-            const sql = `UPDATE novo_equipamento SET equip_modelo = ?, equip_tipo = ?, equip_ip = ?, equip_mac = ?, equip_status = ?, equip_observacao = ? WHERE equip_id = ?;`; 
+    //         // instruções SQL
+    //         const sql = `UPDATE novo_equipamento SET equip_modelo = ?, equip_tipo = ?, equip_ip = ?, equip_mac = ?, equip_status = ?, equip_observacao = ? WHERE equip_id = ?;`; 
 
-            // preparo do array com dados que serão atualizados
-            const values = [equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao, equip_id]; 
+    //         // preparo do array com dados que serão atualizados
+    //         const values = [equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao, equip_id]; 
 
-            // execução e obtenção de confirmação da atualização realizada
-            const atualizaDados = await db.query(sql, values); 
+    //         // execução e obtenção de confirmação da atualização realizada
+    //         const atualizaDados = await db.query(sql, values); 
             
-            return response.status(200).json({
-                sucesso: true, 
-                mensagem: `Equipamento ${equip_id} atualizado com sucesso!`, 
-                dados: atualizaDados[0].affectedRows 
-            });
+    //         return response.status(200).json({
+    //             sucesso: true, 
+    //             mensagem: `Equipamento ${equip_id} atualizado com sucesso!`, 
+    //             dados: atualizaDados[0].affectedRows 
+    //         });
 
-        } catch (error) {
-            return response.status(500).json({
-                sucesso: false, 
-                mensagem: 'Erro na alteração.', 
-                dados: error.message
-            });
-        }
-    }, 
+    //     } catch (error) {
+    //         return response.status(500).json({
+    //             sucesso: false, 
+    //             mensagem: 'Erro na alteração.', 
+    //             dados: error.message
+    //         });
+    //     }
+    // }, 
 
     async apagar(request, response) { //ok
         try {
@@ -306,7 +306,7 @@ module.exports = {
                 await connection.query(sqlAtualizarLocalizacao, valuesLocalizacao);
             }
     
-            await connection.commit(); // Finaliza a transação
+            await connection.commit(); //Finaliza a transação
     
             return response.status(200).json({
                 sucesso: true,

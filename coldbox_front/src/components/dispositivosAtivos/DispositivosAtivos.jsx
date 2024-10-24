@@ -124,13 +124,31 @@ const DispositivosAtivos = () => {
     setMostrarModal(true);
   };
 
+  const limparFormulario = () => {
+    setNovoDispositivo({
+      modeloEquipamento: '',
+      tipoSensor: '',
+      ipEquipamento: '',
+      macEquipamento: '',
+      observacaoEquipamento: '',
+      localNome: '',
+      localDescricao: ''
+    });
+    setEditando(false);
+    setEquipamentoSelecionado(null);
+  };
+  
+
   return (
     <div className={styles.conteinerGrid}>
       <div className={styles.headerDispositivos}>
         <span className={styles.tag}>Dispositivos Ativos</span>
         <button
           className={styles.addButton}
-          onClick={() => setMostrarModal(true)}
+          onClick={() => {
+            limparFormulario();
+            setMostrarModal(true);
+          }}
         >
           <FontAwesomeIcon icon={faPlus} /> Adicionar Dispositivo
         </button>
@@ -177,7 +195,9 @@ const DispositivosAtivos = () => {
       {mostrarModal && (
         <div className={styles.modalDispositivos}>
           <div className={styles.modalContent}>
-            <h2>Adicionar Novo Dispositivo</h2>
+            <h2>
+              {editando ? 'Editar Localização' : 'Adicionar Nova Localização'}
+            </h2>
       
             <label htmlFor="modeloEquipamento">Modelo</label>
             <input
@@ -248,7 +268,12 @@ const DispositivosAtivos = () => {
             />
 
             <div className={styles.modalAddDispositivo}>
-              <button type="fecharModal" onClick={() => setMostrarModal(false)}>Fechar</button>
+              <button type="fecharModal" onClick={() => {
+                limparFormulario();
+                setMostrarModal(false);
+              }}>
+                Fechar
+              </button>
               <button type="adicionarDisp" onClick={salvarDispositivo}>
                 {editando ? 'Salvar Alterações' : 'Adicionar'}
               </button>

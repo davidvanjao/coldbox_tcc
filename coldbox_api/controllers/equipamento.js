@@ -292,10 +292,14 @@ module.exports = {
                                     WHERE equip_id = ?;`;
     
             const valuesEquipamento = [equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao, equip_id];
+            const resultEquipamento = await connection.query(sqlEquipamento, valuesEquipamento);
     
-            await connection.query(sqlEquipamento, valuesEquipamento);
+            if (resultEquipamento[0].affectedRows === 0) {
+                throw new Error('Nenhum equipamento foi atualizado. Verifique se o ID está correto.');
+            }
     
             // 2. Atualizar a localização, se os dados de localização forem fornecidos
+            let resultLocalizacao;
             if (local_nome && local_descricao) {
                 const sqlAtualizarLocalizacao = `UPDATE novo_local l
                                                  JOIN novo_equipamento_local el ON l.local_id = el.local_id
@@ -303,14 +307,31 @@ module.exports = {
                                                  WHERE el.equip_id = ?;`;
     
                 const valuesLocalizacao = [local_nome, local_descricao, equip_id];
-                await connection.query(sqlAtualizarLocalizacao, valuesLocalizacao);
+                resultLocalizacao = await connection.query(sqlAtualizarLocalizacao, valuesLocalizacao);
+    
+                if (resultLocalizacao[0].affectedRows === 0) {
+                    throw new Error('Nenhuma localização foi atualizada. Verifique se o equipamento está vinculado a uma localização.');
+                }
             }
     
-            await connection.commit(); //Finaliza a transação
+            await connection.commit(); // Finaliza a transação
+    
+            // Retorne os dados atualizados
+            const updatedData = {
+                equip_modelo, 
+                equip_tipo, 
+                equip_ip, 
+                equip_mac, 
+                equip_status, 
+                equip_observacao,
+                local_nome,
+                local_descricao
+            };
     
             return response.status(200).json({
                 sucesso: true,
                 mensagem: `Equipamento e localização ${equip_id} atualizados com sucesso!`,
+                dados: updatedData
             });
     
         } catch (error) {
@@ -324,6 +345,7 @@ module.exports = {
             connection.release(); // Libera a conexão do pool
         }
     }
+    
 
 }
 

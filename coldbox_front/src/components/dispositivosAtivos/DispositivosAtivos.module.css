@@ -1,39 +1,31 @@
-.conteinerGrid {
+.containerPrincipal {
   border-radius: 10px;
   grid-row: 2 / span 5;
   grid-column: 1 / -1;
-  /* box-sizing: border-box; Inclui padding e bordas na altura total */
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  /* width: 100%; */
-  /* height: 100vh; O container ocupará 100% da altura da viewport */
-  background-color: #f9f9f9; /* Ajuste a cor de fundo conforme necessário */
-  position: relative; /* Para posicionar o botão absoluto dentro deste container */
+  background-color: #f9f9f9;
+  position: relative;
 }
-
+ 
 .tabelaGeral {
   flex-grow: 1;
   padding: 10px;
-  /* display: flex;
-  flex-direction: column; */
-  /* max-height: 300px; Limita a altura da tabela */
-  overflow-y: auto; /* Adiciona a barra de rolagem quando necessário */
-  /* width: 100%; Garante que o container ocupe toda a largura */
-  overflow: hidden;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
 
-.headerDispositivos {
+.containerSecundario {
   background-color: #E6E6E6;
   padding: 15px 10px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  position: relative; /* Para que o botão absoluto se posicione corretamente */
+  position: relative;
 }
 
-.headerDispositivos .tag {
+.containerSecundario .tag {
   padding: 5px 10px;
   font-size: 18px;
   font-weight: 600;
@@ -46,28 +38,27 @@
 }
 
 .th, .td {
-  padding: 15px 10px; /* Ajuste de padding para espaçamento vertical */
+  padding: 15px 10px;
   text-align: left;
   vertical-align: middle;
-  border-bottom: 1px solid #dddddd; /* Linha divisória */
+  border-bottom: 1px solid #dddddd;
   font-size: 16px;
 }
 
 .td {
-  padding: 15px 10px; /* Aumenta o padding para dar mais espaço vertical */
+  padding: 15px 10px;
   text-align: left;
   vertical-align: middle;
-  min-height: 50px; /* Define uma altura mínima */
-  font-size: 16px; /* Tamanho da fonte para ficar mais visível */
+  min-height: 50px;
+  font-size: 16px;
 }
 
 .th {
-  padding: 15px 10px; /* Mesma configuração para o header */
+  padding: 15px 10px;
   text-align: left;
   font-weight: bold;
   min-height: 50px;
 }
-
 
 .evenRow {
   background-color: #f5f5f5;
@@ -77,13 +68,13 @@
   background-color: #eeeeee;
 }
 
-.addButton {
+.botaoAddDisp {
   position: absolute;
-  right: 15px; /* Ajuste para se alinhar corretamente */
+  right: 15px;
   top: 50%;
   transform: translateY(-50%);
   padding: 8px 10px;
-  background-color: #4285F4; /* Cor azul semelhante ao botão de exportação */
+  background-color: #4285F4;
   color: white;
   font-size: 15px;
   border: none;
@@ -91,10 +82,6 @@
   cursor: pointer;
   z-index: 10;
 }
-
-/* .addButton:hover {
-  background-color: #0056b3;
-} */
 
 .modalDispositivos {
   position: fixed;
@@ -113,47 +100,43 @@
   background-color: white;
   padding: 30px;
   border-radius: 10px;
-  width: 600px; /* Largura aumentada */
-  height: auto; /* Altura ajustada para o conteúdo */
-}
-
-.modalContent textarea {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-  resize: vertical;
+  width: 450px;
+  max-width: 100%; /* Garante que o modal se ajuste em telas menores */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza os elementos horizontalmente */
 }
 
 .modalContent h2 {
   margin-bottom: 20px;
   font-weight: bold;
   font-size: 18px;
+  text-align: center; /* Centraliza o título */
 }
 
 .modalContent label {
   display: block;
+  width: 100%; /* Garante que o label ocupe 100% da largura */
   margin-bottom: 5px;
   font-weight: bold;
+  text-align: left; /* Mantém o texto alinhado à esquerda */
 }
 
 .modalContent input {
-  width: 100%;
+  width: 100%; /* Mantém os inputs ocupando 100% do container */
+  max-width: 400px; /* Limita a largura dos inputs para que não fiquem exageradamente grandes */
   padding: 10px;
   margin-bottom: 15px;
-  border-radius: 5px;
+  /* border-radius: 5px; */
   border: 1px solid #ccc;
   font-size: 16px;
 }
 
-
-/* ------------------------------------- */
-/* BOTÃO DE ADICIONAR DISPOSTIVOS */
 .modalAddDispositivo {
   display: flex;
   justify-content: space-between;
+  width: 100%;
+  max-width: 400px; /* Alinha os botões de acordo com os inputs */
   margin-top: 20px;
 }
 
@@ -174,7 +157,6 @@
   color: white;
 }
 
-/* Estilos para o indicador de status */
 .online {
   color: #4CAF50;
 }
@@ -183,9 +165,8 @@
   color: #36f436;
 }
 
-/* Ajuste do tamanho do ícone de edição */
-.editIcon {
+.editarDispositivo {
   cursor: pointer;
-  font-size: 20px; /* Aumenta o tamanho do ícone */
+  font-size: 20px;
   margin-left: 10px;
 }

@@ -48,6 +48,7 @@ const DispositivosAtivos = () => {
   const salvarDispositivo = () => {
     const cli_id = localStorage.getItem('cli_id');
 
+    //Requisição patch para editar o dispositivo
     if (editando) {
       axios
         .patch(`http://127.0.0.1:3333/equipamento/${equipamentoSelecionado}`, {
@@ -57,26 +58,34 @@ const DispositivosAtivos = () => {
           equip_mac: novoDispositivo.macEquipamento,
           equip_status: 'A',
           equip_observacao: novoDispositivo.observacaoEquipamento || null,
+          local_nome: novoDispositivo.localNome,
+          local_descricao: novoDispositivo.localDescricao,
         })
         .then((response) => {
           const novosDispositivos = dispositivos.map((dispositivo) =>
             dispositivo.equip_id === equipamentoSelecionado ? { ...dispositivo, ...response.data.dados } : dispositivo
           );
+
+          //Atualiza o estado com os novos dados
           setDispositivos(novosDispositivos);
+
           setMostrarModal(false);
-          setNovoDispositivo({
-            modeloEquipamento: '',
-            tipoSensor: '',
-            ipEquipamento: '',
-            macEquipamento: '',
-            observacaoEquipamento: '',
-          });
-          setEditando(false);
-          setEquipamentoSelecionado(null);
+          limparFormulario();
+          // setNovoDispositivo({
+          //   modeloEquipamento: '',
+          //   tipoSensor: '',
+          //   ipEquipamento: '',
+          //   macEquipamento: '',
+          //   observacaoEquipamento: '',
+          // });
+          // setEditando(false);
+          // setEquipamentoSelecionado(null);
         })
         .catch((error) => {
           console.error('Erro ao editar o dispositivo', error);
         });
+
+      //Requisição para adicionar um novo dispositivo
     } else {
       axios
         .post('http://127.0.0.1:3333/equipamento/cadastrarEquipComLocal', {
@@ -93,15 +102,16 @@ const DispositivosAtivos = () => {
         .then((response) => {
           setDispositivos([...dispositivos, response.data.dados]);
           setMostrarModal(false);
-          setNovoDispositivo({
-            modeloEquipamento: '',
-            tipoSensor: '',
-            ipEquipamento: '',
-            macEquipamento: '',
-            observacaoEquipamento: '',
-            localNome: '',
-            localDescricao: ''
-          });
+          limparFormulario();
+          // setNovoDispositivo({
+          //   modeloEquipamento: '',
+          //   tipoSensor: '',
+          //   ipEquipamento: '',
+          //   macEquipamento: '',
+          //   observacaoEquipamento: '',
+          //   localNome: '',
+          //   localDescricao: ''
+          // });
         })
         .catch((error) => {
           console.error('Erro ao adicionar o dispositivo', error);
@@ -140,11 +150,11 @@ const DispositivosAtivos = () => {
   
 
   return (
-    <div className={styles.conteinerGrid}>
-      <div className={styles.headerDispositivos}>
+    <div className={styles.containerPrincipal}>
+      <div className={styles.containerSecundario}>
         <span className={styles.tag}>Dispositivos Ativos</span>
         <button
-          className={styles.addButton}
+          className={styles.botaoAddDisp}
           onClick={() => {
             limparFormulario();
             setMostrarModal(true);
@@ -182,7 +192,7 @@ const DispositivosAtivos = () => {
                 <td className={styles.td}>
                   <FontAwesomeIcon
                     icon={faPen}
-                    className={styles.editIcon}
+                    className={styles.editarDispositivo}
                     onClick={() => editarDispositivo(item)} 
                   />
                 </td>
@@ -198,7 +208,7 @@ const DispositivosAtivos = () => {
             <h2>
               {editando ? 'Editar Localização' : 'Adicionar Nova Localização'}
             </h2>
-      
+            
             <label htmlFor="modeloEquipamento">Modelo</label>
             <input
               type="text"

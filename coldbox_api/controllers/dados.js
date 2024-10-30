@@ -76,21 +76,75 @@ module.exports = {
             const { equip_id } = request.params; 
 
             //instruções SQL 
-            const sql = `SELECT 
-                DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS data_hora,
-                DATE_FORMAT(a.dados_data, '%H') AS hora,
-                ROUND(AVG(CAST(a.dados_temp AS DECIMAL(5,2))), 2) AS media_temperatura,
-                ROUND(AVG(CAST(a.dados_umid AS DECIMAL(5,2))), 2) AS media_umidade
-            FROM 
-                novo_equipamento_dados a
-            WHERE
-                a.equip_id = 1
-            AND DATE_FORMAT(a.dados_data, '%Y-%m-%d') = CURDATE()  -- Usa a data atual
-            GROUP BY 
-                DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
-            ORDER BY 
-                hora DESC
-            LIMIT 6`;
+            const sql = `SELECT * FROM (
+                    SELECT 
+                        DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS data_hora,
+                        CAST(DATE_FORMAT(a.dados_data, '%H') AS UNSIGNED) AS hora,
+                        ROUND(AVG(CAST(a.dados_temp AS DECIMAL(5,2))), 2) AS media_temperatura,
+                        ROUND(AVG(CAST(a.dados_umid AS DECIMAL(5,2))), 2) AS media_umidade
+                    FROM 
+                        novo_equipamento_dados a
+                    WHERE
+                        a.equip_id = ?
+                    
+                    GROUP BY 
+                        DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
+                    ORDER BY 
+                        a.dados_data DESC  -- Ordena pela data e hora para obter os mais recentes
+                    LIMIT 6
+                ) AS subconsulta
+                ORDER BY data_hora ASC;  -- Ordena a seleção final por data e hora em ordem crescente`;
+
+            // preparo do array com dados que serão atualizados
+            const values = [equip_id];                     
+
+            //executa instruções SQL e armazena o resultado na variável usuários
+            const dadosEquipamento = await db.query(sql, values); 
+            const nItens = dadosEquipamento[0].length;
+
+            return response.status(200).json({
+                sucesso: true, 
+                mensagem: 'Dados por equipamento.', 
+                dados: dadosEquipamento[0], 
+                nItens                 
+            });
+
+        } catch (error) {
+            //console.log(error);
+            return response.status(500).json({
+                sucesso: false, 
+                mensagem: 'Erro na requisição.', 
+                dados: error.message
+            });
+        }
+    },
+
+    //grafico WEB
+    async listarWeb(request, response) {//ok
+        try {
+
+            //parâmetro recebido pela URL via params ex: /usuario/1
+            const { equip_id } = request.params; 
+
+            //instruções SQL 
+            const sql = `SELECT * FROM (
+                SELECT 
+                    DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS data_hora,
+                    DATE_FORMAT(a.dados_data, '%H') AS hora,
+                    ROUND(AVG(CAST(a.dados_temp AS DECIMAL(5,2))), 2) AS media_temperatura,
+                    ROUND(AVG(CAST(a.dados_umid AS DECIMAL(5,2))), 2) AS media_umidade
+                FROM 
+                    novo_equipamento_dados a
+                WHERE
+                    a.equip_id = 1
+                AND DATE_FORMAT(a.dados_data, '%Y-%m-%d') = CURDATE()  -- Usa a data atual
+                GROUP BY 
+                    DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
+                ORDER BY 
+                    hora DESC
+                LIMIT 12
+            ) AS subconsulta
+            ORDER BY hora ASC;`;
 
             // preparo do array com dados que serão atualizados
             const values = [equip_id];                     

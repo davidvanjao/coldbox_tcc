@@ -32,6 +32,7 @@ export default function InfoEquipamento() {
                 equipamentoId={equipamentoId} 
                 id_usuario={id_usuario} 
                 id_cliente={id_cliente} 
+                reloadKey={reloadKey} // Passa o reloadKey como prop
             />
 
             <EquipamentoStatus

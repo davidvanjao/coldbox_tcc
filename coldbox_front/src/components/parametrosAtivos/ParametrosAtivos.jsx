@@ -128,12 +128,14 @@ const ParametrosAtivos = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h2>Parâmetros Ativos</h2>
+        <span className={styles.tag}>Parâmetros Ativos</span>
+        {/* <h2>Parâmetros Ativos</h2> */}
       </div>
+      <div className={styles.tabelaGeral}>
       <table className={styles.table}>
         <thead>
           <tr>
-            <th className={styles.th}>ON/OFF</th>
+            <th className={styles.th}>Status</th>
             <th className={styles.th}>Modelo</th>
             <th className={styles.th}>Equipamento</th>
             <th className={styles.th}>Temp. Min</th>
@@ -169,6 +171,7 @@ const ParametrosAtivos = () => {
           ))}
         </tbody>
       </table>
+      </div>
 
       {showEditModal && (
         <div className={styles.modal}>

@@ -4,7 +4,7 @@ import { LineChart } from 'react-native-chart-kit';
 
 import styles from './styles';
 
-export default function Grafico({ equipamentoId }) {
+export default function Grafico({ equipamentoId, id_usuario, reloadKey }) {
 
     const [dadosEquipamento, setDadosEquipamento] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -40,7 +40,7 @@ export default function Grafico({ equipamentoId }) {
     // Fetch de dados com useEffect
     useEffect(() => {
         fetchData(); // Buscar dados ao carregar o componente ou quando `equipamentoId` mudar
-    }, [equipamentoId]);  // Adiciona `equipamentoId` como dependência
+    }, [equipamentoId, reloadKey]);  // Adiciona `equipamentoId` como dependência
 
     // Extrair dados e rótulos do array "dadosEquipamento"
     const labels = dadosEquipamento.map(dado => dado.hora); // Supondo que você tenha um campo "horario"

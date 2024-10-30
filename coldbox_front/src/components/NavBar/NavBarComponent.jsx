@@ -51,9 +51,9 @@ const NavBarComponent = () => {
                     <li className={routePath === '/relatorios' ? 'activeMenuItem' : ''}>
                         <Link href='/relatorios'>Relatórios</Link>
                     </li>
-                    <li className={routePath === '/localDispositivo' ? 'activeMenuItem' : ''}>
+                    {/* <li className={routePath === '/localDispositivo' ? 'activeMenuItem' : ''}>
                         <Link href='/localDispositivo'>Local Dispositivo</Link>
-                    </li>
+                    </li> */}
                     <li className={routePath === '/dispositivos' ? 'activeMenuItem' : ''}>
                         <Link href='/dispositivos'>Dispositivos</Link>
                     </li>

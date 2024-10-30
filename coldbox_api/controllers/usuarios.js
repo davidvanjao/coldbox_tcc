@@ -1,24 +1,15 @@
 const { json } = require('express'); 
 const db = require('../database/connection'); 
 const { validationResult } = require('express-validator');
-
-
+const nodemailer = require('nodemailer');
 
 module.exports = {
-    async listar(request, response) {//ok
+    // Função para listar usuários por `cli_id`
+    async listar(request, response) {
         try {
-
-            // parâmetro recebido pela URL via params ex: /usuario/1
             const { cli_id } = request.params; 
-
-            // instruções SQL
-            const sql = `select * from novo_usuario WHERE cli_id = ?;`; 
-
-            // preparo do array com dados que serão atualizados
-            const values = [cli_id]; 
-
-            //executa instruções SQL e armazena o resultado na variável usuários
-            const usuarios = await db.query(sql, values); 
+            const sql = `SELECT * FROM novo_usuario WHERE cli_id = ?;`; 
+            const usuarios = await db.query(sql, [cli_id]);
             const nItens = usuarios[0].length;
 
             return response.status(200).json({
@@ -27,9 +18,7 @@ module.exports = {
                 dados: usuarios[0], 
                 nItens                 
             });
-
         } catch (error) {
-            //console.log(error);
             return response.status(500).json({
                 sucesso: false, 
                 mensagem: 'Erro na requisição.', 
@@ -38,37 +27,24 @@ module.exports = {
         }
     },
 
-    async cadastrar(request, response) { //ok
+    // Função para cadastrar um novo usuário
+    async cadastrar(request, response) {
         try {
-
             const errors = validationResult(request);
-
             if(!errors.isEmpty()) {
-                return response.status(400).json({ errors: errors.array()[0]['msg']});
+                return response.status(400).json({ errors: errors.array()[0]['msg'] });
             }
 
-
-            // parâmetros recebidos no corpo da requisição
             const { user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil, cli_id } = request.body;
-
-            // instrução SQL
             const sql = `INSERT INTO novo_usuario (user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil, cli_id) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-
-            // definição dos dados a serem inseridos em um array
-            const values = [user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil, cli_id];  
-
-            // execução da instrução sql passando os parâmetros
-            const execSql = await db.query(sql, values); 
-
-            // identificação do ID do registro inserido
-            const usu_id = execSql[0].insertId;           
+            const execSql = await db.query(sql, [user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil, cli_id]);
+            const usu_id = execSql[0].insertId;
 
             return response.status(200).json({
                 sucesso: true, 
                 mensagem: 'Cadastro de usuário efetuado com sucesso.', 
                 dados: usu_id
             });
-
         } catch (error) {
             return response.status(500).json({
                 sucesso: false, 
@@ -78,29 +54,19 @@ module.exports = {
         }
     },
 
-    async editar(request, response) { //ok
+    // Função para editar informações de um usuário
+    async editar(request, response) {
         try {
-            // parâmetros recebidos pelo corpo da requisição
-            const { user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil, user_status} = request.body;
-
-            // parâmetro recebido pela URL via params ex: /usuario/1
+            const { user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil, user_status } = request.body;
             const { user_id } = request.params; 
+            const sql = `UPDATE novo_usuario SET user_nome = ?, user_senha = ?, user_email = ?, user_tel = ?, nivel_id = ?, user_imagem_perfil = ?, user_status = ? WHERE user_id = ?;`; 
+            const atualizaDados = await db.query(sql, [user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil, user_status, user_id]);
 
-            // instruções SQL
-            const sql = `UPDATE novo_usuario SET user_nome = ?, user_senha = ?, user_email = ?, user_tel = ?, nivel_id = ?,  user_imagem_perfil = ?, user_status = ? WHERE user_id = ?;`; 
-
-            // preparo do array com dados que serão atualizados
-            const values = [user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil, user_status, user_id]; 
-
-            // execução e obtenção de confirmação da atualização realizada
-            const atualizaDados = await db.query(sql, values); 
-            
             return response.status(200).json({
                 sucesso: true, 
                 mensagem: `Usuário ${user_id} atualizado com sucesso!`, 
                 dados: atualizaDados[0].affectedRows 
             });
-
         } catch (error) {
             return response.status(500).json({
                 sucesso: false, 
@@ -108,21 +74,14 @@ module.exports = {
                 dados: error.message
             });
         }
-    }, 
+    },
 
-    async apagar(request, response) { //ok
+    // Função para apagar um usuário
+    async apagar(request, response) {
         try {
-            // parâmetro passado via url na chamada da api pelo front-end
             const { user_id } = request.params;
-
-            // comando de exclusão
             const sql = `DELETE FROM novo_usuario WHERE user_id = ?;`;
-
-            // array com parâmetros da exclusão
-            const values = [user_id];
-
-            // executa instrução no banco de dados
-            const excluir = await db.query(sql, values);
+            const excluir = await db.query(sql, [user_id]);
 
             return response.status(200).json({
                 sucesso: true,
@@ -138,31 +97,20 @@ module.exports = {
         }
     },
 
-    //VERIFICA SE USUARIO E SENHA EXISTE - ok
-    async login(request, response) { //ok
+    // Função para login do usuário
+    async login(request, response) {
         try {
-
-            const {user_email, user_senha} = request.body;
-
-            // instruções SQL
-            const sql = `select user_id, user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil from novo_usuario where user_email = ? and user_senha = ?;`; 
-
-            const values = [user_email, user_senha];
-
-            //executa instruções SQL e armazena o resultado na variável usuários
-            const usuarios = await db.query(sql, values); 
+            const { user_email, user_senha } = request.body;
+            const sql = `SELECT user_id, user_nome, user_senha, user_email, user_tel, nivel_id, user_imagem_perfil FROM novo_usuario WHERE user_email = ? AND user_senha = ?;`; 
+            const usuarios = await db.query(sql, [user_email, user_senha]);
             const nItens = usuarios[0].length;
-
-            console.log(usuarios[0]);
-
-            if(nItens < 1) {
-
-                return response.status(403).json({
+            
+            if (nItens < 1) {
+                return response.status(200).json({
                     sucesso: false, 
                     mensagem: 'Login e/ou senha inválido.', 
                     dados: null               
                 });
-
             }
 
             return response.status(200).json({
@@ -170,9 +118,7 @@ module.exports = {
                 mensagem: 'Login efetuado com sucesso.', 
                 dados: usuarios[0]            
             });
-
         } catch (error) {
-            //console.log(error);
             return response.status(500).json({
                 sucesso: false, 
                 mensagem: 'Erro na requisição.', 
@@ -180,41 +126,23 @@ module.exports = {
             });
         }
     },
-    
-    //NOVO - TRAZ NOME DE USUARIO E NOME EMPRESA - ok
-    async listarDadosUsuarioEmpresa(request, response) { //ok
+
+    // Função para listar dados do usuário e empresa
+    async listarDadosUsuarioEmpresa(request, response) {
         try {
-
-            //const {user_id} = request.body;
             const { user_id } = request.params; 
-
-            // instruções SQL
-            const sql = `SELECT a.user_id, a.user_nome,  b.cli_id, b.cli_razaoSocial, c.nivel_acesso
-            FROM 
-                novo_usuario a,
-                novo_clientes b,
-                novo_nivel_acesso c
-            WHERE 
-                a.user_id = ?
-            AND a.cli_id = b.cli_id
-            AND a.nivel_id = c.nivel_id;`; 
-
-            const values = [user_id];
-
-            //executa instruções SQL e armazena o resultado na variável usuários
-            const usuario = await db.query(sql, values); 
+            const sql = `SELECT a.user_id, a.user_nome, b.cli_id, b.cli_razaoSocial, c.nivel_acesso
+                         FROM novo_usuario a, novo_clientes b, novo_nivel_acesso c
+                         WHERE a.user_id = ? AND a.cli_id = b.cli_id AND a.nivel_id = c.nivel_id;`; 
+            const usuario = await db.query(sql, [user_id]);
             const nItens = usuario[0].length;
 
-            console.log(usuario[0]);
-
-            if(nItens < 1) {
-
+            if (nItens < 1) {
                 return response.status(403).json({
                     sucesso: false, 
                     mensagem: 'Dados do usuário inválido.', 
                     dados: null               
                 });
-
             }
 
             return response.status(200).json({
@@ -222,9 +150,7 @@ module.exports = {
                 mensagem: 'Sucesso na requisição.', 
                 dados: usuario[0]            
             });
-
         } catch (error) {
-            //console.log(error);
             return response.status(500).json({
                 sucesso: false, 
                 mensagem: 'Erro na requisição.', 
@@ -233,37 +159,94 @@ module.exports = {
         }
     },
 
-    //Faz a busca do usuário pelo ID
+    // Função para listar dados do usuário pelo ID
     async listarDadosUsuario(request, response) {
-        const { user_id } = request.params;  // Obtém o ID do usuário a partir dos parâmetros da URL
+        const { user_id } = request.params;
     
         try {
-          const sql = `SELECT * FROM novo_usuario WHERE user_id = ?`;
-          const [result] = await db.query(sql, [user_id]);
+            const sql = `SELECT * FROM novo_usuario WHERE user_id = ?`;
+            const [result] = await db.query(sql, [user_id]);
+
+            if (result.length === 0) {
+                return response.status(404).json({
+                    sucesso: false,
+                    mensagem: 'Usuário não encontrado',
+                });
+            }
     
-          if (result.length === 0) {
-            return response.status(404).json({
-              sucesso: false,
-              mensagem: 'Usuário não encontrado',
+            return response.status(200).json({
+                sucesso: true,
+                dados: result[0],
             });
-          }
-    
-          return response.status(200).json({
-            sucesso: true,
-            dados: result[0], // Retorna os dados do primeiro (e único) usuário encontrado
-          });
         } catch (error) {
-          return response.status(500).json({
-            sucesso: false,
-            mensagem: 'Erro ao buscar o usuário',
-            dados: error.message,
-          });
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro ao buscar o usuário',
+                dados: error.message,
+            });
+        }
+    },
+
+    // Função para enviar e-mail de recuperação de senha
+    async enviarEmailRecuperacao(req, res) {
+        const { email } = req.body;
+        const transporter = nodemailer.createTransport({
+            service: 'hotmail',
+            auth: {
+                user: 'henrique.prodam@hotmail.com',
+                pass: '123'
+            }
+        });
+
+        const resetUrl = `http://127.0.0.1:3333/redefinirSenha?email=${encodeURIComponent(email)}`;
+        const mailOptions = {
+            from: 'henrique.prodam@hotmail.com',
+            to: email,
+            subject: 'Redefinição de senha',
+            text: `Clique no link para redefinir sua senha: ${resetUrl}`
+        };
+
+        try {
+            await transporter.sendMail(mailOptions);
+            res.status(200).json({ message: 'E-mail enviado com sucesso' });
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao enviar o e-mail', error });
+        }
+    },
+    // Função para redefinir a senha do usuário
+    async redefinirSenha(req, res) {
+        const { email, password } = req.body; // Recebe o email e a nova senha do corpo da requisição
+    
+        try {
+            // Verifica se o usuário existe com base no email
+            const sqlVerificaUsuario = `SELECT user_id FROM novo_usuario WHERE user_email = ?;`;
+            const usuario = await db.query(sqlVerificaUsuario, [email]);
+    
+            if (usuario[0].length === 0) {
+                return res.status(404).json({
+                    sucesso: false,
+                    mensagem: 'Usuário não encontrado.',
+                });
+            }
+    
+            // Hash da nova senha
+            const hashedPassword = await bcrypt.hash(password, 10);
+    
+            // Atualiza a senha do usuário
+            const sqlAtualizaSenha = `UPDATE novo_usuario SET user_senha = ? WHERE user_email = ?;`;
+            await db.query(sqlAtualizaSenha, [hashedPassword, email]);
+    
+            return res.status(200).json({
+                sucesso: true,
+                mensagem: 'Senha redefinida com sucesso.',
+            });
+        } catch (error) {
+            return res.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro ao redefinir a senha.',
+                dados: error.message,
+            });
         }
     }
-}
-
-
-
-
-
+    };
 

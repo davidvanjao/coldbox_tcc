@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Corrigir o import do useRouter
+import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 import Link from 'next/link';
 
@@ -14,7 +14,8 @@ export default function ForgotPassword() {
   };
 
   const handleSendClick = () => {
-    router.push(`/login?emailSent=${encodeURIComponent(email)}`);
+    // Aqui, você pode adicionar lógica se precisar fazer algo com o e-mail antes de redirecionar
+    router.push('/resetarSenha'); // Redireciona para a página de redefinição de senha
   };
 
   return (
@@ -25,7 +26,7 @@ export default function ForgotPassword() {
         </div>
         <div className={styles.logo}>
           <img src="/logo.png" alt="ColdBox Logo" />
-          <span>ColdBox</span>          
+          <span>ColdBox</span>
         </div>
         
         <div className={styles.mensagemRecuperacao}>
@@ -48,9 +49,9 @@ export default function ForgotPassword() {
         </div>
         
         <div className={styles.extras}>
-            <span>Ajuda</span>
-            <span>Sobre</span>
-            <span>Mais</span>
+          <span>Ajuda</span>
+          <span>Sobre</span>
+          <span>Mais</span>
         </div>
       </div>
     </div>

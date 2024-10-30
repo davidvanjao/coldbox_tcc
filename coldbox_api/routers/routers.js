@@ -82,5 +82,9 @@ router.get('/usuarios/dadosUsuario/:user_id', UsuariosController.listarDadosUsua
 //traz nome de usuario e nome da empresa - ok 
 router.get('/usuarios/dadosUsuarioEmpresa/:user_id', UsuariosController.listarDadosUsuarioEmpresa); 
 
+// Nova rota para recuperação de senha
+router.post('/usuarios/send-reset-email', UsuariosController.enviarEmailRecuperacao);
+
+
 
 module.exports = router;

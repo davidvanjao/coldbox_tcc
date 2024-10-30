@@ -22,7 +22,7 @@ const DispositivosAtivos = () => {
 
   //Carrega os dispositivos já cadastrados com base no cli_id do localStorage
   useEffect(() => {
-    const cli_id = localStorage.getItem('cli_id'); // Pega o cli_id do localStorage
+    const cli_id = localStorage.getItem('cli_id'); //Pega o cli_id do localStorage
 
     if (cli_id) {
       axios
@@ -44,7 +44,7 @@ const DispositivosAtivos = () => {
     setNovoDispositivo((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Função para salvar o dispositivo (criar ou editar)
+  //Função para salvar o dispositivo (criar ou editar)
   const salvarDispositivo = () => {
     const cli_id = localStorage.getItem('cli_id');
 
@@ -168,6 +168,7 @@ const DispositivosAtivos = () => {
           <thead>
             <tr>
               <th className={styles.th}>Status</th> {/* Indicador de status */}
+              <th className={styles.th}>Nome</th>
               <th className={styles.th}>Equipamento</th> {/* equip_modelo */}
               <th className={styles.th}>Sensor</th> {/* equip_tipo */}
               <th className={styles.th}>IP</th> {/* equip_ip */}
@@ -184,6 +185,7 @@ const DispositivosAtivos = () => {
                     className={item.equip_status === 'A' ? styles.online : styles.offline}
                   />
                 </td>
+                <td className={styles.td}>{item.local_nome}</td>
                 <td className={styles.td}>{item.equip_modelo}</td>
                 <td className={styles.td}>{item.equip_tipo}</td>
                 <td className={styles.td}>{item.equip_ip}</td>

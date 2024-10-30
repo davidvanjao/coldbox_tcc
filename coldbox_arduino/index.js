@@ -21,8 +21,8 @@ let n = 0;
 
 
 // Parâmetros da simulação
-const temperaturaMedia = 25;   // Temperatura média em °C
-const desvioPadrao = 2;      // Desvio padrão para variações aleatórias
+const temperaturaMedia = 3;   // Temperatura média em °C
+const desvioPadrao = 4;      // Desvio padrão para variações aleatórias
 const intervaloLeitura = 1800000;  // Intervalo de 30 minutos (1800000 ms)
 
 //id do equipamento
@@ -73,7 +73,7 @@ async function lerDataSimulada(equip_id) {
 async function novoCadastrar(dados_temp, dados_umid, equip_id, dados_data) {
     try {
 
-        const param_minimo = -2;
+        const param_minimo = -1;
         const param_max = 5;
 
         // Instrução SQL

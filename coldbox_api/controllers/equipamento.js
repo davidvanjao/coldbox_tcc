@@ -108,6 +108,8 @@ module.exports = {
     //     }
     // }, 
 
+
+    //NAO SERA POSSIVEL APAGAR INFORMACOES DA TABELA. APENAS EDICAO.
     async apagar(request, response) { //ok
         try {
             // parâmetro passado via url na chamada da api pelo front-end

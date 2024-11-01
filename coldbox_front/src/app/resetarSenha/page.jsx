@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from './page.module.css'; // Mantenha os estilos ou ajuste conforme necessário
+import styles from './page.module.css';
 import Link from 'next/link';
+import axios from 'axios';
 
 export default function ResetPassword() {
   const [password, setPassword] = useState('');
@@ -25,32 +26,28 @@ export default function ResetPassword() {
       return;
     }
 
-      // Obtenha o e-mail do parâmetro da URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const email = urlParams.get('email');
+    // Obtenha o e-mail do parâmetro da URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email');
 
-  
+    try {
+      const response = await axios.post('http://127.0.0.1:3333/redefinirSenha', {
+        email,
+        password,
+      });
 
-  try {
-    const response = await fetch('/api/usuarios/redefinir-senha', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }), // Envie o email junto com a nova senha
-    });
-    const data = await response.json();
-
-    if (response.ok) {
-      setMessage('Senha redefinida com sucesso. Você pode fazer login agora.');
-      setTimeout(() => {
-        router.push('/login');
-      }, 2000);
-    } else {
-      setMessage(data.message || 'Erro ao redefinir a senha.');
+      if (response.data.sucesso) {
+        setMessage('Senha redefinida com sucesso. Você pode fazer login agora.');
+        setTimeout(() => {
+          router.push('/login');
+        }, 2000);
+      } else {
+        setMessage(response.data.mensagem || 'Erro ao redefinir a senha.');
+      }
+    } catch (error) {
+      setMessage('Erro de rede. Tente novamente mais tarde.');
     }
-  } catch (error) {
-    setMessage('Erro de rede. Tente novamente mais tarde.');
-  }
-};
+  };
 
   return (
     <div className={styles.fundo}>

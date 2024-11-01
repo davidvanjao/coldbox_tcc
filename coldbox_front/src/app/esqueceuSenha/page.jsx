@@ -4,18 +4,33 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 import Link from 'next/link';
+import axios from 'axios';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
   const router = useRouter();
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
 
-  const handleSendClick = () => {
-    // Aqui, você pode adicionar lógica se precisar fazer algo com o e-mail antes de redirecionar
-    router.push('/resetarSenha'); // Redireciona para a página de redefinição de senha
+  const handleSendClick = async () => {
+    try {
+      const response = await axios.post('http://127.0.0.1:3333/usuarios', { email });
+
+      if (response.data.sucesso) {
+        setMessage('Link de recuperação enviado! Verifique seu e-mail.');
+        setTimeout(() => {
+          router.push('/resetarSenha');
+        }, 2000);
+      } else {
+        setMessage(response.data.mensagem || 'Erro ao enviar link de recuperação.');
+      }
+    } catch (error) {
+      setMessage('Erro de rede. Tente novamente mais tarde.');
+      console.error(error);
+    }
   };
 
   return (
@@ -46,6 +61,7 @@ export default function ForgotPassword() {
           <Link href="/login" className={styles.esqueceuSenha}>
             Voltar para Login
           </Link>
+          {message && <p className={styles.mensagemStatus}>{message}</p>}
         </div>
         
         <div className={styles.extras}>

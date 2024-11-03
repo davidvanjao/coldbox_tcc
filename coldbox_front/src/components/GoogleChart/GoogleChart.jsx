@@ -3,51 +3,41 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios'; 
 import styles from './GoogleChart.css'; 
 
-// A prop 'exportButton' renderizará o botão de exportação apenas quando necessário
+//A prop 'exportButton' renderizará o botão de exportação apenas quando necessário
 const GoogleChart = ({ exportButton }) => {
-  // Estado para os dados do gráfico
-  const [chartData, setChartData] = useState([]); 
+  const [dadosGrafico, setDadosGrafico] = useState([]); //Estado para armazenar os dados do gráfico
+  const [googleChartsCarregado, setGoogleChartsCarregado] = useState(false); //Estado para controlar o carregamento do Google Charts
+  const [valorMaximo, setValorMaximo] = useState(0); //Estado para armazenar o valor máximo de temperatura
+  const [exibirModalExportacao, setExibirModalExportacao] = useState(false); //Estado para controlar a visibilidade do modal de exportação
+  const [exportarVisualizacaoAtual, setExportarVisualizacaoAtual] = useState(false); //Estado para controlar a checkbox de exportação de visualização atual
+  const [opcaoSelecionada, setOpcaoSelecionada] = useState('24h'); //Estado para o seletor de período
 
-  // Estado para controlar se o script foi carregado
-  const [isGoogleChartsLoaded, setIsGoogleChartsLoaded] = useState(false);
-
-  // Armazena o maior valor já visto no gráfico
-  const [maxValue, setMaxValue] = useState(0);
-
-  // Estado para controlar a visibilidade do modal de exportação
-  const [showExportModal, setShowExportModal] = useState(false);
-
-  // Estado para a checkbox "Exportar visualização atual"
-  const [exportCurrentView, setExportCurrentView] = useState(false);
-
-  // Estado para o seletor de período
-  const [selectedOption, setSelectedOption] = useState('24h');
-
-  //! Funções para abrir e fechar o modal de exportação
-  const handleOpenExportModal = () => {
-    setExportCurrentView(false); // Resetar o estado da checkbox ao abrir o modal
-    setShowExportModal(true);
+  //!Funções para abrir e fechar o modal de exportação
+  const abrirModalExportacao  = () => {
+    setExportarVisualizacaoAtual(false); //Resetar o estado da checkbox ao abrir o modal
+    setExibirModalExportacao(true);
   };
 
-  const handleCloseExportModal = () => {
-    setShowExportModal(false);
+  // Função para fechar o modal de exportação
+  const fecharModalExportacao = () => {
+    setExibirModalExportacao(false);
   };
 
-  // Função de exportação de dados (no momento, apenas exibe um alerta)
-  const handleExport = (e) => {
-    e.preventDefault(); // Evita o comportamento padrão do formulário de recarregar a página
+  //Função de exportação de dados (no momento, apenas exibe um alerta)
+  const exportarDados = (e) => {
+    e.preventDefault(); //Evita o comportamento padrão do formulário de recarregar a página
     alert('Exportando dados...');
-    handleCloseExportModal(); // Fecha o modal após a exportação
+    fecharModalExportacao(); //Fecha o modal após a exportação
   };
 
-  // Alterna o estado da checkbox "Exportar visualização atual"
-  const handleExportCurrentViewChange = () => {
-    setExportCurrentView(!exportCurrentView);
+  //Alterna o estado da checkbox "Exportar visualização atual"
+  const alterarExportarVisualizacaoAtual  = () => {
+    setExportarVisualizacaoAtual(!exportarVisualizacaoAtual);
   };
 
-  // Atualiza o estado ao selecionar uma nova opção no seletor de período
-  const handleSelectChange = (event) => {
-    setSelectedOption(event.target.value);
+  //Atualiza o estado ao selecionar uma nova opção no seletor de período
+  const alterarOpcaoSelecionada  = (event) => {
+    setOpcaoSelecionada(event.target.value);
   };
 
   //Função para abreviar o nome dos equipamentos, pegando sempre a ultima palavra
@@ -57,114 +47,107 @@ const GoogleChart = ({ exportButton }) => {
   };
 
   //! Função para buscar os dados da API
-  const fetchChartData = async () => {
+  const buscarDadosGrafico  = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:3333/dados/3'); // Faz uma requisição para obter os dados da API
+      //Faz uma requisição para a API listarWeb com o ID do equipamento
+      const response = await axios.get('http://127.0.0.1:3333/dados/web/1');
       if (response.data.sucesso) { 
-        const dados = response.data.dados; // Extrai os dados da resposta da API
+        const dados = response.data.dados; //Extrai os dados da resposta da API
   
-        // Substitui os nomes completos pelos abreviados
+        //Substitui os nomes completos pelos abreviados
         const equipamentos = [...new Set(dados.map(item => abreviarNomeEquipamento(item.local_nome)))];
   
         // Inicializa o array de dados com os cabeçalhos
-        const chartDataArray = [['Hora', ...equipamentos]];
+        const dadosGraficoArray = [['Hora', 'Temperatura (°C)', 'Umidade (%)']];
   
-        // Armazena os dados reais pela data/hora completa
-        const dataByTime = {};
+        let maximoAtual = valorMaximo;
   
-        let currentMax = maxValue; // Inicializa o maior valor com o estado maxValue
-  
-        // Preenche os dados com base nos horários completos
+        // Processa os dados recebidos da API e os insere no array
         dados.forEach(item => {
-          // Converte a data para um objeto Date e pega a hora completa
-          const dataCompleta = new Date(item.dados_data);
-          const formattedTime = `${dataCompleta.getHours()}:${dataCompleta.getMinutes()}:${dataCompleta.getSeconds()}`; // Hora:minuto:segundo
-  
-          const temp = parseFloat(item.dados_temp);
-  
-          if (!dataByTime[formattedTime]) {
-            dataByTime[formattedTime] = new Array(equipamentos.length).fill(null); // Cria um array de temperaturas
-          }
-  
-          const equipIndex = equipamentos.indexOf(abreviarNomeEquipamento(item.local_nome)); // Obtém o índice do equipamento
-          dataByTime[formattedTime][equipIndex] = temp; // Atribui a temperatura à hora completa
-  
-          if (temp > currentMax) { // Atualiza o maior valor de temperatura se necessário
-            currentMax = temp;
+          const hora = item.hora + ":00"; // Formata a hora para exibir no gráfico
+          const temperatura = parseFloat(item.media_temperatura);
+          const umidade = parseFloat(item.media_umidade);
+
+          dadosGraficoArray.push([hora, temperatura, umidade]);
+
+          if (temperatura > maximoAtual) {
+            maximoAtual = temperatura;
           }
         });
   
-        // Insere os dados no array de dados do gráfico
-        Object.entries(dataByTime).forEach(([formattedTime, temps]) => {
-          chartDataArray.push([formattedTime, ...temps]);
-        });
-  
-        setChartData(chartDataArray); // Atualiza os dados do gráfico
-        setMaxValue(currentMax); // Atualiza o valor máximo
+        setDadosGrafico(dadosGraficoArray); // Atualiza os dados do gráfico
+        setValorMaximo(maximoAtual); // Atualiza o valor máximo para o gráfico
       }
     } catch (error) {
-      console.error('Erro ao buscar dados da API', error); // Lida com erros da API
+      console.error('Erro ao buscar dados da API', error); // Exibe um erro no console se a requisição falhar
     }
   };
-  //! Carrega o script do Google Charts
+
+  //!Carrega o script do Google Charts
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = 'https://www.gstatic.com/charts/loader.js'; // URL do Google Charts
+    script.src = 'https://www.gstatic.com/charts/loader.js'; //URL do Google Charts
     script.async = true;
     script.onload = () => {
       window.google.charts.load('current', { packages: ['corechart'] });
-      window.google.charts.setOnLoadCallback(() => setIsGoogleChartsLoaded(true)); // Marca como carregado
+      window.google.charts.setOnLoadCallback(() => setGoogleChartsCarregado(true)); //Marca como carregado
     };
-    document.body.appendChild(script); // Adiciona o script ao documento
+    document.body.appendChild(script); //Adiciona o script ao documento
   }, []);
 
-  //! Atualiza o gráfico a cada minuto
+  //!Atualiza o gráfico a cada minuto
   useEffect(() => {
-    fetchChartData(); // Carrega os dados inicialmente
+    buscarDadosGrafico(); //Carrega os dados inicialmente
 
-    const interval = setInterval(() => {
-      fetchChartData(); // Atualiza os dados a cada minuto
+    const intervalo = setInterval(() => {
+      buscarDadosGrafico(); //Atualiza os dados a cada minuto
     }, 60000);
 
-    return () => clearInterval(interval); // Limpa o intervalo quando o componente for desmontado
+    return () => clearInterval(intervalo); //Limpa o intervalo quando o componente for desmontado
   }, []);
 
-  //! Desenha o gráfico quando os dados e o Google Charts estão prontos
+  //!Desenha o gráfico quando os dados e o Google Charts estão prontos
   useEffect(() => {
-    const drawChart = () => {
-      if (!isGoogleChartsLoaded || chartData.length === 0) {
-        return; // Se o script não estiver carregado ou não houver dados, não faz nada
+    const desenharGrafico  = () => {
+      if (!googleChartsCarregado  || dadosGrafico.length === 0) {
+        return; //Se o script não estiver carregado ou não houver dados, não faz nada
       }
 
-      const data = window.google.visualization.arrayToDataTable(chartData); // Converte os dados em formato do Google Charts
+      const data = window.google.visualization.arrayToDataTable(dadosGrafico); //Converte os dados em formato do Google Charts
 
-      // Definindo o formatter para adicionar "°C" e limitar a 1 casa decimal
-      const formatter = new window.google.visualization.NumberFormat({
-        suffix: '°C',  // Sufixo que vai aparecer após o número
-        fractionDigits: 0, // Limita a 1 casa decimal
+      //Definindo o formatter para adicionar "°C" e limitar a 1 casa decimal
+      const formatador  = new window.google.visualization.NumberFormat({
+        suffix: '°C',  //Sufixo que vai aparecer após o número
+        fractionDigits: 0, //Limita a 1 casa decimal
       });
 
-      // Aplica o formatter para cada coluna de temperatura no gráfico
-      for (let i = 1; i < chartData[0].length; i++) {
-        formatter.format(data, i); // Aplica o formatter na coluna i (pula a coluna 'Hora')
-      }
+      //Aplica o formatador para cada coluna de temperatura no gráfico
+      formatador.format(data, 1); // Formata a coluna de temperatura
+      formatador.format(data, 2); // Formata a coluna de umidade
 
       const options = {
         legend: { position: 'right', alignment: 'center', legend: 'none' },
-        colors: ['#4285F4', '#DB4437', '#F4B400', '#0F9D58'], // Define as cores das linhas
+        colors: ['#4285F4', '#DB4437', '#F4B400', '#0F9D58'], //Define as cores das linhas
         hAxis: {
-          ticks: [
-            { v: 2, f: '0h' }, // Rótulo da hora
-            { v: 6, f: '6h' },
-            { v: 12, f: '12h' },
-            { v: 18, f: '18h' },
-            { v: 23.9833, f: '23h59' } // Próximo de 24h
-          ],
-          gridlines: { count: 5 } // Quantidade de linhas de grade
+          title: 'Hora',
+          format: 'H:mm',
+          gridlines: { count: 5 }
+          // ticks: 
+          //[
+          //   { v: 2, f: '0h' }, //Rótulo da hora
+          //   { v: 6, f: '6h' },
+          //   { v: 12, f: '12h' },
+          //   { v: 18, f: '18h' },
+          //   { v: 23.9833, f: '23h59' } //Próximo de 24h
+          // ],
+          // gridlines: { count: 5 } //Quantidade de linhas de grade
         },
         vAxis: {
-          viewWindow: { min: -10, max: 6 }, // Intervalo de temperatura (-4°C a 6°C)
-          format: '#,##0°C'
+          title: 'Valores',
+          viewWindow: { min: 0, max: valorMaximo + 5 },
+          format: '#,##0'
+          // viewWindow: { min: -10, max: 6 }, //Intervalo de temperatura (-4°C a 6°C)
+          // format: '#,##0°C'
         },
         chartArea: {
           left: 70,
@@ -172,34 +155,34 @@ const GoogleChart = ({ exportButton }) => {
           height: '70%',
           right: 180,
         },
-        tooltip: { isHtml: true }, // Habilita tooltips em HTML
+        tooltip: { isHtml: true }, //Habilita tooltips em HTML
       };
 
       const chart = new window.google.visualization.LineChart(
         document.getElementById('curve_chart')
       );
-      chart.draw(data, options); // Desenha o gráfico com os dados e opções
+      chart.draw(data); //Desenha o gráfico com os dados e opções
     };
 
-    if (isGoogleChartsLoaded) {
-      drawChart();
+    if (googleChartsCarregado) {
+      desenharGrafico();
     }
 
-    window.addEventListener('resize', drawChart); // Redesenha o gráfico ao redimensionar a janela
+    window.addEventListener('resize', desenharGrafico); //Redesenha o gráfico ao redimensionar a janela
     return () => {
-      window.removeEventListener('resize', drawChart); // Remove o listener ao desmontar o componente
+      window.removeEventListener('resize', desenharGrafico); //Remove o listener ao desmontar o componente
     };
-  }, [isGoogleChartsLoaded, chartData, maxValue]);
+  }, [googleChartsCarregado, dadosGrafico, valorMaximo]);
 
   return (
     <div className='contentGrafico'>
       <div className='headerGrafico'>
         <span className='tag'>Temperatura</span>
 
-        {exportButton && ( // Renderiza o botão de exportação se 'exportButton' estiver ativo
+        {exportButton && ( //Renderiza o botão de exportação se 'exportButton' estiver ativo
           <>
             Botão para selecionar o periodo
-            <select className='selecionarPeriodo' value={selectedOption} onChange={handleSelectChange}>
+            <select className='selecionarPeriodo' value={opcaoSelecionada} onChange={alterarOpcaoSelecionada}>
               <option value="24h">Últimas 24 horas</option>
               <option value="semana">Esta Semana</option>
               <option value="mes">Este Mês</option>
@@ -207,7 +190,7 @@ const GoogleChart = ({ exportButton }) => {
             </select>
 
             {/* Botão para abrir o modal de exportação */}
-            <button className='botaoExportar' onClick={handleOpenExportModal}>
+            <button className='botaoExportar' onClick={abrirModalExportacao}>
               Exportar Dados
             </button>
           </>
@@ -216,8 +199,8 @@ const GoogleChart = ({ exportButton }) => {
       <div id="curve_chart"></div> {/* Onde o gráfico será renderizado */}
 
       {/* Modal para selecionar o período de exportação */}
-      {showExportModal && (
-        <div className="telaSobreposta" onClick={handleCloseExportModal}>
+      {exibirModalExportacao  && (
+        <div className="telaSobreposta" onClick={fecharModalExportacao}>
           <div className="conteudoDaSobreposicao" onClick={(e) => e.stopPropagation()}>
             <h2>Exportar Dados</h2>
 
@@ -228,8 +211,8 @@ const GoogleChart = ({ exportButton }) => {
                   type="date"
                   id="dataInicio"
                   name="dataInicio"
-                  disabled={exportCurrentView} // Desabilita o campo se a checkbox estiver marcada
-                  className={exportCurrentView ? "desabilitarCampo" : ""}
+                  disabled={exportarVisualizacaoAtual} //Desabilita o campo se a checkbox estiver marcada
+                  className={exportarVisualizacaoAtual ? "desabilitarCampo" : ""}
                 />
               </div>
 
@@ -239,8 +222,8 @@ const GoogleChart = ({ exportButton }) => {
                   type="date" 
                   id="dataFim" 
                   name="dataFim" 
-                  disabled={exportCurrentView} 
-                  className={exportCurrentView ? "desabilitarCampo" : ""}
+                  disabled={exportarVisualizacaoAtual} 
+                  className={exportarVisualizacaoAtual ? "desabilitarCampo" : ""}
                   required 
                 />
               </div>
@@ -248,8 +231,8 @@ const GoogleChart = ({ exportButton }) => {
               <div className="containerCheckBox">
                 <input 
                   type="checkbox"  
-                  checkbox={exportCurrentView}
-                  onChange={handleExportCurrentViewChange}
+                  checkbox={exportarVisualizacaoAtual}
+                  onChange={alterarExportarVisualizacaoAtual}
                 />
                 <label htmlFor="exportCheckbox" className="checkBoxLabel">
                   Exportar visualização atual
@@ -258,8 +241,8 @@ const GoogleChart = ({ exportButton }) => {
 
               {/* Botões para fechar e exportar */}
               <div className="botaoFecharExportar">
-                <button type="fechar" onClick={handleCloseExportModal}>Fechar</button>
-                <button type="exportar" onClick={handleExport}>Exportar</button>
+                <button type="fechar" onClick={fecharModalExportacao}>Fechar</button>
+                <button type="exportar" onClick={exportarDados}>Exportar</button>
               </div>
             </form>
           </div>
@@ -271,7 +254,3 @@ const GoogleChart = ({ exportButton }) => {
 
 export default GoogleChart;
 
-
-//! ALTERAÇÃO PARA O BANCO DE DADOS
-// DESCRIBE dados; //! VISUALIZAR FORMATO DA TABELA
-// ALTER TABLE dados MODIFY dados_temp FLOAT; //! ALTERAÇÃO

@@ -119,7 +119,7 @@ module.exports = {
         }
     },
 
-    //grafico WEB
+    // grafico WEB
     async listarWeb(request, response) {//ok
         try {
 
@@ -132,14 +132,19 @@ module.exports = {
                     DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS data_hora,
                     DATE_FORMAT(a.dados_data, '%H') AS hora,
                     ROUND(AVG(CAST(a.dados_temp AS DECIMAL(5,2))), 2) AS media_temperatura,
-                    ROUND(AVG(CAST(a.dados_umid AS DECIMAL(5,2))), 2) AS media_umidade
+                    ROUND(AVG(CAST(a.dados_umid AS DECIMAL(5,2))), 2) AS media_umidade,
+                    l.local_nome AS local_nome
                 FROM 
                     novo_equipamento_dados a
+                JOIN 
+                    novo_equipamento_local el ON a.equip_id = el.equip_id  -- Junção para associar ao local_id
+                JOIN 
+                    novo_local l ON el.local_id = l.local_id  -- Junção para buscar o nome do local
                 WHERE
-                    a.equip_id = 1
+                    a.equip_id = ?
                 AND DATE_FORMAT(a.dados_data, '%Y-%m-%d') = CURDATE()  -- Usa a data atual
-                GROUP BY 
-                    DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
+                GROUP BY
+                    data_hora, hora, local_nome
                 ORDER BY 
                     hora DESC
                 LIMIT 12

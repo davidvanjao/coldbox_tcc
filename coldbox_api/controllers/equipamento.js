@@ -203,6 +203,11 @@ module.exports = {
             //verifica se ha dados retornados
             const nItens = equipamento[0].length;
 
+            // Formata o valor da temperatura para garantir que seja um número inteiro
+            if (nItens > 0) {
+            equipamento[0][0].dados_temp = Math.round(parseFloat(equipamento[0][0].dados_temp));
+            };
+
             return response.status(200).json({
                 sucesso: true, 
                 mensagem: 'Ultimas informacoes do equipamento.', 

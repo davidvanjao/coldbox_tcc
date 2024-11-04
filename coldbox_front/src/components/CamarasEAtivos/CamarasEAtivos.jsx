@@ -9,7 +9,7 @@ import GoogleChart from '../GoogleChart/GoogleChart';
 const CamarasEAtivos = () => {
   const [equipamentos, setEquipamentos] = useState([]); // Inicializa o estado com um array vazio
   const [equipamentosSelecionados,  setEquipamentosSelecionados] = useState([]); //Estado para os equipamentos selecionados
-  const [cliId, setCliId] = useState(null); // Estado para armazenar o cli_id
+  const [cliId, setCliId] = useState(null); //Estado para armazenar o cli_id
 
   //Estados para armazenar Temperatura e Umidade
   const [dadosTemperatura, setDadosTemperatura] = useState({});
@@ -20,7 +20,7 @@ const CamarasEAtivos = () => {
     try {
       const response = await axios.get(`http://127.0.0.1:3333/equipamento/dadosUltimaComunicacao/${equip_id}`);
       if (response.data.sucesso) {
-        const dados = response.data.dados[0]; // Acessa o primeiro item do array de dados
+        const dados = response.data.dados[0]; //Acessa o primeiro item do array de dados
 
         if (dados) {
           //Verifica se os dados de temperatura e umidade estão presentes
@@ -50,7 +50,7 @@ const CamarasEAtivos = () => {
         return;
       }
       
-      const response = await axios.get(`http://127.0.0.1:3333/equipamento/dadosEquipamentoEmpresa/${cliId}`); // Faz a requisição GET
+      const response = await axios.get(`http://127.0.0.1:3333/equipamento/dadosEquipamentoEmpresa/${cliId}`); //Faz a requisição GET
       if (response.data.sucesso) {
         // Adicionando a propriedade 'selecionado' para cada equipamento
         const dadosComSelecao = response.data.dados.map(item => ({

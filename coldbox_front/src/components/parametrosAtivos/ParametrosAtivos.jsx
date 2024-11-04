@@ -16,12 +16,13 @@ const ParametrosAtivos = () => {
     param_maximo: '',
   });
 
-  // Função para listar parâmetros
+  //Função para listar parâmetros
   const listarParametro = async () => {
     try {
       const response = await axios.get(`http://127.0.0.1:3333/parametro/${equipId}`); 
       if (response.data.sucesso) {
         setParametros(response.data.dados);
+        localStorage.setItem(`parametros_${equipId}`, JSON.stringify(response.data.dados)); //Armazena os parâmetros no local storage
       } else {
         console.error('Erro ao carregar os parâmetros.');
       }
@@ -94,6 +95,8 @@ const ParametrosAtivos = () => {
       }
     } catch (error) {
       console.error('Erro ao deletar parâmetro:', error);
+    } finally {
+      listarParametro(); //Atualiza a lista e armazena no localStorage
     }
   };
 
@@ -108,6 +111,8 @@ const ParametrosAtivos = () => {
       }
     } catch (error) {
       console.error('Erro ao salvar o novo parâmetro:', error);
+    } finally {
+      listarParametro(); //Atualiza a lista e armazena no localStorage
     }
   };
 

@@ -28,6 +28,13 @@ const intervaloLeitura = 1800000;  // Intervalo de 30 minutos (1800000 ms)
 //id do equipamento
 const equip_id = 1;
 
+// gerar numero aleatorio entre 1 e 6
+function gerarNumeroEquipamento() {
+    // Gera um número aleatório entre 1 e 6
+    let equip_id = Math.floor(Math.random() * 6) + 1;
+    return equip_id;
+}
+
 // Função para gerar uma leitura de temperatura simulada
 function lerTemperaturaSimulada() {
     // Geração de um valor aleatório com distribuição normal
@@ -58,12 +65,14 @@ async function lerDataSimulada(equip_id) {
     // O resultado do SELECT estará armazenado em execSql
     const resultado = execSql[0]; // Pega a primeira linha do resultado
 
-    const dataHora = resultado ? resultado[0].dados_data : null; // Verifica se existe resultado e pega 'dados_data'
+    //console.log(resultado)
+
+    const dataHora = resultado.length === 0 ? new Date() : resultado[0].dados_data; // Verifica se existe resultado e pega 'dados_data'
 
     // Adicionar 30 minutos
     dataHora.setMinutes(dataHora.getMinutes() + 30);
 
-    // Exibe os dados do equipamento
+    //Exibe os dados do equipamento
     //console.log(dataHora);
 
     return dataHora;
@@ -150,8 +159,7 @@ const interval = setInterval(async () => {
     const dados_temp = parseFloat(lerTemperaturaSimulada().toFixed(2));
     const dados_umid = lerUmidadeSimulada();
     const dados_data = await lerDataSimulada(1);
-
-    //console.log(dados_data);
+    const equip_id = gerarNumeroEquipamento();
 
     novoCadastrar(dados_temp, dados_umid, equip_id, dados_data);
 

@@ -7,7 +7,7 @@ import { faPlus, faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 
 const Usuarios = () => {
-    const cliId = localStorage.getItem('cli_id');
+const cliId = localStorage.getItem('cli_id') || ''; // Valor padrão caso esteja ausente
     const userId = localStorage.getItem('userId');
     const [usuarios, setUsuarios] = useState([]);
     const [showModal, setShowModal] = useState(false);

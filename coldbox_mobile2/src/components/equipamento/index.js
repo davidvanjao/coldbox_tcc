@@ -114,7 +114,7 @@ export default function Equipamento({ id_usuario, id_cliente }) {
                         {/* Exibe o horário formatado ou carregando */}
                         <Text>Horário: {dadosAdicionais[item.equip_id]?.horario 
                             ? formatarDataHoraBrasileira(dadosAdicionais[item.equip_id].horario) 
-                            : 'Carregando...'}</Text>
+                            : 'Sem comunicação'}</Text>
                     </View>
                     <View style={styles.equipamentoStatus}>
                         <Text style={styles.textoSimples}>

@@ -85,8 +85,7 @@ module.exports = {
                     FROM 
                         novo_equipamento_dados a
                     WHERE
-                        a.equip_id = ?
-                    
+                        a.equip_id = ?                    
                     GROUP BY 
                         DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
                     ORDER BY 
@@ -128,28 +127,27 @@ module.exports = {
 
             //instruções SQL 
             const sql = `SELECT * FROM (
-                SELECT 
-                    DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS data_hora,
-                    DATE_FORMAT(a.dados_data, '%H') AS hora,
-                    ROUND(AVG(CAST(a.dados_temp AS DECIMAL(5,2))), 2) AS media_temperatura,
-                    ROUND(AVG(CAST(a.dados_umid AS DECIMAL(5,2))), 2) AS media_umidade,
-                    l.local_nome AS local_nome
-                FROM 
-                    novo_equipamento_dados a
-                JOIN 
-                    novo_equipamento_local el ON a.equip_id = el.equip_id  -- Junção para associar ao local_id
-                JOIN 
-                    novo_local l ON el.local_id = l.local_id  -- Junção para buscar o nome do local
-                WHERE
-                    a.equip_id = ?
-                AND DATE_FORMAT(a.dados_data, '%Y-%m-%d') = CURDATE()  -- Usa a data atual
-                GROUP BY
-                    data_hora, hora, local_nome
-                ORDER BY 
-                    hora DESC
-                LIMIT 12
+            SELECT 
+                DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS data_hora,
+                CAST(DATE_FORMAT(a.dados_data, '%H') AS UNSIGNED) AS hora,
+                ROUND(AVG(CAST(a.dados_temp AS DECIMAL(5,2))), 2) AS media_temperatura,
+                ROUND(AVG(CAST(a.dados_umid AS DECIMAL(5,2))), 2) AS media_umidade,
+                a.equip_id, c.local_nome
+            FROM 
+                novo_equipamento_dados a,
+                novo_equipamento_local b,
+                novo_local c
+            WHERE
+                a.equip_id = ?
+            AND a.equip_id = b.equip_id
+            AND c.local_id = b.local_id
+            GROUP BY 
+                DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
+            ORDER BY 
+                a.dados_data DESC  -- Ordena pela data e hora para obter os mais recentes
+            LIMIT 12
             ) AS subconsulta
-            ORDER BY hora ASC;`;
+            ORDER BY data_hora ASC;  -- Ordena a seleção final por data e hora em ordem crescente`;
 
             // preparo do array com dados que serão atualizados
             const values = [equip_id];                     

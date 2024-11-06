@@ -68,7 +68,7 @@ module.exports = {
         }
     },
 
-    //grafico mobile
+    //grafico mobile. quando gerado apenas 1 dado, o grafico nao e gerado.
     async listarMobile(request, response) {//ok
         try {
 

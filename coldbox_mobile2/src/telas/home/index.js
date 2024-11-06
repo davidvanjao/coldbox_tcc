@@ -86,8 +86,8 @@ export default function Home({ navigation }) {
             {/* Exibe os dados do usuário, caso estejam disponíveis */}
             {dadosUsuario[0] ? (
                 <>
-                    <Text style={styles.textoSimples}>Usuário: {dadosUsuario[0].user_nome}</Text>
-                    <Text style={styles.textoSimples}>Empresa: {dadosUsuario[0].cli_razaoSocial}</Text>
+                    {/* <Text style={styles.textoSimples}>Usuário: {dadosUsuario[0].user_nome}</Text>
+                    <Text style={styles.textoSimples}>Empresa: {dadosUsuario[0].cli_razaoSocial}</Text> */}
                     <Equipamento 
                         id_usuario={token} 
                         id_cliente={dadosUsuario[0].cli_id} 

@@ -17,7 +17,7 @@ export default styles = StyleSheet.create({
         color: '#fff'
     },   
     containerForm: {
-        backgroundColor: '#fff',
+        backgroundColor: '#2C4CBF',
         flex:1,
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
@@ -27,12 +27,16 @@ export default styles = StyleSheet.create({
     title: {
         fontSize: 20,
         marginTop: 28,
+        marginBottom:10,
+        color: '#fff'
     },
     input: {
         borderBottomWidth: 1,
+        padding:20,
         height: 40,
         marginBottom: 12,
         fontSize: 16,
+        borderRadius: 4,
     },
     button: {
         backgroundColor: '#38a69d',
@@ -54,7 +58,7 @@ export default styles = StyleSheet.create({
         alignItems: 'center',
     },
     tinyLogo: {
-        width: 100,
-        height: 100,
+        width: 200,
+        height: 200,
     }
 }); 

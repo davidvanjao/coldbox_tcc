@@ -45,7 +45,8 @@ export default function Grafico({ equipamentoId, id_usuario, reloadKey }) {
     // Extrair dados e rótulos do array "dadosEquipamento"
     const labels = dadosEquipamento.map(dado => dado.hora); // Supondo que você tenha um campo "horario"
     const data = dadosEquipamento.map(dado => dado.media_temperatura); // Supondo que você tenha um campo "temperatura"
-    
+
+       
 
     if (loading) {
         return <ActivityIndicator size="large" color="#0000ff" />;
@@ -55,6 +56,9 @@ export default function Grafico({ equipamentoId, id_usuario, reloadKey }) {
         <View>
             <Text style={styles.titulo}>Equipamento {equipamentoId}</Text>
             <View style={styles.grafico}>
+
+            {/* verifica se existe apenas uma informacao disponivel */}
+            {data.length > 1 ? (
                 
                 <View>
                     <Text style={{ textAlign: 'center', marginTop: 20, fontSize: 15 }}>
@@ -98,7 +102,11 @@ export default function Grafico({ equipamentoId, id_usuario, reloadKey }) {
                     />
                 </View>
 
-
+            ) : (
+                <Text style={{ textAlign: 'center', marginTop: 20, fontSize: 15 }}>
+                    Sem informações disponíveis.
+                </Text>
+            )}
 
             </View>
         </View>        

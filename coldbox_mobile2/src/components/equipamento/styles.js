@@ -12,7 +12,8 @@ export default styles = StyleSheet.create({
 
     textoSimples: {
         fontWeight: 'bold',
-        fontSize:15
+        fontSize:15,
+        color: '#fff'
     },
 
     equipamento: {
@@ -21,23 +22,32 @@ export default styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems:'center',
         
-        backgroundColor: '#CCCCFF',
+        backgroundColor: '#2C4CBF',        
         borderRadius:10,
         padding:10,
-
-        marginTop:10,
+        
         marginBottom:10
+    },
+
+    equipamentoInfo: {
+        color: '#fff',
+    },
+
+    infoText: {
+        color: '#fff'
     },
 
     equipamentoStatus: {
         display:'flex',
         alignItems:'center',
         justifyContent:'center',
+        
 
         width: 50,
         height: 50,
         borderRadius:10,
         borderWidth: 2,
+        borderColor: '#fff'
 
     },
 }); 

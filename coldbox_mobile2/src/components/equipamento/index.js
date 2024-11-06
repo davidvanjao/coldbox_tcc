@@ -107,12 +107,12 @@ export default function Equipamento({ id_usuario, id_cliente }) {
                     })}
                 >
                     <View style={styles.equipamentoInfo}>
-                        <Text>Local: {item.local_nome}</Text>
-                        <Text>{item.local_descricao}</Text>
-                        <Text>Id: {item.equip_id}</Text>
+                        <Text style={styles.infoText}>Local: {item.local_nome}</Text>
+                        <Text style={styles.infoText}>{item.local_descricao}</Text>
+                        <Text style={styles.infoText}>Id: {item.equip_id}</Text>
 
                         {/* Exibe o horário formatado ou carregando */}
-                        <Text>Horário: {dadosAdicionais[item.equip_id]?.horario 
+                        <Text style={styles.infoText}>Horário: {dadosAdicionais[item.equip_id]?.horario 
                             ? formatarDataHoraBrasileira(dadosAdicionais[item.equip_id].horario) 
                             : 'Sem comunicação'}</Text>
                     </View>

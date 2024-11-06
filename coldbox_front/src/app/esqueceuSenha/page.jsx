@@ -7,7 +7,7 @@ import Link from 'next/link';
 import axios from 'axios';
 
 export default function ForgotPassword() {
-  const [email, setEmail] = useState('');
+  const [user_email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const router = useRouter();
 
@@ -17,7 +17,7 @@ export default function ForgotPassword() {
 
   const handleSendClick = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:3333/usuarios/send-reset-email', { email });
+      const response = await axios.post('http://127.0.0.1:3333/usuarios/send-reset-email', { user_email });
 
       if (response.data && response.data.sucesso) {
         setMessage('Link de recuperação enviado! Verifique seu e-mail.');
@@ -54,7 +54,7 @@ export default function ForgotPassword() {
             type="email"
             placeholder="Digite seu email"
             className={styles.inputCaixa}
-            value={email}
+            value={user_email}
             onChange={handleEmailChange}
           />
           <button className={styles.botaoEntrar} onClick={handleSendClick}>Enviar</button>

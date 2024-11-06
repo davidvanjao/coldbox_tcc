@@ -23,8 +23,7 @@ export default styles = StyleSheet.create({
       borderRadius:10,
       padding:10,
 
-      marginTop:10,
-      marginBottom:5
+      marginTop:10
   },
 
       

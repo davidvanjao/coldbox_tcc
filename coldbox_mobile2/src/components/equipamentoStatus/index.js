@@ -96,7 +96,9 @@ export default function EquipamentoStatus({ equipamentoId, id_usuario, reloadKey
                     onPress={() => usuarioVisualizou(item.alertEnviado_id)}
                 >
                     <View>
+                        {/*nome da temperatura*/}
                         <Text style={styles.titulo}>{item.alerta_tipo}</Text>
+
                         {/* Exibindo o horário formatado */}
                         <Text>
                             Horário: {item.alertEnviado_data 
@@ -107,7 +109,7 @@ export default function EquipamentoStatus({ equipamentoId, id_usuario, reloadKey
                         <Text>
                             Temp. Registrada:  
                             <Text style={{ fontWeight: 'bold', color: 'red', marginLeft:10 }}>
-                                {item.dados_temp}
+                                {item.dados_temp} °C
                             </Text>
                         </Text>
                     </View>

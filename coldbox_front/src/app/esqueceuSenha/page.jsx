@@ -17,7 +17,7 @@ export default function ForgotPassword() {
 
   const handleSendClick = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:3333/usuarios', { email });
+      const response = await axios.post('http://127.0.0.1:3333/usuarios/send-reset-email', { email });
 
       if (response.data && response.data.sucesso) {
         setMessage('Link de recuperação enviado! Verifique seu e-mail.');

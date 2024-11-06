@@ -2,6 +2,7 @@ const { json } = require('express');
 const db = require('../database/connection'); 
 const { validationResult } = require('express-validator');
 const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt'); // Certifique-se de que bcrypt está instalado
 
 module.exports = {
     // Função para listar usuários por `cli_id`
@@ -191,28 +192,39 @@ module.exports = {
     async enviarEmailRecuperacao(req, res) {
         const { email } = req.body;
         const transporter = nodemailer.createTransport({
-            service: 'hotmail',
+            host: "sandbox.smtp.mailtrap.io",
+            port: 2525,
+            secure: false,
             auth: {
-                user: 'henrique.prodam@hotmail.com',
-                pass: '123'
+                user: "dc5526bf72b600",
+                pass: "51102710f933a6",
+            },
+        });
+    
+        // Configurações do conteúdo do e-mail
+        const messageContent = {
+            from: '"Equipe Coldbox" <no-reply@coldbox.com>',
+            to: email.user_email,
+            subject: "Instruções para a ativação da sua conta - Coldbox",
+            text: `Olá ${email.user_nome}, seja bem-vindo à plataforma Coldbox. Por favor, acesse o link para confirmar seu cadastro: ${process.env.Dominio}/usuarios/send-reset-email/${email.cli_id}`,
+        };
+    
+        // Envio do e-mail
+        transporter.sendMail(messageContent, function (err, info) { 
+            if (err) {
+                res.status(500).json({
+                    message: 'Não foi possível enviar o e-mail de ativação no momento, solicite ao administrador do sistema.',
+                    error: err,
+                });
+            } else {
+                console.log("Mensagem enviada.");
+                res.status(200).json({
+                    message: 'E-mail de ativação enviado com sucesso!',
+                });
             }
         });
-
-        const resetUrl = `http://127.0.0.1:3333/redefinirSenha?email=${encodeURIComponent(email)}`;
-        const mailOptions = {
-            from: 'henrique.prodam@hotmail.com',
-            to: email,
-            subject: 'Redefinição de senha',
-            text: `Clique no link para redefinir sua senha: ${resetUrl}`
-        };
-
-        try {
-            await transporter.sendMail(mailOptions);
-            res.status(200).json({ message: 'E-mail enviado com sucesso' });
-        } catch (error) {
-            res.status(500).json({ message: 'Erro ao enviar o e-mail', error });
-        }
     },
+
     // Função para redefinir a senha do usuário
     async redefinirSenha(req, res) {
         const { email, password } = req.body; // Recebe o email e a nova senha do corpo da requisição
@@ -238,15 +250,14 @@ module.exports = {
     
             return res.status(200).json({
                 sucesso: true,
-                mensagem: 'Senha redefinida com sucesso.',
+                mensagem: 'Senha redefinida com sucesso!',
             });
         } catch (error) {
             return res.status(500).json({
                 sucesso: false,
                 mensagem: 'Erro ao redefinir a senha.',
-                dados: error.message,
+                error: error.message,
             });
         }
     }
-    };
-
+};

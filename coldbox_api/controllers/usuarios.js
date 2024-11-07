@@ -225,7 +225,7 @@ module.exports = {
                 <h1>Ativação de Conta</h1>
                 <h2>Olá ${user_nome},</h2>
                 <p>Sejam bem-vindos ao Coldbox. Por favor, clique no link a seguir </p>
-                <a href=http://127.0.0.1:3333/ativacao/usuarios${user_id}>Ativar Conta</a>
+                <a href=http://127.0.0.1:3333/resetarSenha${user_id}>Ativar Conta</a>
                 </div>`
             };    
 

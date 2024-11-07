@@ -46,38 +46,67 @@ const GoogleChart = ({ exportButton }) => {
       return palavras[palavras.length - 1]; //Retorna a ultima palavra
   };
 
-  //! Função para buscar os dados da API
+
+  //! Função inicial, essa função vai listar todos os equipamentos vinculados a empresa atraves do cli_id e equip_id
+  const buscarEquipamentos = async () => {
+    try {
+      const cli_id = localStorage.getItem('cli_id');
+      const response = await axios.get(`http://127.0.0.1:3333/equipamento/${cli_id}`);
+      return response.data.dados; //retorna a lista de equipamentos
+    } catch (error) {
+      console.error('Erro ao buscar equipamentos', error);
+      return [];  
+    }
+  };
+
+  //! Segunda função, ela irá buscar os dados de temperatura de cada equipamento
+  const buscarDadosEquipamento = async (equip_id) => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:3333/dados/web/${equip_id}`);
+      return response.data.dados;
+    } catch (error) {
+      console.error('Erro ao buscar dados do equipamento ${equip_id}', error);
+      return [];
+    }
+  };
+
+  //! Função Principal - busca e organiza os dados de todos os equipamentos para o grafico
   const buscarDadosGrafico  = async () => {
     try {
-      //Faz uma requisição para a API listarWeb com o ID do equipamento
-      const response = await axios.get('http://127.0.0.1:3333/dados/web/1');
-      if (response.data.sucesso) { 
-        const dados = response.data.dados; //Extrai os dados da resposta da API
-  
-        //Substitui os nomes completos pelos abreviados
-        const equipamentos = [...new Set(dados.map(item => abreviarNomeEquipamento(item.local_nome)))];
-  
-        // Inicializa o array de dados com os cabeçalhos
-        const dadosGraficoArray = [['Hora', 'Temperatura (°C)', 'Umidade (%)']];
-  
-        let maximoAtual = valorMaximo;
-  
-        // Processa os dados recebidos da API e os insere no array
-        dados.forEach(item => {
-          const hora = item.hora + ":00"; // Formata a hora para exibir no gráfico
-          const temperatura = parseFloat(item.media_temperatura);
-          const umidade = parseFloat(item.media_umidade);
+      const equipamentos = await buscarEquipamentos(); // Buscando todos os equipamentos associados ao cli_id
+      
+      // Inicializa o array de dados com os cabeçalhos dinâmicos, uma coluna para cada equipamento
+      const dadosGraficoArray = [['Hora', ...equipamentos.map(equip => equip.local_nome)]];
 
-          dadosGraficoArray.push([hora, temperatura, umidade]);
+      // Obter as horas que serão usadas para todas as linhas
+      const horas = Array.from({ length: 12 }, (_, index) => `${index + 1}:00`);
 
-          if (temperatura > maximoAtual) {
-            maximoAtual = temperatura;
-          }
+      //Cria um objeto pra armazenar as temperaturas por equipamento e hora
+      const dadosTemp = {};
+
+      //Faz uma requisição para cada equipamento e organiza os dados
+      for (const equipamento of equipamentos) {
+        const dados = await buscarDadosEquipamento(equipamento.equip_id);
+
+        //Armazena os dados de temperatura para cada equipamento dentro do objeto
+        dadosTemp[equipamento.local_nome] = {};
+        dados.forEach((item) => {
+          const hora = item.hora + ":00"; //Formatando a hora
+          dadosTemp[equipamento.local_nome][hora] = parseFloat(item.media_temperatura);
         });
-  
-        setDadosGrafico(dadosGraficoArray); // Atualiza os dados do gráfico
-        setValorMaximo(maximoAtual); // Atualiza o valor máximo para o gráfico
       }
+
+      //Monta os dados do grafico
+      horas.forEach((hora) => {
+        const linha = [hora];
+        equipamentos.forEach((equipamento) => {
+          linha.push(dadosTemp[equipamento.local_nome][hora] || null);
+        });
+        dadosGraficoArray.push(linha);
+      });
+
+      setDadosGrafico(dadosGraficoArray); //Atualiza os dados do grafico
+      
     } catch (error) {
       console.error('Erro ao buscar dados da API', error); // Exibe um erro no console se a requisição falhar
     }

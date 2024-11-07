@@ -80,6 +80,8 @@ const DispositivosAtivos = () => {
           // });
           // setEditando(false);
           // setEquipamentoSelecionado(null);
+          alert('Equipamento atualizado com sucesso');
+          console.log('Equipamento atualizado com sucesso');
         })
         .catch((error) => {
           console.error('Erro ao editar o dispositivo', error);

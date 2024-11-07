@@ -92,11 +92,17 @@ export default function EquipamentoStatus({ equipamentoId, id_usuario, reloadKey
             {statusEquipamento.map((item) => (
                 <Pressable
                     key={item.equip_id} // Adicionando uma chave única    
-                    style={styles.campoStatus}                
+                    style={[
+                        styles.campoStatus, 
+                        { backgroundColor: item.alerta_tipo == 'AUMENTO DA TEMPERATURA' ? '#FF0000' : '#0000FF' } // Condição para trocar a cor do background
+                    ]}
+
                     onPress={() => usuarioVisualizou(item.alertEnviado_id)}
                 >
                     <View>
+                        {/*nome da temperatura*/}
                         <Text style={styles.titulo}>{item.alerta_tipo}</Text>
+
                         {/* Exibindo o horário formatado */}
                         <Text>
                             Horário: {item.alertEnviado_data 
@@ -107,7 +113,7 @@ export default function EquipamentoStatus({ equipamentoId, id_usuario, reloadKey
                         <Text>
                             Temp. Registrada:  
                             <Text style={{ fontWeight: 'bold', color: 'red', marginLeft:10 }}>
-                                {item.dados_temp}
+                                {item.dados_temp} °C
                             </Text>
                         </Text>
                     </View>

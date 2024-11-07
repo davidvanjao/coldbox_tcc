@@ -10,56 +10,27 @@ select * from novo_equipamento_dados order by dados_id desc;/*relaciona dados co
 select * from novo_equipamento_parametro2;/*parametros definidos para cada equipamento---NOVO*/
 select * from novo_equipamento_alertas_enviados; /*alertas enviados e esperando acao do usuario*/
 
-SELECT * FROM novo_equipamento_dados WHERE equip_id = 3 ORDER BY dados_data DESC LIMIT 1;
-
 describe novo_equipamento_dados;
 
-/*novo 3 lista dados*/
-SELECT * FROM (
+/*traz dados da ultima insercao*/
+select * from novo_equipamento_dados where equip_id = '1' order by dados_data desc limit 1;
+
+/*novo 2 lista dados*/
 SELECT 
 	DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS data_hora,
-	CAST(DATE_FORMAT(a.dados_data, '%H') AS UNSIGNED) AS hora,
+	DATE_FORMAT(a.dados_data, '%H:00') AS hora,
 	ROUND(AVG(CAST(a.dados_temp AS DECIMAL(5,2))), 2) AS media_temperatura,
-	ROUND(AVG(CAST(a.dados_umid AS DECIMAL(5,2))), 2) AS media_umidade,
-    a.equip_id, c.local_nome
+	ROUND(AVG(CAST(a.dados_umid AS DECIMAL(5,2))), 2) AS media_umidade
 FROM 
-	novo_equipamento_dados a,
-    novo_equipamento_local b,
-    novo_local c
+	novo_equipamento_dados a
 WHERE
-	a.equip_id = 4
-AND a.equip_id = b.equip_id
-AND c.local_id = b.local_id
+	a.equip_id = 1
+/*AND DATE_FORMAT(a.dados_data, '%Y-%m-%d') = "2024-10-05"*/
+AND DATE_FORMAT(a.dados_data, '%Y-%m-%d') = CURDATE()  -- Usa a data atual
 GROUP BY 
 	DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
 ORDER BY 
-	a.dados_data DESC  -- Ordena pela data e hora para obter os mais recentes
-LIMIT 6
-) AS subconsulta
-ORDER BY data_hora ASC;  -- Ordena a seleção final por data e hora em ordem crescente
-
-
-
-/*novo 2 lista dados*/
-SELECT * FROM (
-	SELECT 
-		DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS data_hora,
-		DATE_FORMAT(a.dados_data, '%H') AS hora,
-		ROUND(AVG(CAST(a.dados_temp AS DECIMAL(5,2))), 2) AS media_temperatura,
-		ROUND(AVG(CAST(a.dados_umid AS DECIMAL(5,2))), 2) AS media_umidade
-	FROM 
-		novo_equipamento_dados a
-	WHERE
-		a.equip_id = 1
-	AND DATE_FORMAT(a.dados_data, '%Y-%m-%d') = CURDATE()  -- Usa a data atual
-	GROUP BY 
-		DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
-	ORDER BY 
-		hora DESC
-	LIMIT 6
-) AS subconsulta
-ORDER BY hora ASC;
-
+	hora;
 
 
 /*novo lista dados*/
@@ -86,4 +57,4 @@ WHERE
 AND b.equip_id = 1;
 
 /*cadastar dados*/
-INSERT INTO novo_equipamento_dados (dados_temp, dados_umid, equip_id) VALUES (?, ?, ?);
+INSERT INTO novo_equipamento_dados (dados_temp, dados_umid, equip_id, dados_data) VALUES (?, ?, ?, ?);

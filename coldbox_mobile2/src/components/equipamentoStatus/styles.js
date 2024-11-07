@@ -5,7 +5,8 @@ export default styles = StyleSheet.create({
     titulo: {
       fontSize:15,
       fontWeight: 'bold',  
-      marginBottom:10
+      marginBottom:10,
+      color: '#fff'
     },
 
     textoSimples: {
@@ -19,7 +20,7 @@ export default styles = StyleSheet.create({
       justifyContent: 'space-between',
       alignItems:'center',
       
-      backgroundColor: '#CCC',
+      //backgroundColor: '#CCC',
       borderRadius:10,
       padding:10,
 

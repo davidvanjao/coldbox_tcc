@@ -9,7 +9,7 @@ module.exports = {
             const { equip_id } = request.params; 
 
             // instruções SQL
-            const sql = `SELECT a.alerta_id, a.alertEnviado_status, c.alerta_tipo,  a.alertEnviado_usuario_retorno, c.alerta_descricao, d.dados_temp
+            const sql = `SELECT a.alerta_id, a.alertEnviado_status, c.alerta_id, c.alerta_tipo,  a.alertEnviado_usuario_retorno, c.alerta_descricao, d.dados_temp
             FROM 
                 novo_equipamento_alertas_enviados a,
                 novo_equipamento b,

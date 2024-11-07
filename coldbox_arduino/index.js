@@ -3,110 +3,76 @@ const cors = require('cors');
 const db = require('./conexao');
 
 const app = express();
+const porta = 3334;
+
+// Parâmetros da simulação
+const temperaturaMedia = 1;   // Temperatura média em °C
+const desvioPadrao = 4;      // Desvio padrão para variações aleatórias
+const intervaloLeitura = 1800000;  // Intervalo de 30 minutos (1800000 ms)
+
 app.use(cors());
 app.use(express.json());
 
-const porta = 3334;
-//teste
 
+//inicia o servidor
 app.listen(porta, () => {
     console.log(`Servidor iniciado na porta ${porta}`);
 });
 
-app.get('/', (request, response) => {
-    response.send('teste 6');
-});
+//rota de teste
+app.get('/', (request, response) => response.send());
 
-let n = 0;
-
-
-// Parâmetros da simulação
-const temperaturaMedia = 3;   // Temperatura média em °C
-const desvioPadrao = 4;      // Desvio padrão para variações aleatórias
-const intervaloLeitura = 1800000;  // Intervalo de 30 minutos (1800000 ms)
-
-//id do equipamento
-const equip_id = 1;
-
-// gerar numero aleatorio entre 1 e 6
-function gerarNumeroEquipamento() {
-    // Gera um número aleatório entre 1 e 6
-    let equip_id = Math.floor(Math.random() * 6) + 1;
-    return equip_id;
-}
+// Função utilitária para gerar um número aleatório dentro de um intervalo
+const getRandomInRange = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 // Função para gerar uma leitura de temperatura simulada
-function lerTemperaturaSimulada() {
-    // Geração de um valor aleatório com distribuição normal
-    let random = Math.random();
-    let variacao = (random - 0.5) * 2 * desvioPadrao;
+const lerTemperaturaSimulada = () => {
+    const variacao = (Math.random() - 0.5) * 2 * desvioPadrao;
     return temperaturaMedia + variacao;
 }
 
-// Função para gerar uma leitura de umidade simulada
-function lerUmidadeSimulada() {
-    // Geração de um valor aleatório com distribuição normal
-    let dados_umid = getRandomInRange(50, 90);
-    return dados_umid;
-}
+// Função para gerar um valor de umidade simulada
+const lerUmidadeSimulada = () => getRandomInRange(50, 90);
+
+// Retorna o próximo id de equipamento aleatoriamente
+const gerarNumeroEquipamento = () => Math.floor(Math.random() * 6) + 1;
+
 
 // Função para gerar uma leitura de temperatura simulada
+async function lerParametroCadastrado(equip_id) {
+    const sql = `select * from novo_equipamento_parametro2 where equip_id = ?;`;
+    const [parametro] = await db.query(sql, [equip_id]);
+    return parametro[0];
+}
+
+// Consulta a última data registrada para um equipamento e incrementa 30 minutos
 async function lerDataSimulada(equip_id) {
-
-    // Definição da instrução SQL de seleção
-    const sql = `select * from novo_equipamento_dados where equip_id = ? order by dados_data desc limit 1`;
-
-    // Definição do parâmetro para o SELECT
-    const values = [equip_id]; // 'equip_id' seria a variável que você quer usar para filtrar os dados
-
-    // Execução da instrução SQL passando o parâmetro
-    const execSql = await db.query(sql, values);
-
-    // O resultado do SELECT estará armazenado em execSql
-    const resultado = execSql[0]; // Pega a primeira linha do resultado
-
-    //console.log(resultado)
-
-    const dataHora = resultado.length === 0 ? new Date() : resultado[0].dados_data; // Verifica se existe resultado e pega 'dados_data'
-
-    // Adicionar 30 minutos
-    dataHora.setMinutes(dataHora.getMinutes() + 30);
-
-    //Exibe os dados do equipamento
-    //console.log(dataHora);
-
-    return dataHora;
+    const sql = `SELECT dados_data FROM novo_equipamento_dados WHERE equip_id = ? ORDER BY dados_data DESC LIMIT 1`;
+    const [registro] = await db.query(sql, [equip_id]);
+    const ultimaData = registro.length ? new Date(registro[0].dados_data) : new Date();
+    ultimaData.setMinutes(ultimaData.getMinutes() + 30);
+    return ultimaData;
 }
 
 //cadastrar dados do arduino
 async function novoCadastrar(dados_temp, dados_umid, equip_id, dados_data) {
     try {
 
-        const param_minimo = -1;
-        const param_max = 5;
+        const { param_minimo: param_minimo, param_maximo: param_max } = await lerParametroCadastrado(equip_id);
 
         // Instrução SQL
         const sql = `INSERT INTO novo_equipamento_dados (dados_temp, dados_umid, equip_id, dados_data) VALUES (?, ?, ?, ?)`;
+        const [result] = await db.query(sql, [dados_temp, dados_umid, equip_id, dados_data]);
+        const dados_id = result.insertId;
 
-        // Definição dos dados a serem inseridos em um array
-        const values = [dados_temp, dados_umid, equip_id, dados_data];
-
-        //Execução da instrução sql passando os parâmetros
-        const execSql = await db.query(sql, values); 
-
-        //pega a linha que foi inserida
-        const dados_id = execSql[0].insertId;   
-
-        //verifica se a temperatura esta dentro do parametro
-        if (dados_temp >= param_minimo && dados_temp <= param_max) {
-
-            console.log('Valor dentro do intervalo', dados_temp);
-
+        // Verifica se a temperatura está dentro do intervalo permitido
+        if (isTemperaturaDentroIntervalo(dados_temp, param_minimo, param_max)) {
+            console.log('Temperatura dentro do intervalo:', dados_temp);
         } else {
-            console.log('Emitiu alerta: ', dados_temp);
+            console.log('Alerta emitido devido à temperatura:', dados_temp);
 
             //verifica o tipo de alerta
-            if(dados_temp < param_minimo) {
+            if(dados_temp <= param_minimo) {
 
                 //temperatura menor
                 const alerta_id = 2;
@@ -121,49 +87,43 @@ async function novoCadastrar(dados_temp, dados_umid, equip_id, dados_data) {
                 emitirAlerta(equip_id, alerta_id, dados_id)
 
             }
-            
+
+
+
         }
         
     } catch (error) {
-        console.log(error);
+        console.error('Erro ao registrar leitura:', error);
     }
 }
+
+
+// Função auxiliar para verificar se a temperatura está dentro do intervalo permitido
+function isTemperaturaDentroIntervalo(temp, min, max) {
+    return temp >= min && temp <= max;
+}
+
+
 
 //grava um alerta
 async function emitirAlerta(equip_id, alerta_id, dados_id) {
     try { 
-
         // instrução SQL
         const sql = `INSERT INTO novo_equipamento_alertas_enviados (equip_id, alerta_id, dados_id) VALUES (?, ?, ?);`;
-
-        // definição dos dados a serem inseridos em um array
-        const values = [equip_id, alerta_id, dados_id];  
-
-        // execução da instrução sql passando os parâmetros
-        await db.query(sql, values);    
+        await db.query(sql, [equip_id, alerta_id, dados_id]);
 
     } catch (error) {
-        console.log(error);
+        console.error('Erro ao emitir alerta:', error);
     }
 }
 
-function getRandomInRange(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-
-const interval = setInterval(async () => {
-    n++;
-    //console.log('repete' + ' ' + n);
-    //cadastrar();
+setInterval(async () => {
     const dados_temp = parseFloat(lerTemperaturaSimulada().toFixed(2));
     const dados_umid = lerUmidadeSimulada();
     const dados_data = await lerDataSimulada(1);
     const equip_id = gerarNumeroEquipamento();
 
-    novoCadastrar(dados_temp, dados_umid, equip_id, dados_data);
+    await novoCadastrar(dados_temp, dados_umid, equip_id, dados_data);
 
 }, 10000); // 1800000 milissegundos = 30 minutos
 
-
-interval;

@@ -85,6 +85,21 @@ const cliId = localStorage.getItem('cli_id') || ''; // Valor padrão caso esteja
         console.log(newUser); // Verifique se o estado está sendo atualizado conforme esperado
     };
 
+    async function enviarEmailNovoUsuario(user_email) {
+        try {
+            const response = await axios.post('http://127.0.0.1:3333/usuarios/send-user-email', { user_email });
+    
+            if (response.data && response.data.sucesso) {
+                console.log('Email de boas-vindas enviado com sucesso!');
+            } else {
+                console.error('Erro ao enviar o e-mail de boas-vindas:', response.data?.mensagem || 'Erro desconhecido.');
+            }
+        } catch (error) {
+            console.error('Erro de rede ao enviar e-mail de boas-vindas:', error);
+        }
+    }
+    
+
 
     async function cadastrarUsuarios() {
         try {
@@ -102,16 +117,17 @@ const cliId = localStorage.getItem('cli_id') || ''; // Valor padrão caso esteja
                     user_imagem_perfil: '',
                     cli_id: cliId
                 });
-                setShowModal(false); // Fecha o modal após a adição
-                setError(null); // Limpa qualquer mensagem de erro
-            } else {
-                setError('Erro ao adicionar usuário');
+                        // Chama a função de envio de e-mail
+                        enviarEmailNovoUsuario(newUser.user_email);
+                    } else {
+                        setError('Erro ao adicionar usuário');
+                    }
+                } catch (error) {
+                    setError('Erro ao adicionar usuário');
+                    console.error(error);
+                }
             }
-        } catch (error) {
-            setError('Erro ao adicionar usuário');
-            console.error(error);
-        }
-    }
+            
     
 
     async function edtUsuario() {

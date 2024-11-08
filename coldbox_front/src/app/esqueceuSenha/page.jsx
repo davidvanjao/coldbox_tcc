@@ -22,7 +22,7 @@ export default function ForgotPassword() {
       if (response.data && response.data.sucesso) {
         setMessage('Link de recuperação enviado! Verifique seu e-mail.');
         setTimeout(() => {
-          router.push('/resetarSenha');
+          router.push('/resetarSenha/[user_id]');
         }, 2000);
     } else {
         setMessage(response.data?.mensagem || 'Erro ao enviar link de recuperação.');

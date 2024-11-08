@@ -86,6 +86,7 @@ router.get('/usuarios/dadosUsuarioEmpresa/:user_id', UsuariosController.listarDa
 
 // Nova rota para recuperação de senha
 router.post('/usuarios/send-reset-email', UsuariosController.enviarEmailRecuperacao);
+router.post('/usuarios/send-user-email', UsuariosController.enviarEmailNovoUsuario);
 
 
 

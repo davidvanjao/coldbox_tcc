@@ -188,24 +188,23 @@ module.exports = {
         }
     },
 
-    // Função para enviar e-mail de recuperação de senha
-    async enviarEmailRecuperacao(request, response) {
+    async enviarEmailNovoUsuario(request, response) {
         try {
             const { user_email } = request.body;
             const sql = `SELECT user_id, user_nome FROM novo_usuario WHERE user_email = ?;`;
             const values = [user_email];
             const result = await db.query(sql, values);
-
+    
             if (result[0].length === 0) {
                 return response.status(400).json({
                     sucesso: false,
                     mensagem: 'Email inválido.',
                 });
             }
-
+    
             const user_id = result[0][0].user_id;
             const user_nome = result[0][0].user_nome;
-
+    
             const transporter = nodemailer.createTransport({
                 host: "sandbox.smtp.mailtrap.io",
                 port: 2525,
@@ -214,24 +213,81 @@ module.exports = {
                     pass: "51102710f933a6",
                 },
             });
-
+    
             // Configurações do conteúdo do e-mail
             let message = {
                 from: 'dc5526bf72b600@sandbox.smtp.mailtrap.io',
                 to: user_email,
-                subject: "Conta ativada.",
-                text: `Olá ${user_nome}, \nSejam bem-vindos ao Coldbox. Por favor, copie o link nessa mensagem e o cole na barra de pesquisa do navegador. \nVocê será direcionado automaticamente para a pagina de autenticação de cadastro. \nhttp://127.0.0.1:3333/ativacao/usuarios${user_id}`,
+                subject: "Bem-vindo à nossa plataforma!",
+                text: `Olá ${user_nome}, \nSeja bem-vindo(a) ao Coldbox. Estamos felizes em tê-lo(a) conosco. Acesse nossa plataforma para explorar mais.`,
                 html: `<div>
-                <h1>Ativação de Conta</h1>
+                <h1>Bem-vindo(a)!</h1>
                 <h2>Olá ${user_nome},</h2>
-                <p>Sejam bem-vindos ao Coldbox. Por favor, clique no link a seguir </p>
-                <a href=http://127.0.0.1:3333/resetarSenha${user_id}>Ativar Conta</a>
+                <p>Seja bem-vindo(a) ao Coldbox. Estamos felizes em tê-lo(a) conosco. Clique <a href="http://127.0.0.1:3333/login${user_id}">aqui</a> para acessar a plataforma.</p>
                 </div>`
-            };    
-
+            };
+    
             // Envio do e-mail
             await transporter.sendMail(message);
-            
+    
+            return response.status(200).json({
+                sucesso: true,
+                mensagem: 'Email enviado com sucesso.',
+            });
+        } catch (error) {
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro no envio do e-mail.',
+                dados: error.message
+            });
+        }
+    },
+    
+    
+    // Função para enviar e-mail de recuperação de senha
+    async enviarEmailRecuperacao(request, response) {
+        try {
+            const { user_email } = request.body;
+            const sql = `SELECT user_id, user_nome FROM novo_usuario WHERE user_email = ?;`;
+            const values = [user_email];
+            const result = await db.query(sql, values);
+    
+            if (result[0].length === 0) {
+                return response.status(400).json({
+                    sucesso: false,
+                    mensagem: 'Email inválido.',
+                });
+            }
+    
+            const user_id = result[0][0].user_id;
+            const user_nome = result[0][0].user_nome;
+    
+            const transporter = nodemailer.createTransport({
+                host: "sandbox.smtp.mailtrap.io",
+                port: 2525,
+                auth: {
+                    user: "dc5526bf72b600",
+                    pass: "51102710f933a6",
+                },
+            });
+    
+            // Configurações do conteúdo do e-mail
+            let message = {
+                from: 'dc5526bf72b600@sandbox.smtp.mailtrap.io',
+                to: user_email,
+                subject: "Resetar Senha.",
+                text: `Olá ${user_nome}, \nSejam bem-vindos ao Coldbox. Por favor, copie o link nessa mensagem e o cole na barra de pesquisa do navegador. \nVocê será direcionado automaticamente para a pagina de autenticação de cadastro. \nhttp://127.0.0.1:3333/ativacao/usuarios${user_id}`,
+                html: `<div>
+                <h1>Resetar a Senha</h1>
+                <h2>Olá ${user_nome},</h2>
+                <p>Sejam bem-vindos ao Coldbox. Por favor, clique no link a seguir </p>
+                <a href=http://127.0.0.1:3333/resetarSenha${user_id}>Resetar Senha</a>
+                </div>`
+            };
+    
+            // Envio do e-mail
+            await transporter.sendMail(message);
+    
             return response.status(200).json({
                 sucesso: true,
                 mensagem: 'Email enviado com sucesso.',
@@ -244,4 +300,5 @@ module.exports = {
             });
         }
     }
-};
+}
+    

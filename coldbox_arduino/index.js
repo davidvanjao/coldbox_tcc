@@ -65,32 +65,32 @@ async function novoCadastrar(dados_temp, dados_umid, equip_id, dados_data) {
         const [result] = await db.query(sql, [dados_temp, dados_umid, equip_id, dados_data]);
         const dados_id = result.insertId;
 
-        // // Verifica se a temperatura está dentro do intervalo permitido
-        // if (isTemperaturaDentroIntervalo(dados_temp, param_minimo, param_max)) {
-        //     console.log('Temperatura dentro do intervalo:', dados_temp);
-        // } else {
-        //     console.log('Alerta emitido devido à temperatura:', dados_temp);
+        // Verifica se a temperatura está dentro do intervalo permitido
+        if (isTemperaturaDentroIntervalo(dados_temp, param_minimo, param_max)) {
+            console.log('Temperatura dentro do intervalo:', dados_temp);
+        } else {
+            console.log('Alerta emitido devido à temperatura:', dados_temp);
 
-        //     //verifica o tipo de alerta
-        //     if(dados_temp <= param_minimo) {
+            //verifica o tipo de alerta
+            if(dados_temp <= param_minimo) {
 
-        //         //temperatura menor
-        //         const alerta_id = 2;
+                //temperatura menor
+                const alerta_id = 2;
 
-        //         emitirAlerta(equip_id, alerta_id, dados_id)
+                emitirAlerta(equip_id, alerta_id, dados_id)
 
-        //     } else {
+            } else {
 
-        //         //temperatura maior
-        //         const alerta_id = 1;
+                //temperatura maior
+                const alerta_id = 1;
 
-        //         emitirAlerta(equip_id, alerta_id, dados_id)
+                emitirAlerta(equip_id, alerta_id, dados_id)
 
-        //     }
+            }
 
 
 
-        // }
+        }
         
     } catch (error) {
         console.error('Erro ao registrar leitura:', error);
@@ -98,24 +98,24 @@ async function novoCadastrar(dados_temp, dados_umid, equip_id, dados_data) {
 }
 
 
-// // Função auxiliar para verificar se a temperatura está dentro do intervalo permitido
-// function isTemperaturaDentroIntervalo(temp, min, max) {
-//     return temp >= min && temp <= max;
-// }
+// Função auxiliar para verificar se a temperatura está dentro do intervalo permitido
+function isTemperaturaDentroIntervalo(temp, min, max) {
+    return temp >= min && temp <= max;
+}
 
 
 
-// //grava um alerta
-// async function emitirAlerta(equip_id, alerta_id, dados_id) {
-//     try { 
-//         // instrução SQL
-//         const sql = `INSERT INTO novo_equipamento_alertas_enviados (equip_id, alerta_id, dados_id) VALUES (?, ?, ?);`;
-//         await db.query(sql, [equip_id, alerta_id, dados_id]);
+//grava um alerta
+async function emitirAlerta(equip_id, alerta_id, dados_id) {
+    try { 
+        // instrução SQL
+        const sql = `INSERT INTO novo_equipamento_alertas_enviados (equip_id, alerta_id, dados_id) VALUES (?, ?, ?);`;
+        await db.query(sql, [equip_id, alerta_id, dados_id]);
 
-//     } catch (error) {
-//         console.error('Erro ao emitir alerta:', error);
-//     }
-// }
+    } catch (error) {
+        console.error('Erro ao emitir alerta:', error);
+    }
+}
 
 setInterval(async () => {
     const dados_temp = parseFloat(lerTemperaturaSimulada().toFixed(2));
@@ -125,5 +125,5 @@ setInterval(async () => {
 
     await novoCadastrar(dados_temp, dados_umid, equip_id, dados_data);
 
-}, 1800000); // 1800000 milissegundos = 30 minutos
+}, 18000); // 1800000 milissegundos = 30 minutos
 

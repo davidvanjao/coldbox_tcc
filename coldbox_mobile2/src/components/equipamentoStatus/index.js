@@ -106,13 +106,13 @@ export default function EquipamentoStatus({ equipamentoId, id_usuario, reloadKey
                         {/* Exibindo o horário formatado */}
                         <Text>
                             Horário: {item.alertEnviado_data 
-                                ? formatarDataHoraBrasileira(item.alertEnviado_data) 
+                                ? formatarDataHoraBrasileira(item.dados_data) 
                                 : 'Carregando...'}
                         </Text>
 
                         <Text>
                             Temp. Registrada:  
-                            <Text style={{ fontWeight: 'bold', color: 'red', marginLeft:10 }}>
+                            <Text style={{ fontWeight: 'bold', color: '#fff', marginLeft:10 }}>
                                 {item.dados_temp} °C
                             </Text>
                         </Text>

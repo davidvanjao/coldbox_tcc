@@ -7,12 +7,8 @@ const bd_porta = '3306'; // porta
 const bd_banco = 'bd_tcc_tecdes_223_g2'; // nome do banco
 let connection;
 
-<<<<<<< HEAD
-// Configurações para usar em casa (Bruno/Henrique)
-=======
 
-// // // //! Configurações para usar em casa (Bruno/Henrique)
->>>>>>> 7a7da1672eaadbfd9d5e26f8f0d30ea64840cd16
+// Configurações para usar em casa (Bruno/Henrique)
 // const bd_usuario = 'root'; // usuário
 // const bd_senha = 'ec0623'; // senha
 // const bd_servidor = '127.0.0.1'; // servidor (localhost)

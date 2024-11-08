@@ -171,8 +171,8 @@ const DispositivosAtivos = () => {
             <tr>
               <th className={styles.th}>Status</th> {/* Indicador de status */}
               <th className={styles.th}>Nome</th>
-              <th className={styles.th}>Equipamento</th> {/* equip_modelo */}
-              <th className={styles.th}>Sensor</th> {/* equip_tipo */}
+              <th className={styles.th}>Modelo</th> {/* equip_modelo */}
+              <th className={styles.th}>Tipo do Sensor</th> {/* equip_tipo */}
               <th className={styles.th}>IP</th> {/* equip_ip */}
               <th className={styles.th}>MAC</th> {/* equip_mac */}
               <th className={styles.th}>Descrição</th> {/* equip_observacao */}
@@ -181,7 +181,7 @@ const DispositivosAtivos = () => {
           <tbody>
             {dispositivos.map((item, index) => (
               <tr key={index} className={index % 2 === 0 ? styles.evenRow : styles.oddRow}>
-                <td className={styles.td}>
+                <td className={`${styles.td} ${styles.statusDispositivos}`}>
                   <FontAwesomeIcon
                     icon={faCircle}
                     className={item.equip_status === 'A' ? styles.online : styles.offline}
@@ -212,6 +212,26 @@ const DispositivosAtivos = () => {
             <h2>
               {editando ? 'Editar Localização' : 'Adicionar Nova Localização'}
             </h2>
+
+            <label htmlFor="localNome">Nome</label>
+            <input
+              type="text"
+              name="localNome"
+              id="localNome"
+              value={novoDispositivo.localNome}
+              onChange={lidarComMudanca}
+              required
+            />
+
+            {/* <label htmlFor="localDescricao">Descrição(opcional)</label>
+            <input
+              type="text"
+              name="localDescricao"
+              id="localDescricao"
+              value={novoDispositivo.localDescricao}
+              onChange={lidarComMudanca}
+              required
+            /> */}
             
             <label htmlFor="modeloEquipamento">Modelo</label>
             <input
@@ -223,7 +243,7 @@ const DispositivosAtivos = () => {
               required
             />
 
-            <label htmlFor="tipoSensor">Sensor</label>
+            <label htmlFor="tipoSensor">Tipo do Sensor</label>
             <input
               type="text"
               name="tipoSensor"
@@ -259,26 +279,6 @@ const DispositivosAtivos = () => {
               id="observacaoEquipamento"
               value={novoDispositivo.observacaoEquipamento}
               onChange={lidarComMudanca}
-            />
-
-            <label htmlFor="localNome">Nome da Localização</label>
-            <input
-              type="text"
-              name="localNome"
-              id="localNome"
-              value={novoDispositivo.localNome}
-              onChange={lidarComMudanca}
-              required
-            />
-
-            <label htmlFor="localDescricao">Descrição da Localização</label>
-            <input
-              type="text"
-              name="localDescricao"
-              id="localDescricao"
-              value={novoDispositivo.localDescricao}
-              onChange={lidarComMudanca}
-              required
             />
 
             <div className={styles.modalAddDispositivo}>

@@ -86,8 +86,8 @@ const CamarasEAtivos = () => {
   useEffect(() => {
     if (cliId) {
       const interval = setInterval(() => {
-        fetchEquipamentoDados(cliId); //Faz a requisição a cada 1 minuto com o cli_id correto
-      }, 60000);
+        fetchEquipamentoDados(cliId); //Faz a requisição a cada 1 minuto com o cli_id correto - 60000
+      }, 10000); // 10000 milissegundos = 10 segundos Valor para testes
   
       return () => clearInterval(interval);
     }

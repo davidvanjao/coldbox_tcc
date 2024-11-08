@@ -158,15 +158,21 @@
 }
 
 .online {
-  color: #4CAF50;
+  color: #36f436;
 }
 
 .offline {
-  color: #36f436;
+  color: #f43636;
 }
 
 .editarDispositivo {
   cursor: pointer;
   font-size: 20px;
   margin-left: 10px;
+}
+
+.statusDispositivos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

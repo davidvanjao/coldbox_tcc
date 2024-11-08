@@ -129,8 +129,8 @@ const GoogleChart = ({ exportButton }) => {
     buscarDadosGrafico(); //Carrega os dados inicialmente
 
     const intervalo = setInterval(() => {
-      buscarDadosGrafico(); //Atualiza os dados a cada minuto
-    }, 60000);
+      buscarDadosGrafico(); //Atualiza os dados a cada minuto - 60000
+    }, 10000); // 10000 milissegundos = 10 segundos Valor para testes
 
     return () => clearInterval(intervalo); //Limpa o intervalo quando o componente for desmontado
   }, []);

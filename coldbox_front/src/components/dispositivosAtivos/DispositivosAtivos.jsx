@@ -169,7 +169,7 @@ const DispositivosAtivos = () => {
         <table className={styles.tabelaDispositivos}>
           <thead>
             <tr>
-              <th className={styles.th}>Status</th> {/* Indicador de status */}
+              <th className={`${styles.td} ${styles.statusDispositivos}`}>Status</th> {/* Indicador de status */}
               <th className={styles.th}>Nome</th>
               <th className={styles.th}>Modelo</th> {/* equip_modelo */}
               <th className={styles.th}>Tipo do Sensor</th> {/* equip_tipo */}

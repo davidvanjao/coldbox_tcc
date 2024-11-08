@@ -140,21 +140,21 @@ const ParametrosAtivos = () => {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th className={styles.th}>Status</th>
+            {/* <th className={styles.th}>Status</th> */}
             <th className={styles.th}>Modelo</th>
             <th className={styles.th}>Equipamento</th>
             <th className={styles.th}>Temp. Min</th>
             <th className={styles.th}>Temp. Máx</th>
-            <th className={styles.th}>Data</th>
+            <th className={styles.th}>Data Cadastro</th>
             <th className={styles.th}>Ações</th>
           </tr>
         </thead>
         <tbody>
           {parametros.map((item) => (
             <tr key={item.param_id} className={styles.tr}>
-              <td className={styles.td}>
+              {/* <td className={styles.td}>
                 <div className={styles.circularButton}></div>
-              </td>
+              </td> */}
               <td className={styles.td}>{item.equip_modelo}</td>
               <td className={styles.td}>{item.param_interface}</td>
               <td className={styles.td}>{item.param_minimo}</td>

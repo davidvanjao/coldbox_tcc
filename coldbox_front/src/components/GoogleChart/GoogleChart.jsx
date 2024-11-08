@@ -152,7 +152,7 @@ const GoogleChart = ({ exportButton }) => {
 
       //Aplica o formatador para cada coluna de temperatura no gráfico
       formatador.format(data, 1); // Formata a coluna de temperatura
-      formatador.format(data, 2); // Formata a coluna de umidade
+      // formatador.format(data, 2); // Formata a coluna de umidade
 
       const options = {
         legend: { position: 'right', alignment: 'center', legend: 'none' },

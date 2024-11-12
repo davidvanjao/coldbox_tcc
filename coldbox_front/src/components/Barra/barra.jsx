@@ -25,6 +25,10 @@ const BarraSuperior = () => {
   useEffect(() => {
     const nomeArmazenado = localStorage.getItem('userName');
     const idArmazenado = localStorage.getItem('userId');
+
+    console.log('Nome do usuário no localStorage:', nomeArmazenado);
+    console.log('ID do usuário no localStorage:', idArmazenado);
+
     
     if (nomeArmazenado) {
       setNomeUsuario(nomeArmazenado); //Define o nome do usuário
@@ -102,9 +106,44 @@ const BarraSuperior = () => {
   const mudarFotoPerfil = (event) => {
     const arquivo = event.target.files[0];
     if (arquivo) {
-      setArquivoSelecionado(URL.createObjectURL(arquivo)); //Atualiza a imagem de perfil temporariamente
+      setArquivoSelecionado(arquivo);
+      setFotoPerfil(URL.createObjectURL(arquivo)); 
     }
   };
+
+  //Função para enviar a foto de perfil ao servidor
+  const enviarFotoPerfil = async () => {
+    console.log('userId antes de enviar a foto:', userId);
+
+    if (!arquivoSelecionado || !userId) {
+      
+        alert('Selecione uma imagem.');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('fotoPerfil', arquivoSelecionado);
+
+    try {
+        const response = await axios.post(`http://127.0.0.1:3333/usuarios/uploadFotoPerfil/${userId}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+            timeout: 30000 // Timeout de 30 segundos para testes
+        });
+
+        console.log('Resposta da API recebida:', response);
+
+        if (response.data.sucesso) {
+            setFotoPerfil(response.data.imageUrl); 
+            alert('Foto de perfil atualizada com sucesso!');
+        } else {
+            alert('Erro ao atualizar a foto de perfil.');
+        }
+    } catch (error) {
+        console.error('Erro ao enviar a foto de perfil', error);
+        alert('Ocorreu um erro ao enviar a foto de perfil. Tente novamente.');
+    }
+};
+
 
   //Salva as mudanças feitas no perfil
   const salvarAlteracoesPerfil = async (e) => {
@@ -128,6 +167,8 @@ const BarraSuperior = () => {
 
 
     try {
+            await enviarFotoPerfil(); // Envia a foto de perfil antes de salvar as informações
+
       //Requisição para atualizar o perfil do usuario
       const response = await axios.patch(`http://127.0.0.1:3333/usuarios/${userId}`, dadosAtualizados);
       if (response.data.sucesso) {
@@ -159,7 +200,7 @@ const BarraSuperior = () => {
 
       <div className='perfilUsuario'>
         <div className='informacaoUsuario'>
-          <img src={arquivoSelecionado || fotoPerfil} alt="Usuário" />
+          <img src={fotoPerfil} alt="Usuário" />
           <div>
             <h3>{nomeUsuario || 'Usuário'}</h3> {/* Exibe o nome recuperado ou 'Usuário' como fallback */}
             <span>{nivelAcesso || 'Nível de Acesso'}</span>
@@ -178,7 +219,7 @@ const BarraSuperior = () => {
 
             {/* Área de edição da foto de perfil */}
             <div className="fotoDePerfil">
-              <img src={arquivoSelecionado || fotoPerfil} alt="Foto de Perfil" className="imagemDePerfil" />
+              <img src={fotoPerfil} alt="Foto de Perfil" className="imagemDePerfil" />
               <div className="sobreposicaoParaEditar">
                 <input
                   type="file"

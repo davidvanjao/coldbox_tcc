@@ -1,8 +1,26 @@
 const { json } = require('express'); 
 const db = require('../database/connection'); 
 const { validationResult } = require('express-validator');
-const nodemailer = require('nodemailer');
+const nodemailer = require('nodemailer'); 'D:/FotosPerfil'
 const bcrypt = require('bcrypt'); // Certifique-se de que bcrypt está instalado
+const multer = require('multer');
+const path = require('path');
+
+//Configuração do multer para salvar as imagens no servidor
+
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'D:\\FotosPerfil'); // Use o caminho absoluto aqui, sem `path.join`
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, 'fotoPerfil-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
+
 
 module.exports = {
     // Função para listar usuários por `cli_id`
@@ -243,7 +261,6 @@ module.exports = {
         }
     },
     
-    
     // Função para enviar e-mail de recuperação de senha
     async enviarEmailRecuperacao(request, response) {
         try {
@@ -299,6 +316,70 @@ module.exports = {
                 dados: error.message
             });
         }
+    },
+
+    // Função para upload de foto de perfil
+    uploadFotoPerfil: async (request, response) => {
+        const { userId } = request.params;
+        const singleUpload = upload.single('fotoPerfil');
+    
+        singleUpload(request, response, async (err) => {
+            if (err) {
+                console.error('Erro no upload do arquivo:', err);
+                return response.status(500).json({
+                    sucesso: false,
+                    mensagem: 'Erro ao fazer upload da foto de perfil.',
+                    dados: err.message
+                });
+            }
+    
+            if (!request.file) {
+                console.warn('Nenhum arquivo foi enviado.');
+                return response.status(400).json({
+                    sucesso: false,
+                    mensagem: 'Nenhum arquivo foi enviado.'
+                });
+            }
+    
+            const imageUrl = `http://127.0.0.1:3333/uploads/${request.file.filename}`;
+            console.log('URL da imagem:', imageUrl);
+    
+            try {
+                // Adicionando logs antes da query
+                console.log('Iniciando atualização no banco de dados para userId:', userId);
+    
+                const sql = 'UPDATE novo_usuario SET user_imagem_perfil = ? WHERE user_id = ?';
+                const result = await new Promise((resolve, reject) => {
+                    db.query(sql, [imageUrl, userId], (error, results) => {
+                        if (error) {
+                            return reject(error);
+                        }
+                        resolve(results);
+                    });
+                });
+    
+                // Log após a execução da query
+                console.log('Resultado da atualização no banco de dados:', result);
+    
+                return response.status(200).json({
+                    sucesso: true,
+                    mensagem: 'Foto de perfil atualizada com sucesso.',
+                    imageUrl
+                });
+            } catch (error) {
+                console.error('Erro ao atualizar a URL da foto no banco de dados:', error.message);
+                return response.status(500).json({
+                    sucesso: false,
+                    mensagem: 'Erro ao atualizar a URL da foto no banco de dados.',
+                    dados: error.message
+                });
+            }
+        });
     }
+    
+    
+    
+    
+        
 }
     

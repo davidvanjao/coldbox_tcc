@@ -79,6 +79,7 @@ router.patch('/usuarios/:user_id', UsuariosController.editar);
 router.delete('/usuarios/:user_id', UsuariosController.apagar);  
 router.post('/usuarios/login', UsuariosController.login); //USADO PARA VERIFICAR DADOS DE LOGIN
 router.get('/usuarios/dadosUsuario/:user_id', UsuariosController.listarDadosUsuario); //Buscar um usuário especifico pelo ID
+router.post('/usuarios/uploadFotoPerfil/:userID', UsuariosController.uploadFotoPerfil);
 
 
 //traz nome de usuario e nome da empresa - ok 

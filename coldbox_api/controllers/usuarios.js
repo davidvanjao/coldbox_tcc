@@ -8,10 +8,9 @@ const path = require('path');
 
 //Configuração do multer para salvar as imagens no servidor
 
-
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'D:\\FotosPerfil'); // Use o caminho absoluto aqui, sem `path.join`
+        cb(null, path.join(__dirname, '../public/uploads'));
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -375,11 +374,7 @@ module.exports = {
                 });
             }
         });
-    }
-    
-    
-    
-    
+    },
         
 }
     

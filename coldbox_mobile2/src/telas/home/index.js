@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, ActivityIndicator, Alert, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Equipamento from '../../components/equipamento';
 import styles from './styles';
@@ -82,7 +82,7 @@ export default function Home({ navigation }) {
     }
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             {/* Exibe os dados do usuário, caso estejam disponíveis */}
             {dadosUsuario[0] ? (
                 <>
@@ -96,6 +96,6 @@ export default function Home({ navigation }) {
             ) : (
                 <Text style={styles.textoSimples}>Erro: Dados do usuário não encontrados.</Text>
             )}
-        </View>
+        </ScrollView>
     );
 };

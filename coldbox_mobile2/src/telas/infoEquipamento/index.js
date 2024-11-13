@@ -1,7 +1,6 @@
-import { View, Text } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useRoute } from '@react-navigation/native'; // Importa o useRoute
-
 import styles from './styles';
 
 import EquipamentoStatus from '../../components/equipamentoStatus';
@@ -26,7 +25,7 @@ export default function InfoEquipamento() {
 
 
     return (           
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
 
             <Grafico
                 equipamentoId={equipamentoId} 
@@ -41,6 +40,6 @@ export default function InfoEquipamento() {
                 id_cliente={id_cliente} 
                 reloadKey={reloadKey} // Passa o reloadKey como prop
             />
-        </View>
+        </ScrollView>
     );
 };

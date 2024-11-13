@@ -43,4 +43,14 @@ try {
     console.log(error); 
 } 
 
+connection.getConnection()
+    .then(conn => {
+        console.log("Conexão com o banco de dados bem-sucedida!");
+        conn.release();
+    })
+    .catch(err => {
+        console.error("Erro ao conectar ao banco de dados:", err);
+    });
+
+
 module.exports = connection;

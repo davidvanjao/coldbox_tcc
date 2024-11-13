@@ -89,9 +89,23 @@
   .oddRow {
     background-color: #eeeeee;
   }
-  
-  /* Modal styles */
-  .modal {
+
+  .botaoAddParametro {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 8px 10px;
+    background-color: #4285F4;
+    color: white;
+    font-size: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .modalParametros {
     position: fixed;
     top: 0;
     left: 0;
@@ -101,34 +115,40 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 1001;
   }
-  
-  .modalContent {
-    background-color: #fff;
+
+  .modalContentParametros {
+    background-color: white;
     padding: 30px;
     border-radius: 10px;
-    width: 500px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 450px;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   
-  .modalContent h2 {
+  .modalContentParametros h2 {
     margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 18px;
     text-align: center;
-    font-size: 20px;
   }
   
-  .modalContent label {
+  .modalContentParametros label {
     display: block;
+    width: 100%;
     margin-bottom: 5px;
-    font-size: 16px;
+    font-weight: bold;
+    text-align: left;
   }
   
-  .modalContent input {
+  .modalContentParametros input {
     width: 100%;
+    max-width: 400px;
     padding: 10px;
     margin-bottom: 15px;
-    border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 16px;
   }
@@ -136,22 +156,27 @@
   .modalActions {
     display: flex;
     justify-content: space-between;
+    width: 100%;
+    max-width: 400px;
+    margin-top: 20px;
   }
   
   .modalActions button {
     padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
   }
   
-  .modalActions button:last-child {
-    background-color: red;
+  .modalActions button:first-child {
+    background-color: #f44336;
+    color: white;
   }
   
+  .modalActions button:last-child {
+    background-color: #4CAF50;
+    color: white;
+  }
   .editIcon {
     color: #007bff;
     cursor: pointer;
@@ -159,3 +184,10 @@
     margin-left: 10px;
   }
   
+  .descricaoModalParam {
+    font-size: 14px;
+    color: #666;
+    margin-top: -10px; /* Ajuste para aproximar da linha do título */
+    margin-bottom: 20px; /* Espaçamento abaixo da descrição */
+    line-height: 1.2; /* Espaçamento entre as linhas */
+  }

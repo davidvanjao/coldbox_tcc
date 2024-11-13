@@ -210,8 +210,11 @@ const DispositivosAtivos = () => {
         <div className={styles.modalDispositivos}>
           <div className={styles.modalContent}>
             <h2>
-              {editando ? 'Editar Localização' : 'Adicionar Nova Localização'}
+              {editando ? 'Editar Dispositivo' : 'Adicionar Novo Dispositivo'}
             </h2>
+            <p className={styles.descricaoModalDisp}>
+              {editando ? 'Atualize as informações do dispositivo.' : 'Adicione um novo dispositivo. Use informações claras para facilitar a visualização'}
+            </p>
 
             <label htmlFor="localNome">Nome</label>
             <input

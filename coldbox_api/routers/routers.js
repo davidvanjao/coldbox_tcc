@@ -12,6 +12,7 @@ const LogsController = require('../controllers/logs');
 const LocalController = require('../controllers/local'); 
 const EquipamentoController = require('../controllers/equipamento'); 
 const ParametroController = require('../controllers/parametro'); 
+const ArduinoController = require('../controllers/arduino');
 
 router.get('/alerta', AlertaController.listar); //ok
 router.post('/alerta', AlertaController.cadastrar); //ok
@@ -54,6 +55,8 @@ router.get('/dados/mobile/:equip_id', DadosController.listarMobile);//ok
 router.get('/dados/web/:equip_id', DadosController.listarWeb);//ok 
 router.post('/dados', DadosController.cadastrar); //ok
 
+
+
 //precisa enviar equip_id
 router.get('/parametro/:equip_id', ParametroController.listar); //ok
 router.post('/parametro',ParametroController.cadastrar); //ok
@@ -89,6 +92,10 @@ router.get('/usuarios/dadosUsuarioEmpresa/:user_id', UsuariosController.listarDa
 router.post('/usuarios/send-reset-email', UsuariosController.enviarEmailRecuperacao);
 router.post('/usuarios/send-user-email', UsuariosController.enviarEmailNovoUsuario);
 
+
+
+// Rota para inserir dados de temperatura e umidade
+router.post('/arduino',ArduinoController.cadastrarTemperaturaUmidade);
 
 
 module.exports = router;

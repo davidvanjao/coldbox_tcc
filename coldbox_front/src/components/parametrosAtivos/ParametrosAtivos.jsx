@@ -8,7 +8,7 @@ const ParametrosAtivos = () => {
   const equipId = localStorage.getItem('equip_id');
   const [parametros, setParametros] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editingItemId, setEditingItemId] = useState(null);
+  const [editarParam, setEditarParam] = useState(null);
   const [newParameter, setNewParameter] = useState({
     equip_id: equipId, 
     param_interface: '',
@@ -16,13 +16,12 @@ const ParametrosAtivos = () => {
     param_maximo: '',
   });
 
-  //Função para listar parâmetros
   const listarParametro = async () => {
     try {
       const response = await axios.get(`http://127.0.0.1:3333/parametro/${equipId}`); 
       if (response.data.sucesso) {
         setParametros(response.data.dados);
-        localStorage.setItem(`parametros_${equipId}`, JSON.stringify(response.data.dados)); //Armazena os parâmetros no local storage
+        localStorage.setItem(`parametros_${equipId}`, JSON.stringify(response.data.dados));
       } else {
         console.error('Erro ao carregar os parâmetros.');
       }
@@ -42,39 +41,35 @@ const ParametrosAtivos = () => {
         param_minimo: item.param_minimo,
         param_maximo: item.param_maximo
     });
-    setEditingItemId(item.param_id); // Define o ID do parâmetro que está sendo editado
-    setShowEditModal(true); // Abre o modal de edição
+    setEditarParam(item.param_id);
+    setShowEditModal(true);
   };
 
-  // Função para editar parâmetros
   async function edtParametro() {
     try {
-      const response = await axios.patch(`http://127.0.0.1:3333/parametro/${editingItemId}`, newParameter);
+      const response = await axios.patch(`http://127.0.0.1:3333/parametro/${editarParam}`, newParameter);
       if (response.data.sucesso) {
-        // Atualiza a lista de parâmetros com os dados editados
         atualizarParametroNaLista(response.data.dados);
         resetFormulario();
-        setShowEditModal(false); // Fecha o modal após a edição
+        setShowEditModal(false);
       } else {
         console.error('Erro ao atualizar parâmetro.');
       }
     } catch (error) {
       console.error('Erro ao atualizar parâmetro:', error);
     } finally {
-      listarParametro(); // Atualiza a lista após a edição
+      listarParametro();
     }
   }
 
-  // Função para atualizar a lista de parâmetros
   function atualizarParametroNaLista(parametroAtualizado) {
     setParametros((prevParametros) => 
       prevParametros.map(param => 
-        param.param_id === editingItemId ? parametroAtualizado : param
+        param.param_id === editarParam ? parametroAtualizado : param
       )
     );
   }
 
-  // Função para resetar o formulário
   function resetFormulario() {
     setNewParameter({
       equip_id: equipId, 
@@ -82,7 +77,7 @@ const ParametrosAtivos = () => {
       param_minimo: '',
       param_maximo: ''
     });
-    setEditingItemId(null); // Reseta o ID do parâmetro que está sendo editado
+    setEditarParam(null);
   }
 
   const handleDelete = async (paramId) => {
@@ -96,7 +91,7 @@ const ParametrosAtivos = () => {
     } catch (error) {
       console.error('Erro ao deletar parâmetro:', error);
     } finally {
-      listarParametro(); //Atualiza a lista e armazena no localStorage
+      listarParametro();
     }
   };
 
@@ -112,12 +107,12 @@ const ParametrosAtivos = () => {
     } catch (error) {
       console.error('Erro ao salvar o novo parâmetro:', error);
     } finally {
-      listarParametro(); //Atualiza a lista e armazena no localStorage
+      listarParametro();
     }
   };
 
   const handleUpdate = async () => {
-    await edtParametro(); // Chama a função edtParametro ao atualizar
+    await edtParametro();
   };
 
   const handleChange = (e) => {
@@ -134,13 +129,20 @@ const ParametrosAtivos = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <span className={styles.tag}>Parâmetros Ativos</span>
-        {/* <h2>Parâmetros Ativos</h2> */}
+        <button
+          className={styles.botaoAddParametro}
+          onClick={() => {
+            resetFormulario();
+            setShowEditModal(true);
+          }}
+        >
+          <FontAwesomeIcon icon={faPlus} /> Adicionar Parâmetro
+        </button>
       </div>
       <div className={styles.tabelaGeral}>
       <table className={styles.table}>
         <thead>
           <tr>
-            {/* <th className={styles.th}>Status</th> */}
             <th className={styles.th}>Modelo</th>
             <th className={styles.th}>Equipamento</th>
             <th className={styles.th}>Temp. Min</th>
@@ -152,9 +154,6 @@ const ParametrosAtivos = () => {
         <tbody>
           {parametros.map((item) => (
             <tr key={item.param_id} className={styles.tr}>
-              {/* <td className={styles.td}>
-                <div className={styles.circularButton}></div>
-              </td> */}
               <td className={styles.td}>{item.equip_modelo}</td>
               <td className={styles.td}>{item.param_interface}</td>
               <td className={styles.td}>{item.param_minimo}</td>
@@ -179,42 +178,50 @@ const ParametrosAtivos = () => {
       </div>
 
       {showEditModal && (
-        <div className={styles.modal}>
-          <div className={styles.modalContent}>
-            <h2>{editingItemId ? 'Editar Parâmetro' : 'Adicionar Novo Parâmetro'}</h2>
+        <div className={styles.modalParametros}>
+          <div className={styles.modalContentParametros}>
+              <h2>
+                {editarParam ? 'Editar Parâmetro' : 'Adicionar Novo Parâmetro'}
+              </h2>
+              <p className={styles.descricaoModalParam}>
+                {editarParam ? 'Atualize as informações do parâmetro.' : 'Adicione um novo parâmetro para o monitoramento preciso e correto da temperatura.'}
+              </p>
             <label htmlFor="param_interface">Equipamento</label>
-            <input
-              type="text"
-              name="param_interface"
-              id="param_interface"
-              value={newParameter.param_interface}
-              onChange={handleChange}
-              required
-            />
+              <input
+                type="text"
+                name="param_interface"
+                id="param_interface"
+                value={newParameter.param_interface}
+                onChange={handleChange}
+                required
+              />
+
             <label htmlFor="param_minimo">Temp. Min</label>
-            <input
-              type="text"
-              name="param_minimo"
-              id="param_minimo"
-              value={newParameter.param_minimo}
-              onChange={handleChange}
-              required
-            />
+              <input
+                type="text"
+                name="param_minimo"
+                id="param_minimo"
+                value={newParameter.param_minimo}
+                onChange={handleChange}
+                required
+              />
+
             <label htmlFor="param_maximo">Temp. Máx</label>
-            <input
-              type="text"
-              name="param_maximo"
-              id="param_maximo"
-              value={newParameter.param_maximo}
-              onChange={handleChange}
-              required
-            />
-            <button className={styles.saveButton} onClick={editingItemId ? handleUpdate : handleSaveNew}>
-              {editingItemId ? 'Atualizar' : 'Salvar'}
-            </button>
-            <button className={styles.cancelButton} onClick={closeModal}>
-              Cancelar
-            </button>
+              <input
+                type="text"
+                name="param_maximo"
+                id="param_maximo"
+                value={newParameter.param_maximo}
+                onChange={handleChange}
+                required
+              />
+
+            <div className={styles.modalActions}>
+              <button onClick={closeModal}>Cancelar</button>
+              <button onClick={editarParam ? handleUpdate : handleSaveNew}>
+                {editarParam ? 'Atualizar' : 'Salvar'}
+              </button>
+            </div>
           </div>
         </div>
       )}

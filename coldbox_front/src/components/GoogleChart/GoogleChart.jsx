@@ -71,46 +71,52 @@ const GoogleChart = ({ exportButton }) => {
   };
 
   //! Função Principal - busca e organiza os dados de todos os equipamentos para o grafico
-  const buscarDadosGrafico  = async () => {
+  const buscarDadosGrafico = async () => {
     try {
-      const equipamentos = await buscarEquipamentos(); // Buscando todos os equipamentos associados ao cli_id
-      
-      // Inicializa o array de dados com os cabeçalhos dinâmicos, uma coluna para cada equipamento
+      const equipamentos = await buscarEquipamentos();
+  
+      // Cabeçalhos dinâmicos
       const dadosGraficoArray = [['Hora', ...equipamentos.map(equip => equip.local_nome)]];
-
-      // Obter as horas que serão usadas para todas as linhas
-      const horas = Array.from({ length: 12 }, (_, index) => `${index + 1}:00`);
-
-      //Cria um objeto pra armazenar as temperaturas por equipamento e hora
+  
+      // Define as horas para o gráfico com intervalos de 2 horas usando objetos `Date`
+      const horas = Array.from({ length: 12 }, (_, i) => {
+        const date = new Date();
+        date.setHours(i * 2, 0, 0, 0); // Define a hora (0, 2, 4, ..., 22) e minutos/segundos como 0
+        return date;
+      });
+      
+      // Cria uma estrutura para armazenar os dados de temperatura por equipamento e hora
       const dadosTemp = {};
-
-      //Faz uma requisição para cada equipamento e organiza os dados
+  
       for (const equipamento of equipamentos) {
         const dados = await buscarDadosEquipamento(equipamento.equip_id);
-
-        //Armazena os dados de temperatura para cada equipamento dentro do objeto
+  
         dadosTemp[equipamento.local_nome] = {};
         dados.forEach((item) => {
-          const hora = item.hora + ":00"; //Formatando a hora
-          dadosTemp[equipamento.local_nome][hora] = parseFloat(item.media_temperatura);
+          const hora = item.hora.toString().padStart(2, '0') + ":00"; // Converte `hora` para string e formata
+          dadosTemp[equipamento.local_nome][hora] = parseFloat(item.media_temperatura) || null;
         });
       }
-
-      //Monta os dados do grafico
+  
+      // Monta os dados do gráfico
       horas.forEach((hora) => {
+        const horaFormatada = `${hora.getHours().toString().padStart(2, '0')}:00`; // Formata a hora para buscar no objeto `dadosTemp`
         const linha = [hora];
         equipamentos.forEach((equipamento) => {
-          linha.push(dadosTemp[equipamento.local_nome][hora] || null);
+          const temperatura = dadosTemp[equipamento.local_nome][horaFormatada];
+          linha.push(typeof temperatura === 'number' && !isNaN(temperatura) ? temperatura : null);
         });
         dadosGraficoArray.push(linha);
       });
-
-      setDadosGrafico(dadosGraficoArray); //Atualiza os dados do grafico
-      
+  
+      setDadosGrafico(dadosGraficoArray);
+  
     } catch (error) {
-      console.error('Erro ao buscar dados da API', error); // Exibe um erro no console se a requisição falhar
+      console.error('Erro ao buscar dados para o gráfico', error);
     }
   };
+  
+  
 
   //!Carrega o script do Google Charts
   useEffect(() => {

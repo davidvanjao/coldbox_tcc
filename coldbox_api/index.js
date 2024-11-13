@@ -1,6 +1,6 @@
 const express = require('express'); 
 const cors = require('cors'); 
-// const path = require('path');
+const path = require('path');
 
 const router = require('./routers/routers');
 
@@ -9,11 +9,8 @@ app.use(cors());
 app.use(express.json()); 
 
 
-
-// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// Configurar a pasta D:/FotosPerfil como um diretório estático
-app.use('/uploads', express.static('D:/FotosPerfil'));
+// Configura o Express para servir arquivos estáticos da pasta 'public'
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 app.use(router);
 

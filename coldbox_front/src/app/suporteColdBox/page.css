@@ -1,12 +1,16 @@
 .bodyGrafico {
     background-color: #C0C0C0;
-    height: 100vh;
+    height: auto;
+    min-height: 100vh; /* Garante que o mínimo seja 100% da altura da tela */
     display: flex;
+    flex-direction: column; /* Ajusta a direção para garantir que os elementos sejam empilhados */
     width: 100%;
     box-sizing: border-box;
     padding-left: 250px;
     overflow-y: auto; /* Adiciona scroll vertical se necessário */
 }
+
+
 
 .containerGrid {
     display: grid;

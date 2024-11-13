@@ -12,13 +12,15 @@ html, body {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    height: 100%;  /* Garante que ocupe 100% da altura da tela */
-    overflow: hidden; /* Impede qualquer rolagem */
+    /* height: 100%;  Garante que ocupe 100% da altura da tela */
+    min-height: 100vh;
+    /* overflow: hidden; Impede qualquer rolagem */
 }
 
 /* Ajustando o containerSuporte para ajustar ao tamanho da página */
 .paginaSuporte .containerSuporte {
-    max-width: 100%;
+    max-width: auto;
+    min-height: auto;
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ccc;
@@ -27,13 +29,14 @@ html, body {
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
     flex-grow: 1; /* Faz com que o container cresça para ocupar o espaço restante */
-    overflow: hidden; /* Remove qualquer overflow */
+    overflow: visible; /*Remove qualquer overflow */
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     box-sizing: border-box;  /* Adiciona o box-sizing para controle de margens e padding */
 }
+
 
 
 

@@ -13,7 +13,8 @@ export default function tempoReal() {
     <div className='bodyGrafico'>
         <NavBar />
       <div className='containerGrid'>
-        <SuporteColdBox/>    
+      <Barra />
+      <SuporteColdBox/>    
       </div>
     </div>
   );

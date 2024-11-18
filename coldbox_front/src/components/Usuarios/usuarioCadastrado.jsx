@@ -195,61 +195,67 @@ const cliId = localStorage.getItem('cli_id') || ''; // Valor padrão caso esteja
     return (
         <div className={styles.conteinerGrid}>
             <div className={styles.containerUsuarios}>
-                <div className={styles.headerUsuarios}>
-                    <span className={styles.tag}>Usuários</span>
-                    <button
-                        className={styles.addButton}
-                        onClick={openAddModal}  // Use openAddModal para adicionar novos usuários
-                    >
-                        <FontAwesomeIcon icon={faPlus} /> Adicionar Usuário
-                    </button>
-                </div>
-                <div className={styles.tabelaGeral}>
-                    <table className={styles.tabelaUsuarios}>
-                        <thead>
-                            <tr>
-                                <th className={styles.th}>Usuário</th>
-                                <th className={styles.th}>Email</th>
-                                <th className={styles.th}>Telefone</th>
-                                <th className={styles.th}>Nível de Acesso</th>
-                                <th className={styles.th}>Senha</th>
-                                <th className={styles.th}>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {usuarios.map((item) => (
-                                <tr key={item.user_id} className={item.index % 2 === 0 ? styles.evenRow : styles.oddRow}>
-                                    <td className={styles.td}>{item.user_nome}</td>
-                                    <td className={styles.td}>{item.user_email}</td>
-                                    <td className={styles.td}>{item.user_tel}</td>
-                                    <td className={styles.td}>{niveisAcesso.find(n => n.nivel_id === item.nivel_id)?.nivel_acesso || 'N/A'}</td>
-                                    <td className={styles.td}>{'*'.repeat(item.user_senha ? item.user_senha.length : 0)}</td>
-                                    <td className={styles.td}>
-                                        <FontAwesomeIcon
-                                            icon={faPen}
-                                            className={styles.editIcon}
-                                            onClick={() => openEditModal(item)}
-                                        />
-                                        <FontAwesomeIcon
-                                            icon={faTrash}
-                                            className={styles.deleteIcon}
-                                            onClick={() => deleteUsuario(item.user_id)}
-                                        />
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <span className={styles.tag}>Usuários</span>
+                <button
+                    className={styles.botaoAddUser}
+                    onClick={openAddModal}  // Use openAddModal para adicionar novos usuários
+                >
+                    <FontAwesomeIcon icon={faPlus} /> Adicionar Usuário
+                </button>
             </div>
+
+            <div className={styles.tabelaGeral}>
+                <table className={styles.tabelaUsuarios}>
+                    <thead>
+                        <tr>
+                            <th className={styles.th}>Usuário</th>
+                            <th className={styles.th}>Email</th>
+                            <th className={styles.th}>Telefone</th>
+                            <th className={styles.th}>Nível de Acesso</th>
+                            <th className={styles.th}>Senha</th>
+                            <th className={styles.th}>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {usuarios.map((item) => (
+                            <tr key={item.user_id} className={item.index % 2 === 0 ? styles.evenRow : styles.oddRow}>
+                                <td className={styles.td}>{item.user_nome}</td>
+                                <td className={styles.td}>{item.user_email}</td>
+                                <td className={styles.td}>{item.user_tel}</td>
+                                <td className={styles.td}>{niveisAcesso.find(n => n.nivel_id === item.nivel_id)?.nivel_acesso || 'N/A'}</td>
+                                <td className={styles.td}>{'*'.repeat(item.user_senha ? item.user_senha.length : 0)}</td>
+                                <td className={styles.td}>
+                                    <FontAwesomeIcon
+                                        icon={faPen}
+                                        className={styles.editIcon}
+                                        onClick={() => openEditModal(item)}
+                                    />
+                                    {/* USUARIO NÃO PODERÁ EXCLUIR NENHUM USUARIO DO BANCO DE DADOS */}
+                                    {/* <FontAwesomeIcon
+                                        icon={faTrash}
+                                        className={styles.deleteIcon}
+                                        onClick={() => deleteUsuario(item.user_id)}
+                                    /> */}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            
 
             {showModal && (
                 <div className={styles.modalUsuarios}>
-                    <div className={styles.modalContent}>
-                        <h2>{isEditMode ? 'Editar Usuário' : 'Adicionar Novo Usuário'}</h2>
-                        {error && <p className={styles.error}>{error}</p>}
+                    <div className={styles.modalConteiner}>
+                        <h2>
+                            {isEditMode ? 'Editar Usuário' : 'Adicionar Novo Usuário'}
+                        </h2>
+                        <p className={styles.descricaoModalUsuarios}>
+                            {isEditMode ? 'Atualize as informações do usuário.' : 'A senha do usuário deverá ser atualizada no primeiro acesso'}
+                        </p>
 
                         <label htmlFor="user_nome">Usuário</label>
+
                         <input
                             type="text"
                             name="user_nome"
@@ -280,7 +286,7 @@ const cliId = localStorage.getItem('cli_id') || ''; // Valor padrão caso esteja
                         />
 
                         <label htmlFor="nivel_id">Nível de Acesso</label>
-                        <select
+                        <select className={styles.nivelAcesso}
                             name="nivel_id"
                             id="nivel_id"
                             value={newUser.nivel_id}
@@ -304,27 +310,31 @@ const cliId = localStorage.getItem('cli_id') || ''; // Valor padrão caso esteja
                             onChange={handleInputChange}
                             required
                         />
+                        
+                        <div className={styles.modalAddUsuario}>
+                            <button 
+                                type="fecharModal"
+                                className={styles.cancelButton}
+                                onClick={() => {
+                                    setShowModal(false);
+                                    setIsEditMode(false);
+                                    setEditingUserId(null);
+                                }}
+                            >
+                                Cancelar
+                            </button>
 
-                        <button
-                            className={styles.saveButton}
-                            onClick={() => {
-                                isEditMode ? edtUsuario() : cadastrarUsuarios(); // Verifica o modo de edição antes de salvar
-                            }}
-                        >
-                            {isEditMode ? 'Atualizar' : 'Salvar'}
-                        </button>
+                            <button 
 
-                        <button
-                            className={styles.cancelButton}
-                            onClick={() => {
-
-                                setShowModal(false);
-                                setIsEditMode(false);
-                                setEditingUserId(null);
-                            }}
-                        >
-                            Cancelar
-                        </button>
+                                type="AdicionarUsuario"
+                                className={styles.saveButton}
+                                onClick={() => {
+                                    isEditMode ? edtUsuario() : cadastrarUsuarios(); // Verifica o modo de edição antes de salvar
+                                }}
+                            >
+                                {isEditMode ? 'Atualizar' : 'Salvar'}
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

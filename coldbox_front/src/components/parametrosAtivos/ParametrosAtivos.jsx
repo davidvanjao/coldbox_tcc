@@ -153,7 +153,7 @@ const ParametrosAtivos = () => {
         </thead>
         <tbody>
           {parametros.map((item) => (
-            <tr key={item.param_id} className={styles.tr}>
+            <tr key={item.param_id} className={item.param_id % 2 === 0 ? styles.evenRow : styles.oddRow}>
               <td className={styles.td}>{item.equip_modelo}</td>
               <td className={styles.td}>{item.param_interface}</td>
               <td className={styles.td}>{item.param_minimo}</td>

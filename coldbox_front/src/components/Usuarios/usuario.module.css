@@ -1,130 +1,88 @@
-/* src/components/dispositivosAtivos/DispositivosAtivos.module.css */
+.conteinerGrid{
+  border-radius: 10px;
+  grid-row: 2 / span 5;
+  grid-column: 1 / -1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  position: relative;
+}
+
 .containerUsuarios {
-    /* width: 100%; */
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-  }
-  
-  .headerUsuarios {
-    background-color: #E6E6E6;
-    padding: 15px 10px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+  background-color: #E6E6E6;
+  padding: 15px 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  position: relative;
   }
 
-  .headerUsuarios .tag {
-    padding: 5px 10px;
-    font-size: 18px;
-    font-weight: 600;
-  }
-  
-  
-  .headerUsuarios h2 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 600;
-  }
-  
-  .tabelaGeral {
-    overflow-y: auto;
-    flex-grow: 1; /* Permite que o conteúdo cresça conforme necessário */
-    padding: 10px;
-  }
-
-  .tabelaUsuarios {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #ffffff;
-    /* border-radius: 10px; */
-    overflow: hidden;
-  }
-  .th, .td {
-    padding: 10px;
-    border-bottom: 1px solid #dddddd;
-  }
-  
-  .th {
-    text-align: left;
-    font-weight: bold;
-  }
-  
-  .td {
-    text-align: left;
-    vertical-align: middle;
-  }
-  
-  /* Novas classes para linhas pares e ímpares */
-  .evenRow {
-    background-color: #f5f5f5;
-  }
-  
-  .oddRow {
-    background-color: #eeeeee;
-  }
-  
-  .td:last-child {
-    border-right: none;
-  }
-  
-  /* src/components/dispositivosAtivos/DispositivosAtivos.module.css */
-/* ...outros estilos... */
-
-.statusBall {
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    display: inline-block;
-    cursor: pointer;
-    margin-right: 10px;
-    background-color: gray; /* Cor padrão */
-  }
-  
-  .green {
-    background-color: green;
-  }
-  
-  .red {
-    background-color: red;
-  }
-  
-  .conteinerGrid{
-    border-radius: 10px;
-    grid-row: 2 / span 5;
-    grid-column: 1 / -1;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* src/components/dispositivosAtivos/DispositivosAtivos.module.css */
-
-.editIcon {
-  color: #007bff;
-  cursor: pointer;
+.containerUsuarios .tag {
+  padding: 5px 10px;
   font-size: 18px;
-  margin-left: 10px;
+  font-weight: 600;
 }
 
-/* src/components/dispositivosAtivos/usuario.module.css */
+.tabelaGeral {
+  flex-grow: 1;
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
 
-.addButton {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 15px;
+.tabelaUsuarios {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+}
+
+.th, .td {
+  padding: 15px 10px;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid #dddddd;
   font-size: 16px;
-  cursor: pointer;
+}
+
+.td {
+  padding: 15px 10px;
+  text-align: left;
+  vertical-align: middle;
+  min-height: 50px;
+  font-size: 16px;
+}
+
+.th {
+  padding: 15px 10px;
+  text-align: left;
+  font-weight: bold;
+  min-height: 50px;
+}
+
+.evenRow {
+  background-color: #f5f5f5;
+}
+
+.oddRow {
+  background-color: #eeeeee;
+}
+
+.botaoAddUser {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px 10px;
+  background-color: #4285F4;
+  color: white;
+  font-size: 15px;
+  border: none;
   border-radius: 5px;
-  margin-left: 10px;
+  cursor: pointer;
+  z-index: 10;
 }
 
-.addButton:hover {
-  background-color: #0056b3;
-}
-
-/* Estilos do modal */
 .modalUsuarios {
   position: fixed;
   top: 0;
@@ -138,63 +96,100 @@
   z-index: 1001;
 }
 
-.modalContent {
+.modalConteiner {
   background-color: white;
   padding: 30px;
   border-radius: 10px;
-  width: 500px;
+  width: 450px;
+  max-width: 100%; /* Garante que o modal se ajuste em telas menores */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza os elementos horizontalmente */
 }
 
-.modalContent h2 {
+.modalConteiner h2 {
   margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center; /* Centraliza o título */
 }
 
-.modalContent label {
+.modalConteiner label {
   display: block;
+  width: 100%; /* Garante que o label ocupe 100% da largura */
   margin-bottom: 5px;
-  font-size: 16px;
+  font-weight: bold;
+  text-align: left; /* Mantém o texto alinhado à esquerda */
 }
 
-.modalContent input, .modalContent select {
-  width: 100%;
+.modalConteiner input {
+  width: 100%; /* Mantém os inputs ocupando 100% do container */
+  max-width: 400px; /* Limita a largura dos inputs para que não fiquem exageradamente grandes */
   padding: 10px;
   margin-bottom: 15px;
-  border-radius: 5px;
+  /* border-radius: 5px; */
   border: 1px solid #ccc;
   font-size: 16px;
 }
 
-.modalActions {
+.modalAddUsuario {
   display: flex;
   justify-content: space-between;
+  width: 100%;
+  max-width: 400px; /* Alinha os botões de acordo com os inputs */
+  margin-top: 20px;
 }
 
-.modalActions button {
+.modalAddUsuario button {
   padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
 }
 
-.modalActions button:last-child {
-  background-color: red;
+.modalAddUsuario button[type="AdicionarUsuario"] {
+  background-color: #4CAF50;
+  color: white;
 }
 
-/* Adicionando estilo para o ícone de deletar */
-.deleteIcon {
-  color: #ff0000;
-  cursor: pointer;
-  font-size: 18px;
-  margin-left: 10px;
+.modalAddUsuario button[type="fecharModal"] {
+  background-color: #f44336;
+  color: white;
 }
 
-/* Mantendo o estilo do ícone de edição */
-.editIcon {
-  color: #007bff;
+.descricaoModalUsuarios {
+  font-size: 14px;
+  color: #666;
+  margin-top: -10px; /* Ajuste para aproximar da linha do título */
+  margin-bottom: 20px; /* Espaçamento abaixo da descrição */
+  line-height: 1.2; /* Espaçamento entre as linhas */
+}
+
+
+
+
+.nivelAcesso {
+  width: 200%; /* Ocupa toda a largura disponível */
+  max-width: 105%; /* Igual ao max-width dos inputs */
+  padding: 10px; /* Mesmo padding dos inputs */
+  margin-bottom: 15px; /* Espaçamento consistente com os outros campos */
+  font-size: 16px; /* Mesmo tamanho de fonte dos inputs */
+  /* border: 1px solid #ccc; Bordas iguais aos inputs */
+  /* border-radius: 5px; Bordas arredondadas para uniformidade */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  /* color: #333; */
+  outline: none;
+  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+  appearance: none;
   cursor: pointer;
-  font-size: 18px;
-  margin-left: 10px;
+}
+
+.nivelAcesso:hover {
+  border-color: #4285F4; /* Muda a borda ao passar o mouse para combinar com o botão de "Atualizar" */
+}
+
+.nivelAcesso:focus {
+  border-color: #4285F4; /* Realça a borda ao focar */
+  box-shadow: 0 0 5px rgba(66, 133, 244, 0.5); /* Adiciona um brilho ao redor */
 }

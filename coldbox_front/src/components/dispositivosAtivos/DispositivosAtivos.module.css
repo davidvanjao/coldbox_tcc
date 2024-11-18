@@ -8,14 +8,6 @@
   background-color: #f9f9f9;
   position: relative;
 }
- 
-.tabelaGeral {
-  flex-grow: 1;
-  padding: 10px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-}
 
 .containerSecundario {
   background-color: #E6E6E6;
@@ -23,6 +15,14 @@
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   position: relative;
+}
+ 
+.tabelaGeral {
+  flex-grow: 1;
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .containerSecundario .tag {

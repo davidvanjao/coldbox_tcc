@@ -3,7 +3,27 @@ import styles from './empresa.css';
 import axios from 'axios';
 
 const Empresa = () => {
+    const [dispositivos, setDispositivos] = useState([]);
+
   
+  
+    //Carrega os dispositivos já cadastrados com base no cli_id do localStorage
+    useEffect(() => {
+      const cli_id = localStorage.getItem('cli_id'); //Pega o cli_id do localStorage
+  
+      if (cli_id) {
+        axios
+          .get(`http://127.0.0.1:3333/cliente/${cli_id}`)
+          .then((response) => {
+            setDispositivos(response.data.dados);
+          })
+          .catch((error) => {
+            console.error('Erro ao buscar os dispositivos', error);
+          });
+      } else {
+        console.error('Cli_id não encontrado.');
+      }
+    }, []);
   
 
   return (
@@ -26,17 +46,17 @@ const Empresa = () => {
             </tr>
           </thead>
           <tbody>
-            {(() => (
+            {dispositivos.map((item, index) => (
               <tr key={index} className={index % 2 === 0 ? styles.evenRow : styles.oddRow}>
                 <td className={`${styles.td} ${styles.statusDispositivos}`}>
 
                 </td>
-                <td className={styles.td}>{item.local_nome}</td>
-                <td className={styles.td}>{item.equip_modelo}</td>
-                <td className={styles.td}>{item.equip_tipo}</td>
-                <td className={styles.td}>{item.equip_ip}</td>
-                <td className={styles.td}>{item.equip_mac}</td>
-                <td className={styles.td}>{item.equip_observacao || 'Sem observação'}</td>
+                <td className={styles.td}>{item.cli_razaoSocial}</td>
+                <td className={styles.td}>{item.cli_endereco}</td>
+                <td className={styles.td}>{item.cli_cidade}</td>
+                <td className={styles.td}>{item.cli_estado}</td>
+                <td className={styles.td}>{item.cli_contrato}</td>
+                <td className={styles.td}>{item.cli_data || 'Sem observação'}</td>
                 <td className={styles.td}>
                 </td>
               </tr>

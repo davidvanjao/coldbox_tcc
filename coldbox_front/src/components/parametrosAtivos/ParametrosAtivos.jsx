@@ -16,6 +16,13 @@ const ParametrosAtivos = () => {
     param_maximo: '',
   });
 
+  const getNovoEquipId = () => {
+    let lastEquipId = parseInt(localStorage.getItem('last_equip_id')) || 0;
+    const novoEquipId = lastEquipId + 1;
+    localStorage.setItem('last_equip_id', novoEquipId.toString());
+    return novoEquipId;
+  };
+
   const listarParametro = async () => {
     try {
       const response = await axios.get(`http://127.0.0.1:3333/parametro/${equipId}`); 
@@ -45,7 +52,7 @@ const ParametrosAtivos = () => {
     setShowEditModal(true);
   };
 
-  async function edtParametro() {
+  const edtParametro = async () => {
     try {
       const response = await axios.patch(`http://127.0.0.1:3333/parametro/${editarParam}`, newParameter);
       if (response.data.sucesso) {
@@ -60,7 +67,7 @@ const ParametrosAtivos = () => {
     } finally {
       listarParametro();
     }
-  }
+  };
 
   function atualizarParametroNaLista(parametroAtualizado) {
     setParametros((prevParametros) => 
@@ -79,7 +86,7 @@ const ParametrosAtivos = () => {
     });
     setEditarParam(null);
   }
-
+  
   const handleDelete = async (paramId) => {
     try {
       const response = await axios.delete(`http://127.0.0.1:3333/parametro/${paramId}`);
@@ -95,22 +102,41 @@ const ParametrosAtivos = () => {
     }
   };
 
-  const handleSaveNew = async () => {
+  const cadastrarParametro = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:3333/parametro', newParameter);
+      const novoEquipId = getNovoEquipId(); // Obtém o próximo 'equip_id' para o novo parâmetro
+      
+      const parametro = {
+        equip_id: novoEquipId, // Agora, cada parâmetro terá um 'equip_id' único
+        param_interface: newParameter.param_interface,
+        param_minimo: newParameter.param_minimo,
+        param_maximo: newParameter.param_maximo
+      };
+  
+      const response = await axios.post('http://127.0.0.1:3333/parametro', parametro);
       if (response.data.sucesso) {
-        listarParametro();
-        closeModal();
+        listarParametro(); // Atualiza a lista com o novo parâmetro
+        closeModal(); // Fecha o modal e reseta o formulário
       } else {
-        console.error('Erro ao salvar o novo parâmetro.');
+        console.error('Erro ao cadastrar o parâmetro:', response.data); // Exibir a resposta do servidor
       }
     } catch (error) {
-      console.error('Erro ao salvar o novo parâmetro:', error);
-    } finally {
-      listarParametro();
+      // Verifique as respostas detalhadas do erro
+      if (error.response) {
+        // Erro com resposta do servidor
+        console.error('Erro com a resposta do servidor:', error.response.data);
+        console.error('Status do erro:', error.response.status);
+        console.error('Cabeçalhos do erro:', error.response.headers);
+      } else if (error.request) {
+        // Erro com a requisição enviada
+        console.error('Erro com a requisição enviada:', error.request);
+      } else {
+        // Outros erros (geralmente relacionados a configuração)
+        console.error('Erro desconhecido:', error.message);
+      }
     }
   };
-
+      
   const handleUpdate = async () => {
     await edtParametro();
   };
@@ -118,26 +144,27 @@ const ParametrosAtivos = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewParameter((prev) => ({ ...prev, [name]: value }));
+    console.log('Estado atualizado:', { ...newParameter, [name]: value });
   };
-
+  
   const closeModal = () => {
     setShowEditModal(false);
     resetFormulario();
   };
-
+  
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <span className={styles.tag}>Parâmetros Ativos</span>
         <button
-          className={styles.botaoAddParametro}
-          onClick={() => {
-            resetFormulario();
-            setShowEditModal(true);
-          }}
-        >
-          <FontAwesomeIcon icon={faPlus} /> Adicionar Parâmetro
-        </button>
+  className={styles.botaoAddParametro}
+  onClick={() => {
+    resetFormulario();  // Resetando o formulário antes de abrir o modal
+    setShowEditModal(true);
+  }}
+>
+  <FontAwesomeIcon icon={faPlus} /> Adicionar Parâmetro
+</button>
       </div>
       <div className={styles.tabelaGeral}>
       <table className={styles.table}>
@@ -218,8 +245,8 @@ const ParametrosAtivos = () => {
 
             <div className={styles.modalActions}>
               <button onClick={closeModal}>Cancelar</button>
-              <button onClick={editarParam ? handleUpdate : handleSaveNew}>
-                {editarParam ? 'Atualizar' : 'Salvar'}
+              <button onClick={editarParam ? handleUpdate : cadastrarParametro}>
+  {editarParam ? 'Atualizar' : 'Cadastrar'}
               </button>
             </div>
           </div>

@@ -41,38 +41,31 @@ module.exports = {
     },
     
 
-    async cadastrar(request, response) { //ok
+    async cadastrar(request, response) {
         try {
-            // parâmetros recebidos no corpo da requisição
-            const { param_interface, param_maximo, param_minimo, equip_id } = request.body;
-
-            // instrução SQL
-            const sql = `INSERT INTO novo_equipamento_parametro2 (param_interface, param_maximo, param_minimo, equip_id) VALUES (?, ?, ?, ?);`;
-
-            // definição dos dados a serem inseridos em um array
-            const values = [param_interface, param_maximo, param_minimo, equip_id];  
-
-            // execução da instrução sql passando os parâmetros
-            const execSql = await db.query(sql, values); 
-
-            //identificação do ID do registro inserido
-            const param_id = execSql[0].insertId;           
-
-            return response.status(200).json({
-                sucesso: true, 
-                mensagem: 'Parametro cadastrado com sucesso.', 
-                dados: param_id
-            });
+          const { param_interface, param_maximo, param_minimo, equip_id } = request.body;
+          const sql = `INSERT INTO novo_equipamento_parametro2 (param_interface, param_maximo, param_minimo, equip_id) VALUES (?, ?, ?, ?);`;
+          const values = [param_interface, param_maximo, param_minimo, equip_id];
+          const execSql = await db.query(sql, values);
+      
+          // Busca o registro recém-cadastrado para retorno completo
+          const [novoParametro] = await db.query(`SELECT * FROM novo_equipamento_parametro2 WHERE param_id = ?`, [execSql[0].insertId]);
+      
+          return response.status(200).json({
+            sucesso: true,
+            mensagem: 'Parâmetro cadastrado com sucesso.',
+            dados: novoParametro, // Retorna os dados completos do parâmetro
+          });
         } catch (error) {
-            return response.status(500).json({
-                sucesso: false, 
-                mensagem: 'Erro no cadastro do parametro.', 
-                dados: error.message
-            });
+          return response.status(500).json({
+            sucesso: false,
+            mensagem: 'Erro no cadastro do parâmetro.',
+            dados: error.message,
+          });
         }
-    },
-
-    async editar(request, response) { //ok
+      },
+      
+          async editar(request, response) { //ok
         try {
             // parâmetros recebidos pelo corpo da requisição
             const {param_interface, param_maximo, param_minimo, equip_id} = request.body;

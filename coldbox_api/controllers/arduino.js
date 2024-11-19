@@ -31,7 +31,15 @@ module.exports = {
                 dados: error.message
             });
         }
+    },
+
+    // Função para gerar uma leitura de temperatura simulada
+    async lerParametroCadastrado(equip_id) {
+        const sql = `select * from novo_equipamento_parametro2 where equip_id = ?;`;
+        const [parametro] = await db.query(sql, [equip_id]);
+        return parametro[0];
     }
+    
     
 }
 

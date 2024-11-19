@@ -20,7 +20,7 @@ router.patch('/alerta/:alerta_id', AlertaController.editar); //ok
 router.delete('/alerta/:alerta_id', AlertaController.apagar); //ok
 
 
-router.get('/cliente', ClienteController.listar);//ok
+router.get('/cliente/:cli_id', ClienteController.listar);//ok
 router.post('/cliente', ClienteController.cadastrar); //ok
 router.patch('/cliente/:cli_id', ClienteController.editar); //ok
 

@@ -4,17 +4,24 @@ const db = require('../database/connection');
 module.exports = {
     async listar(request, response) {// ok
         try {
+
+            //parâmetro recebido pela URL via params ex: /usuario/1
+            const { cli_id } = request.params; 
+
             // instruções SQL
-            const sql = `SELECT * FROM NOVO_CLIENTES;`; 
+            const sql = `SELECT * FROM NOVO_CLIENTES WHERE CLI_ID = ?`; 
+
+            // preparo do array com dados que serão atualizados
+            const values = [cli_id];    
 
             //executa instruções SQL e armazena o resultado na variável usuários
-            const alerta = await db.query(sql); 
+            const cliente = await db.query(sql, values); 
             const nItens = alerta[0].length;
 
             return response.status(200).json({
                 sucesso: true, 
                 mensagem: 'LISTA DE CLIENTES.', 
-                dados: alerta[0], 
+                dados: cliente[0], 
                 nItens                 
             });
 

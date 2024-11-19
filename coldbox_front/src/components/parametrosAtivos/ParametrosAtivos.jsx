@@ -157,51 +157,51 @@ const ParametrosAtivos = () => {
       <div className={styles.header}>
         <span className={styles.tag}>Parâmetros Ativos</span>
         <button
-  className={styles.botaoAddParametro}
-  onClick={() => {
-    resetFormulario();  // Resetando o formulário antes de abrir o modal
-    setShowEditModal(true);
-  }}
->
-  <FontAwesomeIcon icon={faPlus} /> Adicionar Parâmetro
-</button>
+          className={styles.botaoAddParametro}
+          onClick={() => {
+            resetFormulario();  // Resetando o formulário antes de abrir o modal
+            setShowEditModal(true);
+          }}
+        >
+          <FontAwesomeIcon icon={faPlus} /> Adicionar Parâmetro
+        </button>
       </div>
       <div className={styles.tabelaGeral}>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th className={styles.th}>Modelo</th>
-            <th className={styles.th}>Equipamento</th>
-            <th className={styles.th}>Temp. Min</th>
-            <th className={styles.th}>Temp. Máx</th>
-            <th className={styles.th}>Data Cadastro</th>
-            <th className={styles.th}>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {parametros.map((item) => (
-            <tr key={item.param_id} className={item.param_id % 2 === 0 ? styles.evenRow : styles.oddRow}>
-              <td className={styles.td}>{item.equip_modelo}</td>
-              <td className={styles.td}>{item.param_interface}</td>
-              <td className={styles.td}>{item.param_minimo}</td>
-              <td className={styles.td}>{item.param_maximo}</td>
-              <td className={styles.td}>{item.param_data}</td>
-              <td className={styles.td}>
-                <FontAwesomeIcon 
-                  icon={faPen} 
-                  className={styles.editIcon} 
-                  onClick={() => handleEdit(item)} 
-                />
-                <FontAwesomeIcon 
-                  icon={faTrash} 
-                  className={styles.deleteIcon} 
-                  onClick={() => handleDelete(item.param_id)} 
-                />
-              </td>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th className={styles.th}>Modelo</th>
+              <th className={styles.th}>Equipamento</th>
+              <th className={styles.th}>Temp. Min</th>
+              <th className={styles.th}>Temp. Máx</th>
+              <th className={styles.th}>Data Cadastro</th>
+              <th className={styles.th}>Ações</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {parametros.map((item) => (
+              <tr key={item.param_id} className={item.param_id % 2 === 0 ? styles.evenRow : styles.oddRow}>
+                <td className={styles.td}>{item.equip_modelo}</td>
+                <td className={styles.td}>{item.param_interface}</td>
+                <td className={styles.td}>{item.param_minimo}</td>
+                <td className={styles.td}>{item.param_maximo}</td>
+                <td className={styles.td}>{item.param_data}</td>
+                <td className={styles.td}>
+                  <FontAwesomeIcon 
+                    icon={faPen} 
+                    className={styles.editIcon} 
+                    onClick={() => handleEdit(item)} 
+                  />
+                  <FontAwesomeIcon 
+                    icon={faTrash} 
+                    className={styles.deleteIcon} 
+                    onClick={() => handleDelete(item.param_id)} 
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {showEditModal && (

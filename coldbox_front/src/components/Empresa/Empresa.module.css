@@ -1,0 +1,172 @@
+.containerMaior {
+  border-radius: 10px;
+  grid-row: 2 / span 5;
+  grid-column: 1 / -1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  position: relative;
+}
+
+.containerMenor {
+  background-color: #E6E6E6;
+  padding: 15px 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  position: relative;
+}
+
+.containerMenor .titulo {
+  padding: 5px 10px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.tabelaEmpresa {
+  flex-grow: 1;
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.tableTabela {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+}
+
+.th, .td {
+  padding: 15px 10px;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid #dddddd;
+  font-size: 16px;
+}
+
+.th {
+  padding: 15px 10px;
+  text-align: left;
+  font-weight: bold;
+  min-height: 50px;
+}
+
+.td {
+  padding: 15px 10px;
+  text-align: left;
+  vertical-align: middle;
+  min-height: 50px;
+  font-size: 16px;
+}
+
+.evenRow {
+  background-color: #f5f5f5;
+}
+
+.oddRow {
+  background-color: #eeeeee;
+}
+
+.botaoAddParametro {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px 10px;
+  background-color: #4285F4;
+  color: white;
+  font-size: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.modalParametros {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+}
+
+.modalContentParametros {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 450px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modalContentParametros h2 {
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+}
+
+.modalContentParametros label {
+  display: block;
+  width: 100%;
+  margin-bottom: 5px;
+  font-weight: bold;
+  text-align: left;
+}
+
+.modalContentParametros input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 400px;
+  margin-top: 20px;
+}
+
+.modalActions button {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.modalActions button:first-child {
+  background-color: #f44336;
+  color: white;
+}
+
+.modalActions button:last-child {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.editIcon {
+  color: #007bff;
+  cursor: pointer;
+  font-size: 18px;
+  margin-left: 10px;
+}
+
+.descricaoModalParam {
+  font-size: 14px;
+  color: #666;
+  margin-top: -10px;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}

@@ -9,7 +9,7 @@ const Empresa = () => {
   return (
     <div className={styles.containerPrincipal}>
       <div className={styles.containerSecundario}>
-        <span className={styles.tag}>Dispositivos Ativos</span>
+        <span className={styles.tag}>Empresa</span>
 
       </div>
       <div className={styles.tabelaGeral}>

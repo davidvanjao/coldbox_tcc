@@ -16,7 +16,7 @@ module.exports = {
 
             //executa instruções SQL e armazena o resultado na variável usuários
             const cliente = await db.query(sql, values); 
-            const nItens = alerta[0].length;
+            const nItens = cliente[0].length;
 
             return response.status(200).json({
                 sucesso: true, 

@@ -14,8 +14,14 @@ module.exports = {
                 });
             }
     
-            const sql = `INSERT INTO novo_equipamento_dados (dados_temp, dados_umid, dados_data, equip_id) VALUES (?, ?, ?, ?)`;
-            const values = [dados_temp, dados_umid, dados_data, equip_id];
+            //const sql = `INSERT INTO novo_equipamento_dados (dados_temp, dados_umid, dados_data, equip_id) VALUES (?, ?, ?, ?)`;
+            const sql = `CALL InserirDadosEquipamento(
+                            ?,              -- equip_id: ID do equipamento
+                            ?,              -- dados_temp: Temperatura coletada
+                            ?,              -- dados_umid: Umidade coletada
+                            ?               -- dados_data: Data da coleta
+                        );`;
+            const values = [equip_id, dados_temp, dados_umid, dados_data ];
     
             await db.execute(sql, values);
     
@@ -31,13 +37,6 @@ module.exports = {
                 dados: error.message
             });
         }
-    },
-
-    // Função para gerar uma leitura de temperatura simulada
-    async lerParametroCadastrado(equip_id) {
-        const sql = `select * from novo_equipamento_parametro2 where equip_id = ?;`;
-        const [parametro] = await db.query(sql, [equip_id]);
-        return parametro[0];
     }
     
     

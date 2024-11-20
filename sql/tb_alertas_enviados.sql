@@ -1,4 +1,4 @@
-SELECT * FROM novo_equipamento_dados ORDER BY dados_id DESC;
+SELECT * FROM novo_equipamento_dados;
 SELECT * FROM novo_equipamento;
 SELECT * FROM novo_equipamento_parametro2;
 SELECT * FROM novo_equipamento_alertas_enviados;

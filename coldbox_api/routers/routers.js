@@ -96,7 +96,6 @@ router.post('/usuarios/send-user-email', UsuariosController.enviarEmailNovoUsuar
 
 // Rota para inserir dados de temperatura e umidade
 router.post('/arduino',ArduinoController.cadastrarTemperaturaUmidade);
-router.post('/arduino/teste',ArduinoController.cadastrarTemperaturaUmidade2);
 
 
 module.exports = router;

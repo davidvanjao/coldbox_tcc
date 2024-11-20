@@ -8,6 +8,7 @@ const mysql = require('mysql2/promise');
 // let connection;
 
 
+
 // // Configurações para usar em casa (Bruno/Henrique)
 const bd_usuario = 'root'; // usuário
 const bd_senha = 'ec0623'; // senha
@@ -15,6 +16,9 @@ const bd_servidor = '127.0.0.1'; // servidor (localhost)
 const bd_porta = '3306'; // porta padrão MySQL
 const bd_banco = 'bd_tcc_tecdes_223_g2'; // nome do banco de dados
 let connection;
+
+
+
 
 
 const config = {

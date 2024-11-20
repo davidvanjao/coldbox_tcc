@@ -5,151 +5,134 @@ import { faPlus, faPen, faCircle } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 
 const DispositivosAtivos = () => {
+  const cliId = localStorage.getItem('cli_id') || ''; // Valor padrão caso esteja ausente
   const [dispositivos, setDispositivos] = useState([]);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [editando, setEditando] = useState(false);
   const [equipamentoSelecionado, setEquipamentoSelecionado] = useState(null);
   const [novoDispositivo, setNovoDispositivo] = useState({
-    modeloEquipamento: '',
-    tipoSensor: '',
-    ipEquipamento: '',
-    macEquipamento: '',
-    observacaoEquipamento: '',
-    localNome: '',
-    localDescricao: ''
+    equip_modelo: '',
+    equip_tipo: '',
+    equip_ip: '',
+    equip_mac: '',
+    equip_status: 'A', // Status padrão para novo dispositivo
+    equip_observacao: '',
+    cli_id: 1, // Valor padrão para cli_id (um dos três valores possíveis)
   });
 
+  const [error, setError] = useState(null);
 
-  //Carrega os dispositivos já cadastrados com base no cli_id do localStorage
   useEffect(() => {
-    const cli_id = localStorage.getItem('cli_id'); //Pega o cli_id do localStorage
-
-    if (cli_id) {
-      axios
-        .get(`http://127.0.0.1:3333/equipamento/${cli_id}`)
-        .then((response) => {
-          setDispositivos(response.data.dados);
-        })
-        .catch((error) => {
-          console.error('Erro ao buscar os dispositivos', error);
-        });
-    } else {
-      console.error('Cli_id não encontrado.');
-    }
+    Listar();
   }, []);
 
-  //Lida com as mudanças nos campos de input do modal
+  async function Listar() {
+    try {
+      const response = await axios.get('http://127.0.0.1:3333/equipamento/' + cliId);
+      if (response.data.sucesso) {
+        setDispositivos(response.data.dados);
+      } else {
+        setError('Erro ao listar dispositivos');
+      }
+    } catch (error) {
+      setError('Erro ao listar dispositivos');
+      console.error(error);
+    }
+  }
+
+  // Lida com mudanças nos campos do formulário
   const lidarComMudanca = (e) => {
     const { name, value } = e.target;
     setNovoDispositivo((prev) => ({ ...prev, [name]: value }));
   };
 
-  //Função para salvar o dispositivo (criar ou editar)
+  // Cadastra um novo dispositivo
+  const cadastrarDispositivo = async () => {
+    try {
+      console.log("Dispositivo a ser enviado:", novoDispositivo); // Verifique os dados antes do envio
+      const response = await axios.post('http://127.0.0.1:3333/equipamento', novoDispositivo); 
+      console.log("Resposta da API:", response); // Verifique a resposta da API
+      if (response.data.sucesso) {
+        setDispositivos((prev) => [...prev, response.data.dados]); // Adiciona o novo dispositivo à lista
+        setNovoDispositivo({
+          equip_modelo: '',
+          equip_tipo: '',
+          equip_ip: '',
+          equip_mac: '',
+          equip_status: 'A',
+          equip_observacao: '',
+          cli_id: 1, // Reinicia o cli_id para um valor padrão
+        });
+      } else {
+        console.error("Erro na resposta:", response.data); // Se não tiver sucesso, mostre o erro
+      }
+    } catch (error) {
+      setError('Erro ao adicionar dispositivo');
+      console.error("Erro ao salvar dispositivo:", error); // Log de erro caso ocorra algum erro na requisição
+    }
+  };
+  
+  
+  // Edita um dispositivo existente
+  async function edtEquipamento() {
+    try {
+      const response = await axios.patch(`http://127.0.0.1:3333/equipamento/${equipamentoSelecionado}`, novoDispositivo);
+      if (response.data.sucesso) {
+        setDispositivos((prev) => 
+          prev.map((item) =>
+            item.equip_id === equipamentoSelecionado ? response.data.dados : item
+          )
+        );
+        setMostrarModal(false);
+        setNovoDispositivo({
+          equip_modelo: '',
+          equip_tipo: '',
+          equip_ip: '',
+          equip_mac: '',
+          equip_status: 'A',
+          equip_observacao: '',          
+          cli_id: 1, // Reinicia o cli_id para um valor padrão
+        });
+        setEditando(false);
+        setEquipamentoSelecionado(null);
+      }
+    } catch (error) {
+      setError('Erro ao atualizar dispositivo');
+      console.error(error);
+    }
+  }
+
+  // Decide se o dispositivo será criado ou editado
   const salvarDispositivo = () => {
-    const cli_id = localStorage.getItem('cli_id');
-
-    //Requisição patch para editar o dispositivo
     if (editando) {
-      axios
-        .patch(`http://127.0.0.1:3333/equipamento/${equipamentoSelecionado}`, {
-          equip_modelo: novoDispositivo.modeloEquipamento,
-          equip_tipo: novoDispositivo.tipoSensor,
-          equip_ip: novoDispositivo.ipEquipamento,
-          equip_mac: novoDispositivo.macEquipamento,
-          equip_status: 'A',
-          equip_observacao: novoDispositivo.observacaoEquipamento || null,
-          local_nome: novoDispositivo.localNome,
-          local_descricao: novoDispositivo.localDescricao,
-        })
-        .then((response) => {
-          const novosDispositivos = dispositivos.map((dispositivo) =>
-            dispositivo.equip_id === equipamentoSelecionado ? { ...dispositivo, ...response.data.dados } : dispositivo
-          );
-
-          //Atualiza o estado com os novos dados
-          setDispositivos(novosDispositivos);
-
-          setMostrarModal(false);
-          limparFormulario();
-          // setNovoDispositivo({
-          //   modeloEquipamento: '',
-          //   tipoSensor: '',
-          //   ipEquipamento: '',
-          //   macEquipamento: '',
-          //   observacaoEquipamento: '',
-          // });
-          // setEditando(false);
-          // setEquipamentoSelecionado(null);
-          alert('Equipamento atualizado com sucesso');
-          console.log('Equipamento atualizado com sucesso');
-        })
-        .catch((error) => {
-          console.error('Erro ao editar o dispositivo', error);
-        });
-
-      //Requisição para adicionar um novo dispositivo
+      edtEquipamento();
     } else {
-      axios
-        .post('http://127.0.0.1:3333/equipamento/cadastrarEquipComLocal', {
-          equip_modelo: novoDispositivo.modeloEquipamento,
-          equip_tipo: novoDispositivo.tipoSensor,
-          equip_ip: novoDispositivo.ipEquipamento,
-          equip_mac: novoDispositivo.macEquipamento,
-          equip_status: 'A',
-          equip_observacao: novoDispositivo.observacaoEquipamento || null,
-          local_nome: novoDispositivo.localNome,
-          local_descricao: novoDispositivo.localDescricao,
-          cli_id: cli_id,
-        })
-        .then((response) => {
-          setDispositivos([...dispositivos, response.data.dados]);
-          setMostrarModal(false);
-          limparFormulario();
-          // setNovoDispositivo({
-          //   modeloEquipamento: '',
-          //   tipoSensor: '',
-          //   ipEquipamento: '',
-          //   macEquipamento: '',
-          //   observacaoEquipamento: '',
-          //   localNome: '',
-          //   localDescricao: ''
-          // });
-        })
-        .catch((error) => {
-          console.error('Erro ao adicionar o dispositivo', error);
-        });
+      cadastrarDispositivo();
     }
   };
 
-  const editarDispositivo = (dispositivo) => {
-    setNovoDispositivo({
-      modeloEquipamento: dispositivo.equip_modelo,
-      tipoSensor: dispositivo.equip_tipo,
-      ipEquipamento: dispositivo.equip_ip,
-      macEquipamento: dispositivo.equip_mac,
-      observacaoEquipamento: dispositivo.equip_observacao,
-      localNome: dispositivo.local_nome,
-      localDescricao: dispositivo.local_descricao,
-    });
+  // Prepara o modal para edição de um dispositivo
+  const prepararEdicao = (dispositivo) => {
+    setNovoDispositivo(dispositivo);
     setEquipamentoSelecionado(dispositivo.equip_id);
     setEditando(true);
     setMostrarModal(true);
   };
 
+  // Limpa os dados do formulário e reseta os estados
   const limparFormulario = () => {
     setNovoDispositivo({
-      modeloEquipamento: '',
-      tipoSensor: '',
-      ipEquipamento: '',
-      macEquipamento: '',
-      observacaoEquipamento: '',
-      localNome: '',
-      localDescricao: ''
+      equip_modelo: '',
+      equip_tipo: '',
+      equip_ip: '',
+      equip_mac: '',
+      equip_status: 'A',
+      equip_observacao: '',
+      cli_id: 1, // Reinicia o cli_id para um valor padrão
     });
     setEditando(false);
     setEquipamentoSelecionado(null);
   };
-  
 
   return (
     <div className={styles.containerPrincipal}>
@@ -165,29 +148,34 @@ const DispositivosAtivos = () => {
           <FontAwesomeIcon icon={faPlus} /> Adicionar Dispositivo
         </button>
       </div>
+
       <div className={styles.tabelaGeral}>
         <table className={styles.tabelaDispositivos}>
           <thead>
             <tr>
-              <th className={`${styles.td} ${styles.statusDispositivos}`}>Status</th> {/* Indicador de status */}
+              <th className={`${styles.td} ${styles.statusDispositivos}`}>Status</th>
               <th className={styles.th}>Nome</th>
-              <th className={styles.th}>Modelo</th> {/* equip_modelo */}
-              <th className={styles.th}>Tipo do Sensor</th> {/* equip_tipo */}
-              <th className={styles.th}>IP</th> {/* equip_ip */}
-              <th className={styles.th}>MAC</th> {/* equip_mac */}
-              <th className={styles.th}>Descrição</th> {/* equip_observacao */}
+              <th className={styles.th}>Modelo</th>
+              <th className={styles.th}>Tipo do Sensor</th>
+              <th className={styles.th}>IP</th>
+              <th className={styles.th}>MAC</th>
+              <th className={styles.th}>Descrição</th>
+              <th className={styles.th}>Ações</th>
             </tr>
           </thead>
           <tbody>
-            {dispositivos.map((item, index) => (
-              <tr key={index} className={index % 2 === 0 ? styles.evenRow : styles.oddRow}>
+            {dispositivos.map((item) => (
+              <tr
+                key={item.equip_id}
+                className={styles[item.equip_status === 'A' ? 'evenRow' : 'oddRow']}
+              >
                 <td className={`${styles.td} ${styles.statusDispositivos}`}>
                   <FontAwesomeIcon
                     icon={faCircle}
                     className={item.equip_status === 'A' ? styles.online : styles.offline}
                   />
                 </td>
-                <td className={styles.td}>{item.local_nome}</td>
+                <td className={styles.td}>{item.local_nome || 'N/A'}</td>
                 <td className={styles.td}>{item.equip_modelo}</td>
                 <td className={styles.td}>{item.equip_tipo}</td>
                 <td className={styles.td}>{item.equip_ip}</td>
@@ -197,7 +185,7 @@ const DispositivosAtivos = () => {
                   <FontAwesomeIcon
                     icon={faPen}
                     className={styles.editarDispositivo}
-                    onClick={() => editarDispositivo(item)} 
+                    onClick={() => prepararEdicao(item)}
                   />
                 </td>
               </tr>
@@ -209,92 +197,82 @@ const DispositivosAtivos = () => {
       {mostrarModal && (
         <div className={styles.modalDispositivos}>
           <div className={styles.modalContent}>
-            <h2>
-              {editando ? 'Editar Dispositivo' : 'Adicionar Novo Dispositivo'}
-            </h2>
-            <p className={styles.descricaoModalDisp}>
-              {editando ? 'Atualize as informações do dispositivo.' : 'Adicione um novo dispositivo. Use informações claras para facilitar a visualização'}
-            </p>
+            <h2>{editando ? 'Editar Dispositivo' : 'Adicionar Novo Dispositivo'}</h2>
+            <form>
+              <label htmlFor="equip_modelo">Modelo</label>
+              <input
+                type="text"
+                name="equip_modelo"
+                id="equip_modelo"
+                value={novoDispositivo.equip_modelo}
+                onChange={lidarComMudanca}
+                required
+              />
 
-            <label htmlFor="localNome">Nome</label>
-            <input
-              type="text"
-              name="localNome"
-              id="localNome"
-              value={novoDispositivo.localNome}
-              onChange={lidarComMudanca}
-              required
-            />
+              <label htmlFor="equip_tipo">Tipo do Sensor</label>
+              <input
+                type="text"
+                name="equip_tipo"
+                id="equip_tipo"
+                value={novoDispositivo.equip_tipo}
+                onChange={lidarComMudanca}
+                required
+              />
 
-            {/* <label htmlFor="localDescricao">Descrição(opcional)</label>
-            <input
-              type="text"
-              name="localDescricao"
-              id="localDescricao"
-              value={novoDispositivo.localDescricao}
-              onChange={lidarComMudanca}
-              required
-            /> */}
-            
-            <label htmlFor="modeloEquipamento">Modelo</label>
-            <input
-              type="text"
-              name="modeloEquipamento"
-              id="modeloEquipamento"
-              value={novoDispositivo.modeloEquipamento}
-              onChange={lidarComMudanca}
-              required
-            />
+              <label htmlFor="equip_ip">IP</label>
+              <input
+                type="text"
+                name="equip_ip"
+                id="equip_ip"
+                value={novoDispositivo.equip_ip}
+                onChange={lidarComMudanca}
+                required
+              />
 
-            <label htmlFor="tipoSensor">Tipo do Sensor</label>
-            <input
-              type="text"
-              name="tipoSensor"
-              id="tipoSensor"
-              value={novoDispositivo.tipoSensor}
-              onChange={lidarComMudanca}
-              required
-            />
+              <label htmlFor="equip_mac">MAC</label>
+              <input
+                type="text"
+                name="equip_mac"
+                id="equip_mac"
+                value={novoDispositivo.equip_mac}
+                onChange={lidarComMudanca}
+                required
+              />
 
-            <label htmlFor="ipEquipamento">IP</label>
-            <input
-              type="text"
-              name="ipEquipamento"
-              id="ipEquipamento"
-              value={novoDispositivo.ipEquipamento}
-              onChange={lidarComMudanca}
-              required
-            />
+              <label htmlFor="cli_id">Cliente</label>
+              <select
+                name="cli_id"
+                id="cli_id"
+                value={novoDispositivo.cli_id}
+                onChange={lidarComMudanca}
+                required
+              >
+                <option value={1}>Cliente 1</option>
+                <option value={2}>Cliente 2</option>
+                <option value={3}>Cliente 3</option>
+              </select>
 
-            <label htmlFor="macEquipamento">MAC</label>
-            <input
-              type="text"
-              name="macEquipamento"
-              id="macEquipamento"
-              value={novoDispositivo.macEquipamento}
-              onChange={lidarComMudanca}
-              required
-            />
+              <label htmlFor="equip_observacao">Observação</label>
+              <textarea
+                name="equip_observacao"
+                id="equip_observacao"
+                value={novoDispositivo.equip_observacao}
+                onChange={lidarComMudanca}
+              />
 
-            <label htmlFor="observacaoEquipamento">Descrição</label>
-            <input
-              name="observacaoEquipamento"
-              id="observacaoEquipamento"
-              value={novoDispositivo.observacaoEquipamento}
-              onChange={lidarComMudanca}
-            />
-
-            <div className={styles.modalAddDispositivo}>
-              <button type="fecharModal" onClick={() => {
-                limparFormulario();
-                setMostrarModal(false);
-              }}>
-                Fechar
+              <button
+                type="button"
+                onClick={salvarDispositivo}
+              >
+                {editando ? 'Salvar Alterações' : 'Adicionar Dispositivo'}
               </button>
-              <button type="adicionarDisp" onClick={salvarDispositivo}>
-                {editando ? 'Salvar Alterações' : 'Adicionar'}
+              <button
+                type="button"
+                onClick={() => setMostrarModal(false)}
+              >
+                Cancelar
               </button>
-            </div>
+            </form>
           </div>
         </div>
       )}

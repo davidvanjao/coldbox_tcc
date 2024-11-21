@@ -122,53 +122,49 @@ module.exports = {
     async listarWeb(request, response) {
         try {
             const { equip_id } = request.params;
+            const { dataInicio, dataFim } = request.query; // Recebe os parâmetros do período
     
-            const sql = `SELECT * FROM (
-                SELECT 
-                    DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS data_hora,
-                    CAST(DATE_FORMAT(a.dados_data, '%H') AS UNSIGNED) AS hora,
-                    AVG(CAST(a.dados_temp AS DECIMAL(5,2))) AS media_temperatura, -- Mantém o tipo numérico
-                    a.equip_id, c.local_nome
-                FROM 
-                    novo_equipamento_dados a
-                INNER JOIN 
-                    novo_equipamento_local b ON a.equip_id = b.equip_id
-                INNER JOIN 
-                    novo_local c ON c.local_id = b.local_id
-                WHERE
-                    a.equip_id = ?
-                GROUP BY 
-                    data_hora, hora, a.equip_id, c.local_nome
-                ORDER BY 
-                    data_hora DESC
-                LIMIT 24
-            ) AS subconsulta
-            ORDER BY data_hora ASC;`;
+            const sql = `
+                SELECT * FROM (
+                    SELECT 
+                        DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS data_hora,
+                        CAST(DATE_FORMAT(a.dados_data, '%H') AS UNSIGNED) AS hora,
+                        ROUND(AVG(CAST(a.dados_temp AS DECIMAL(5,2))), 2) AS media_temperatura,
+                        a.equip_id, c.local_nome
+                    FROM 
+                        novo_equipamento_dados a
+                    INNER JOIN 
+                        novo_equipamento_local b ON a.equip_id = b.equip_id
+                    INNER JOIN 
+                        novo_local c ON c.local_id = b.local_id
+                    WHERE
+                        a.equip_id = ?
+                        AND a.dados_data BETWEEN ? AND ? -- Filtro de período
+                    GROUP BY 
+                        data_hora, hora, a.equip_id, c.local_nome
+                    ORDER BY 
+                        data_hora DESC
+                ) AS subconsulta
+                ORDER BY data_hora ASC;
+            `;
     
-            const values = [equip_id];
+            const values = [equip_id, dataInicio, dataFim]; // Valores para o filtro
             const dadosEquipamento = await db.query(sql, values);
             const nItens = dadosEquipamento[0].length;
     
             if (nItens === 0) {
                 return response.status(404).json({
                     sucesso: false,
-                    mensagem: 'Nenhum dado encontrado para o equipamento especificado.',
+                    mensagem: 'Nenhum dado encontrado para o período especificado.',
                 });
             }
     
-            // Garante que os valores retornados sejam numéricos, apenas como segurança adicional
-            const dadosFormatados = dadosEquipamento[0].map((item) => ({
-                ...item,
-                media_temperatura: parseFloat(item.media_temperatura), // Converte explicitamente para número
-            }));
-    
             return response.status(200).json({
                 sucesso: true,
-                mensagem: 'Dados por equipamento.',
-                dados: dadosFormatados,
+                mensagem: 'Dados por equipamento e período.',
+                dados: dadosEquipamento[0],
                 nItens,
             });
-    
         } catch (error) {
             console.error('Erro na API listarWeb:', error);
             return response.status(500).json({

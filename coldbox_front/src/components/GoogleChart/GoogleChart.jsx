@@ -51,8 +51,8 @@ const GoogleChart = ({ exportButton }) => {
   const calcularPeriodo = (opcao) => {
     const hoje = new Date();
     let dataInicio;
-    let dataFim = hoje.toISOString().split('T')[0]; // Data atual
-
+    let dataFim = hoje.toISOString().split('T')[0]; // Data atual no formato ISO
+  
     switch (opcao) {
       case '24h':
         dataInicio = new Date(hoje.setDate(hoje.getDate() - 1)).toISOString().split('T')[0];
@@ -67,12 +67,44 @@ const GoogleChart = ({ exportButton }) => {
         dataInicio = new Date(hoje.setFullYear(hoje.getFullYear() - 1)).toISOString().split('T')[0];
         break;
       default:
-        dataInicio = dataFim;
+        dataInicio = dataFim; // Caso padrão, usa apenas a data atual
     }
-
+  
     return { dataInicio, dataFim };
-  };  
+  };
 
+  const calcularEixoHorizontal = (opcao) => {
+    const hoje = new Date();
+    const horas = [];
+    const dias = [];
+  
+    switch (opcao) {
+      case '24h': // Últimas 24 horas
+        for (let i = 0; i < 24; i += 2) {
+          const hour = i.toString().padStart(2, '0') + ":00";
+          horas.push(hour);
+        }
+        return horas;
+  
+      case 'semana': // Esta semana
+        for (let i = 6; i >= 0; i--) {
+          const dia = new Date(hoje);
+          dia.setDate(dia.getDate() - i);
+          const diaFormatado = `${dia.getDate().toString().padStart(2, '0')}-${(dia.getMonth() + 1)
+            .toString()
+            .padStart(2, '0')}`; // Formato DD-MM
+          dias.push(diaFormatado);
+        }
+        return dias;
+  
+      default:
+        return []; // Caso nenhuma opção válida seja selecionada
+    }
+  };
+  
+  
+  
+  
 
   //! Função inicial, essa função vai listar todos os equipamentos vinculados a empresa atraves do cli_id e equip_id
   const buscarEquipamentos = async () => {
@@ -87,70 +119,86 @@ const GoogleChart = ({ exportButton }) => {
   };
 
   //! Segunda função, ela irá buscar os dados de temperatura de cada equipamento
-  const buscarDadosEquipamento = async (equip_id) => {
+  const buscarDadosEquipamento = async (equip_id, periodo) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:3333/dados/web/${equip_id}`);
+      const { dataInicio, dataFim } = periodo;
+      console.log(`Buscando dados para o equipamento ${equip_id} com período:`, { dataInicio, dataFim });
+  
+      const response = await axios.get(`http://127.0.0.1:3333/dados/web/${equip_id}`, {
+        params: { dataInicio, dataFim },
+      });
+  
       return response.data.dados;
     } catch (error) {
-      console.error('Erro ao buscar dados do equipamento ${equip_id}', error);
+      console.error(`Erro ao buscar dados do equipamento ${equip_id}:`, error);
       return [];
     }
   };
+  
 
   //! Função Principal - busca e organiza os dados de todos os equipamentos para o grafico
   const buscarDadosGrafico = async () => {
-    const periodo = calcularPeriodo(opcaoSelecionada); //Calcula o período com base na opção selecionada
-
+    const periodo = calcularPeriodo(opcaoSelecionada); // Calcula o período baseado na opção
+    const eixoHorizontal = calcularEixoHorizontal(opcaoSelecionada); // Define os pontos no eixo horizontal
+  
     try {
       const equipamentos = await buscarEquipamentos();
-      const dadosGraficoArray = [['Hora', ...equipamentos.map(equip => equip.local_nome)]];
-    
-      const horas = Array.from({ length: 12 }, (_, i) => {
-        const hour = i * 2; // 0, 2, 4, ..., 22
-        return `${hour.toString().padStart(2, '0')}:00`;
-      });
-    
+      const dadosGraficoArray = [[opcaoSelecionada === '24h' ? 'Hora' : 'Dia', ...equipamentos.map((equip) => equip.local_nome)]];
+  
       const dadosTemp = {};
-    
+  
       for (const equipamento of equipamentos) {
-        const dados = await buscarDadosEquipamento(equipamento.equip_id);
-    
+        const dados = await buscarDadosEquipamento(equipamento.equip_id, periodo);
+  
+        console.log(`Dados retornados para o equipamento ${equipamento.local_nome}:`, dados);
+  
         dadosTemp[equipamento.local_nome] = {};
-        dados.forEach((item) => {
-          const hora = item.hora.toString().padStart(2, '0') + ":00";
-          dadosTemp[equipamento.local_nome][hora] = parseFloat(item.media_temperatura) || null;
-        });
+  
+        if (opcaoSelecionada === '24h') {
+          // Agrupar dados em intervalos de 2 horas
+          dados.forEach((item) => {
+            const hora = Math.floor(item.hora / 2) * 2; // Ex.: 15 -> 14
+            const horaFormatada = hora.toString().padStart(2, '0') + ":00";
+            if (!dadosTemp[equipamento.local_nome][horaFormatada]) {
+              dadosTemp[equipamento.local_nome][horaFormatada] = [];
+            }
+            dadosTemp[equipamento.local_nome][horaFormatada].push(parseFloat(item.media_temperatura));
+          });
+        } else if (opcaoSelecionada === 'semana') {
+          // Agrupar dados por dia
+          dados.forEach((item) => {
+            const dataISO = item.data_hora.split(' ')[0]; // Extrai a data (YYYY-MM-DD)
+            const diaFormatado = `${dataISO.split('-')[2]}-${dataISO.split('-')[1]}`; // Formato DD-MM
+            if (!dadosTemp[equipamento.local_nome][diaFormatado]) {
+              dadosTemp[equipamento.local_nome][diaFormatado] = [];
+            }
+            dadosTemp[equipamento.local_nome][diaFormatado].push(parseFloat(item.media_temperatura));
+          });
+        }
+              
       }
-    
-      horas.forEach((hora) => {
-        const linha = [hora];
+  
+      // Calcular as médias
+      eixoHorizontal.forEach((ponto) => {
+        const linha = [ponto];
         equipamentos.forEach((equipamento) => {
-          const temperatura = dadosTemp[equipamento.local_nome]?.[hora] || null;
-          linha.push(temperatura);
+          const valores = dadosTemp[equipamento.local_nome]?.[ponto] || []; // Usar 'ponto' como chave
+          const media =
+            valores.length > 0 ? (valores.reduce((a, b) => a + b, 0) / valores.length).toFixed(2) : null;
+          linha.push(media !== null ? parseFloat(media) : null);
         });
         dadosGraficoArray.push(linha);
       });
+
+      
+      
   
-      // Remover colunas onde todos os valores (exceto o cabeçalho) são `null`
-      const colunasValidas = [0]; // Sempre inclui a coluna 'Hora'
-  
-      dadosGraficoArray[0].forEach((coluna, index) => {
-        if (index === 0) return; // Ignora a primeira coluna
-        const temDados = dadosGraficoArray.slice(1).some((linha) => linha[index] !== null);
-        if (temDados) colunasValidas.push(index);
-      });
-  
-      const dadosFiltrados = dadosGraficoArray.map((linha) =>
-        colunasValidas.map((index) => linha[index])
-      );
-  
-      console.log('Dados filtrados para o gráfico:', dadosFiltrados);
-      setDadosGrafico(dadosFiltrados);
+      console.log('Dados formatados para o gráfico:', dadosGraficoArray);
+      setDadosGrafico(dadosGraficoArray);
     } catch (error) {
-      console.error('Erro ao buscar dados para o gráfico', error);
+      console.error('Erro ao buscar dados para o gráfico:', error);
     }
-  };  
-  
+  };
   
 
   //!Carrega o script do Google Charts
@@ -171,10 +219,10 @@ const GoogleChart = ({ exportButton }) => {
 
     const intervalo = setInterval(() => {
       buscarDadosGrafico(); //Atualiza os dados a cada minuto - 60000
-    }, 10000); // 10000 milissegundos = 10 segundos Valor para testes
+    }, 300000); // 10000 milissegundos = 10 segundos Valor para testes
 
     return () => clearInterval(intervalo); //Limpa o intervalo quando o componente for desmontado
-  }, []);
+  }, [opcaoSelecionada]);
 
   //!Desenha o gráfico quando os dados e o Google Charts estão prontos
   useEffect(() => {
@@ -191,17 +239,23 @@ const GoogleChart = ({ exportButton }) => {
         fractionDigits: 0, //Limita a 1 casa decimal
       });
 
-      //Aplica o formatador para cada coluna de temperatura no gráfico
-      formatador.format(data, 1); // Formata a coluna de temperatura
-      // formatador.format(data, 2); // Formata a coluna de umidade
+      // Aplica o formatador para cada coluna de temperatura existente
+      if (dadosGrafico.length > 0) {
+        const numeroDeColunas = dadosGrafico[0].length; // Número de colunas no cabeçalho
+
+        for (let i = 1; i < numeroDeColunas; i++) {
+          formatador.format(data, i); // Formata cada coluna de temperatura
+        }
+      }
+
 
       const options = {
         legend: { position: 'right', alignment: 'center', legend: 'none' },
         colors: ['#4285F4', '#DB4437', '#F4B400', '#0F9D58'], //Define as cores das linhas
         hAxis: {
-          title: 'Hora',
-          format: 'H:mm',
-          gridlines: { count: 5 }
+          title: opcaoSelecionada === '24h' ? 'Hora' : 'Dia',
+          gridlines: { count: opcaoSelecionada === '24h' ? 12 : 7 }, // Grade baseada na opção
+          textStyle: { fontSize: 12 }, // Ajusta o estilo do texto do eixo
           // ticks: 
           //[
           //   { v: 2, f: '0h' }, //Rótulo da hora

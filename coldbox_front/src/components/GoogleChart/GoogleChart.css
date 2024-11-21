@@ -1,6 +1,7 @@
 #curve_chart {
   width: 100%;
-  height: 100%;
+  height: 100%; /* Ajuste conforme necessário */
+  border: 2px dashed red; /* Diagnóstico: mostra os limites do gráfico */
 }
 
 .retanguloGrafico {

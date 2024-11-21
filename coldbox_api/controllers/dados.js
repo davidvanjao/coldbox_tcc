@@ -119,59 +119,66 @@ module.exports = {
     },
 
     // grafico WEB
-    async listarWeb(request, response) {//ok
+    async listarWeb(request, response) {
         try {
-
-            //parâmetro recebido pela URL via params ex: /usuario/1
-            const { equip_id } = request.params; 
-
-            //instruções SQL 
+            const { equip_id } = request.params;
+    
             const sql = `SELECT * FROM (
-            SELECT 
-                DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS data_hora,
-                CAST(DATE_FORMAT(a.dados_data, '%H') AS UNSIGNED) AS hora,
-                ROUND(AVG(CAST(a.dados_temp AS DECIMAL(5,2))), 2) AS media_temperatura,
-                ROUND(AVG(CAST(a.dados_umid AS DECIMAL(5,2))), 2) AS media_umidade,
-                a.equip_id, c.local_nome
-            FROM 
-                novo_equipamento_dados a,
-                novo_equipamento_local b,
-                novo_local c
-            WHERE
-                a.equip_id = ?
-            AND a.equip_id = b.equip_id
-            AND c.local_id = b.local_id
-            GROUP BY 
-                DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00')
-            ORDER BY 
-                a.dados_data DESC  -- Ordena pela data e hora para obter os mais recentes
-            LIMIT 12
+                SELECT 
+                    DATE_FORMAT(a.dados_data, '%Y-%m-%d %H:00:00') AS data_hora,
+                    CAST(DATE_FORMAT(a.dados_data, '%H') AS UNSIGNED) AS hora,
+                    AVG(CAST(a.dados_temp AS DECIMAL(5,2))) AS media_temperatura, -- Mantém o tipo numérico
+                    a.equip_id, c.local_nome
+                FROM 
+                    novo_equipamento_dados a
+                INNER JOIN 
+                    novo_equipamento_local b ON a.equip_id = b.equip_id
+                INNER JOIN 
+                    novo_local c ON c.local_id = b.local_id
+                WHERE
+                    a.equip_id = ?
+                GROUP BY 
+                    data_hora, hora, a.equip_id, c.local_nome
+                ORDER BY 
+                    data_hora DESC
+                LIMIT 24
             ) AS subconsulta
-            ORDER BY data_hora ASC;  -- Ordena a seleção final por data e hora em ordem crescente`;
-
-            // preparo do array com dados que serão atualizados
-            const values = [equip_id];                     
-
-            //executa instruções SQL e armazena o resultado na variável usuários
-            const dadosEquipamento = await db.query(sql, values); 
+            ORDER BY data_hora ASC;`;
+    
+            const values = [equip_id];
+            const dadosEquipamento = await db.query(sql, values);
             const nItens = dadosEquipamento[0].length;
-
+    
+            if (nItens === 0) {
+                return response.status(404).json({
+                    sucesso: false,
+                    mensagem: 'Nenhum dado encontrado para o equipamento especificado.',
+                });
+            }
+    
+            // Garante que os valores retornados sejam numéricos, apenas como segurança adicional
+            const dadosFormatados = dadosEquipamento[0].map((item) => ({
+                ...item,
+                media_temperatura: parseFloat(item.media_temperatura), // Converte explicitamente para número
+            }));
+    
             return response.status(200).json({
-                sucesso: true, 
-                mensagem: 'Dados por equipamento.', 
-                dados: dadosEquipamento[0], 
-                nItens                 
+                sucesso: true,
+                mensagem: 'Dados por equipamento.',
+                dados: dadosFormatados,
+                nItens,
             });
-
+    
         } catch (error) {
-            //console.log(error);
+            console.error('Erro na API listarWeb:', error);
             return response.status(500).json({
-                sucesso: false, 
-                mensagem: 'Erro na requisição.', 
-                dados: error.message
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
+                dados: error.message,
             });
         }
     },
+    
 
     async cadastrar(request, response) {//ok
         try {
@@ -203,37 +210,6 @@ module.exports = {
             });
         }
     },
-
-    async cadastrarTemperaturaUmidade(request, response) {
-        try {
-            const { dados_temp, dados_umid, equip_id } = request.body;
-            const dados_data = new Date(); // Gera a data e hora atuais no servidor
-    
-            if (!dados_temp || !dados_umid || !equip_id) {
-                return response.status(400).json({ 
-                    sucesso: false, 
-                    mensagem: 'Parâmetros inválidos. Verifique os dados enviados.' 
-                });
-            }
-    
-            const sql = `INSERT INTO novo_equipamento_dados (dados_temp, dados_umid, dados_data, equip_id) VALUES (?, ?, ?, ?)`;
-            const values = [dados_temp, dados_umid, dados_data, equip_id];
-    
-            await db.execute(sql, values);
-    
-            // Envia a resposta indicando sucesso
-            return response.status(201).json({
-                sucesso: true,
-                mensagem: 'Dados de temperatura e umidade inseridos com sucesso.'
-            });
-        } catch (error) {
-            return response.status(500).json({
-                sucesso: false,
-                mensagem: 'Erro ao inserir dados de temperatura e umidade.',
-                dados: error.message
-            });
-        }
-    }
     
 }
 

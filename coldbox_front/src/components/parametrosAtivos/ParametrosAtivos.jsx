@@ -5,12 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 
 const ParametrosAtivos = () => {
-  const equipId = localStorage.getItem('equip_id');
+  const cli_id = localStorage.getItem('cli_id');
   const [parametros, setParametros] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editarParam, setEditarParam] = useState(null);
   const [newParameter, setNewParameter] = useState({
-    equip_id: equipId, 
+    cli_id: cli_id, 
     param_interface: '',
     param_minimo: '',
     param_maximo: '',
@@ -25,10 +25,10 @@ const ParametrosAtivos = () => {
 
   const listarParametro = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:3333/parametro/${equipId}`); 
+      const response = await axios.get(`http://127.0.0.1:3333/parametro/${cli_id}`); 
       if (response.data.sucesso) {
         setParametros(response.data.dados);
-        localStorage.setItem(`parametros_${equipId}`, JSON.stringify(response.data.dados));
+        localStorage.setItem(`parametros_${cli_id}`, JSON.stringify(response.data.dados));
       } else {
         console.error('Erro ao carregar os parâmetros.');
       }

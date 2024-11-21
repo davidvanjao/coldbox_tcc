@@ -47,6 +47,33 @@ const GoogleChart = ({ exportButton }) => {
   };
 
 
+  //! Função para calcular o período baseado na opção selecionada
+  const calcularPeriodo = (opcao) => {
+    const hoje = new Date();
+    let dataInicio;
+    let dataFim = hoje.toISOString().split('T')[0]; // Data atual
+
+    switch (opcao) {
+      case '24h':
+        dataInicio = new Date(hoje.setDate(hoje.getDate() - 1)).toISOString().split('T')[0];
+        break;
+      case 'semana':
+        dataInicio = new Date(hoje.setDate(hoje.getDate() - 7)).toISOString().split('T')[0];
+        break;
+      case 'mes':
+        dataInicio = new Date(hoje.setMonth(hoje.getMonth() - 1)).toISOString().split('T')[0];
+        break;
+      case 'ano':
+        dataInicio = new Date(hoje.setFullYear(hoje.getFullYear() - 1)).toISOString().split('T')[0];
+        break;
+      default:
+        dataInicio = dataFim;
+    }
+
+    return { dataInicio, dataFim };
+  };  
+
+
   //! Função inicial, essa função vai listar todos os equipamentos vinculados a empresa atraves do cli_id e equip_id
   const buscarEquipamentos = async () => {
     try {
@@ -72,49 +99,57 @@ const GoogleChart = ({ exportButton }) => {
 
   //! Função Principal - busca e organiza os dados de todos os equipamentos para o grafico
   const buscarDadosGrafico = async () => {
+    const periodo = calcularPeriodo(opcaoSelecionada); //Calcula o período com base na opção selecionada
+
     try {
       const equipamentos = await buscarEquipamentos();
-  
-      // Cabeçalhos dinâmicos
       const dadosGraficoArray = [['Hora', ...equipamentos.map(equip => equip.local_nome)]];
-  
-      // Define as horas para o gráfico com intervalos de 2 horas usando objetos `Date`
+    
       const horas = Array.from({ length: 12 }, (_, i) => {
-        const date = new Date();
-        date.setHours(i * 2, 0, 0, 0); // Define a hora (0, 2, 4, ..., 22) e minutos/segundos como 0
-        return date;
+        const hour = i * 2; // 0, 2, 4, ..., 22
+        return `${hour.toString().padStart(2, '0')}:00`;
       });
-      
-      // Cria uma estrutura para armazenar os dados de temperatura por equipamento e hora
+    
       const dadosTemp = {};
-  
+    
       for (const equipamento of equipamentos) {
         const dados = await buscarDadosEquipamento(equipamento.equip_id);
-  
+    
         dadosTemp[equipamento.local_nome] = {};
         dados.forEach((item) => {
-          const hora = item.hora.toString().padStart(2, '0') + ":00"; // Converte `hora` para string e formata
+          const hora = item.hora.toString().padStart(2, '0') + ":00";
           dadosTemp[equipamento.local_nome][hora] = parseFloat(item.media_temperatura) || null;
         });
       }
-  
-      // Monta os dados do gráfico
+    
       horas.forEach((hora) => {
-        const horaFormatada = `${hora.getHours().toString().padStart(2, '0')}:00`; // Formata a hora para buscar no objeto `dadosTemp`
         const linha = [hora];
         equipamentos.forEach((equipamento) => {
-          const temperatura = dadosTemp[equipamento.local_nome][horaFormatada];
-          linha.push(typeof temperatura === 'number' && !isNaN(temperatura) ? temperatura : null);
+          const temperatura = dadosTemp[equipamento.local_nome]?.[hora] || null;
+          linha.push(temperatura);
         });
         dadosGraficoArray.push(linha);
       });
   
-      setDadosGrafico(dadosGraficoArray);
+      // Remover colunas onde todos os valores (exceto o cabeçalho) são `null`
+      const colunasValidas = [0]; // Sempre inclui a coluna 'Hora'
   
+      dadosGraficoArray[0].forEach((coluna, index) => {
+        if (index === 0) return; // Ignora a primeira coluna
+        const temDados = dadosGraficoArray.slice(1).some((linha) => linha[index] !== null);
+        if (temDados) colunasValidas.push(index);
+      });
+  
+      const dadosFiltrados = dadosGraficoArray.map((linha) =>
+        colunasValidas.map((index) => linha[index])
+      );
+  
+      console.log('Dados filtrados para o gráfico:', dadosFiltrados);
+      setDadosGrafico(dadosFiltrados);
     } catch (error) {
       console.error('Erro ao buscar dados para o gráfico', error);
     }
-  };
+  };  
   
   
 
@@ -217,7 +252,11 @@ const GoogleChart = ({ exportButton }) => {
         {exportButton && ( //Renderiza o botão de exportação se 'exportButton' estiver ativo
           <>
             Botão para selecionar o periodo
-            <select className='selecionarPeriodo' value={opcaoSelecionada} onChange={alterarOpcaoSelecionada}>
+            <select 
+              className='selecionarPeriodo' 
+              value={opcaoSelecionada} 
+              onChange={(e) => setOpcaoSelecionada(e.target.value)}
+            >
               <option value="24h">Últimas 24 horas</option>
               <option value="semana">Esta Semana</option>
               <option value="mes">Este Mês</option>

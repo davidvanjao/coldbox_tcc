@@ -25,8 +25,7 @@ const DispositivosAtivos = () => {
     const cli_id = localStorage.getItem('cli_id'); //Pega o cli_id do localStorage
 
     if (cli_id) {
-      axios
-        .get(`http://127.0.0.1:3333/equipamento/${cli_id}`)
+      axios.get(`http://127.0.0.1:3333/equipamento/${cli_id}`)
         .then((response) => {
         setDispositivos(response.data.dados);
         })
@@ -89,35 +88,33 @@ const DispositivosAtivos = () => {
 
       //Requisição para adicionar um novo dispositivo
     } else {
-      axios
-        .post('http://127.0.0.1:3333/equipamento/cadastrarEquipComLocal', {
-          equip_modelo: novoDispositivo.modeloEquipamento,
-          equip_tipo: novoDispositivo.tipoSensor,
-          equip_ip: novoDispositivo.ipEquipamento,
-          equip_mac: novoDispositivo.macEquipamento,
-          equip_status: 'A',
-          equip_observacao: novoDispositivo.observacaoEquipamento || null,
-          local_nome: novoDispositivo.localNome,
-          local_descricao: novoDispositivo.localDescricao,
-          cli_id: cli_id,
-        })
-        .then((response) => {
-          setDispositivos([...dispositivos, response.data.dados]);
-          setMostrarModal(false);
-          limparFormulario();
-          // setNovoDispositivo({
-          //   modeloEquipamento: '',
-          //   tipoSensor: '',
-          //   ipEquipamento: '',
-          //   macEquipamento: '',
-          //   observacaoEquipamento: '',
-          //   localNome: '',
-          //   localDescricao: ''
-          // });
-        })
-        .catch((error) => {
-          console.error('Erro ao adicionar o dispositivo', error);
-        });
+      axios.post('http://127.0.0.1:3333/equipamento/cadastrarEquipComLocal', {
+        equip_modelo: novoDispositivo.modeloEquipamento,
+        equip_tipo: novoDispositivo.tipoSensor,
+        equip_ip: novoDispositivo.ipEquipamento,
+        equip_mac: novoDispositivo.macEquipamento,
+        equip_status: 'A',
+        equip_observacao: novoDispositivo.observacaoEquipamento || null,
+        local_nome: novoDispositivo.localNome,
+        local_descricao: "Sem descrição",
+        cli_id: cli_id,
+      })
+      .then(() => {
+        // Recarregar dispositivos após adicionar
+        axios.get(`http://127.0.0.1:3333/equipamento/${cli_id}`)
+          .then((response) => {
+            setDispositivos(response.data.dados);
+            setMostrarModal(false);
+            limparFormulario();
+            alert('Dispositivo adicionado com sucesso!');
+          })
+          .catch((error) => {
+            console.error('Erro ao buscar dispositivos atualizados', error);
+          });
+      })
+      .catch((error) => {
+        console.error('Erro ao adicionar o dispositivo', error.response?.data || error.message);
+      });
     }
   };
 

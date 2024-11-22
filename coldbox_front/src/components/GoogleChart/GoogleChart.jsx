@@ -325,12 +325,14 @@ const GoogleChart = ({ exportButton }) => {
           right: 180,
         },
         tooltip: { isHtml: true }, //Habilita tooltips em HTML
+        pointSize: 5, // Define o tamanho das bolinhas nos pontos
+
       };
 
       const chart = new window.google.visualization.LineChart(
         document.getElementById('curve_chart')
       );
-      chart.draw(data); //Desenha o gráfico com os dados e opções
+      chart.draw(data); //!Desenha o gráfico com os dados e opções -- ADICIONE options
     };
 
     if (googleChartsCarregado) {

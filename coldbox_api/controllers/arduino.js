@@ -14,8 +14,16 @@ module.exports = {
                 });
             }
     
-            const sql = `INSERT INTO novo_equipamento_dados (dados_temp, dados_umid, dados_data, equip_id) VALUES (?, ?, ?, ?)`;
-            const values = [dados_temp, dados_umid, dados_data, equip_id];
+            //const sql = `INSERT INTO novo_equipamento_dados (dados_temp, dados_umid, dados_data, equip_id) VALUES (?, ?, ?, ?)`;
+            const sql = `CALL InserirDadosEquipamento(
+                ?,              -- equip_id: ID do equipamento
+                ?,              -- dados_temp: Temperatura coletada
+                ?,              -- dados_umid: Umidade coletada
+                ?               -- dados_data: Data da coleta
+                );`;
+
+            const values = [equip_id, dados_temp, dados_umid, dados_data ];
+            //const values = [dados_temp, dados_umid, dados_data, equip_id];
     
             await db.execute(sql, values);
     

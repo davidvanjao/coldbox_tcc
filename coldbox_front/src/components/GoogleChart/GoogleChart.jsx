@@ -77,6 +77,7 @@ const GoogleChart = ({ exportButton }) => {
     const hoje = new Date();
     const horas = [];
     const dias = [];
+    const meses = [];
   
     switch (opcao) {
       case '24h': // Últimas 24 horas
@@ -96,16 +97,28 @@ const GoogleChart = ({ exportButton }) => {
           dias.push(diaFormatado);
         }
         return dias;
+
+      case 'mes': // Este mês
+      const diasNoMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0).getDate(); // Dias no mês atual
+      for (let i = 1; i <= diasNoMes; i++) {
+        const diaFormatado = `${i.toString().padStart(2, '0')}-${(hoje.getMonth() + 1).toString().padStart(2, '0')}`;
+        dias.push(diaFormatado);
+      }
+        return dias;
+  
+      case 'ano': // Este ano
+      for (let i = 0; i < 12; i++) {
+        meses.push(new Date(hoje.getFullYear(), i, 1)); // Adiciona o primeiro dia de cada mês
+      }
+        return meses;
+      
+      
   
       default:
         return []; // Caso nenhuma opção válida seja selecionada
     }
   };
   
-  
-  
-  
-
   //! Função inicial, essa função vai listar todos os equipamentos vinculados a empresa atraves do cli_id e equip_id
   const buscarEquipamentos = async () => {
     try {
@@ -174,7 +187,30 @@ const GoogleChart = ({ exportButton }) => {
             }
             dadosTemp[equipamento.local_nome][diaFormatado].push(parseFloat(item.media_temperatura));
           });
-        }
+        }if (opcaoSelecionada === 'mes') {
+          // Agrupar dados por dia
+          dados.forEach((item) => {
+            const dataISO = item.data_hora.split(' ')[0]; // Extrai a data (YYYY-MM-DD)
+            const diaFormatado = `${dataISO.split('-')[2]}-${dataISO.split('-')[1]}`; // Formato DD-MM
+            if (!dadosTemp[equipamento.local_nome][diaFormatado]) {
+              dadosTemp[equipamento.local_nome][diaFormatado] = [];
+            }
+            dadosTemp[equipamento.local_nome][diaFormatado].push(parseFloat(item.media_temperatura));
+          });
+        } else if (opcaoSelecionada === 'ano') {
+          // Agrupar dados por mês
+          dados.forEach((item) => {
+            const dataISO = item.data_hora.split(' ')[0]; // Extrai a data (YYYY-MM-DD)
+            const mes = parseInt(dataISO.split('-')[1], 10) - 1; // Mês como índice (0-11)
+            const ano = parseInt(dataISO.split('-')[0], 10); // Ano como número
+            const chaveMes = new Date(ano, mes, 1); // Cria chave de agrupamento no formato Date
+            if (!dadosTemp[equipamento.local_nome][chaveMes]) {
+              dadosTemp[equipamento.local_nome][chaveMes] = [];
+            }
+            dadosTemp[equipamento.local_nome][chaveMes].push(parseFloat(item.media_temperatura));
+          });
+        }        
+        
               
       }
   
@@ -207,7 +243,10 @@ const GoogleChart = ({ exportButton }) => {
     script.src = 'https://www.gstatic.com/charts/loader.js'; //URL do Google Charts
     script.async = true;
     script.onload = () => {
-      window.google.charts.load('current', { packages: ['corechart'] });
+      window.google.charts.load('current', { 
+        packages: ['corechart'],
+        language: 'pt'
+      });
       window.google.charts.setOnLoadCallback(() => setGoogleChartsCarregado(true)); //Marca como carregado
     };
     document.body.appendChild(script); //Adiciona o script ao documento
@@ -254,8 +293,14 @@ const GoogleChart = ({ exportButton }) => {
         colors: ['#4285F4', '#DB4437', '#F4B400', '#0F9D58'], //Define as cores das linhas
         hAxis: {
           title: opcaoSelecionada === '24h' ? 'Hora' : 'Dia',
-          gridlines: { count: opcaoSelecionada === '24h' ? 12 : 7 }, // Grade baseada na opção
-          textStyle: { fontSize: 12 }, // Ajusta o estilo do texto do eixo
+          ticks: opcaoSelecionada === 'mes' 
+            ? calcularEixoHorizontal('mes').map((dia, index) => ({
+                v: index + 1, // O índice do dia (começando de 1)
+                f: dia.split('-')[0] // Apenas o número do dia
+              }))
+            : null,
+          gridlines: { count: opcaoSelecionada === 'ano' ? 12 : (opcaoSelecionada === 'mes' ? 31 : 12) },
+          textStyle: { fontSize: 12 } // Ajusta o estilo do texto
           // ticks: 
           //[
           //   { v: 2, f: '0h' }, //Rótulo da hora

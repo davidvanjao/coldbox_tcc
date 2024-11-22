@@ -118,6 +118,24 @@ const DispositivosAtivos = () => {
     }
   };
 
+
+  const apagarDispositivo = (equip_id) => {
+    if (window.confirm('Tem certeza de que deseja excluir este dispositivo?')) {
+      axios.delete(`http://127.0.0.1:3333/equipamento/${equip_id}`)
+        .then(() => {
+          // Remove o dispositivo localmente após apagar do servidor
+          const dispositivosAtualizados = dispositivos.filter((item) => item.equip_id !== equip_id);
+          setDispositivos(dispositivosAtualizados);
+  
+          alert('Dispositivo excluído com sucesso!');
+        })
+        .catch((error) => {
+          console.error('Erro ao excluir o dispositivo', error);
+        });
+    }
+  };
+  
+
   const editarDispositivo = (dispositivo) => {
     setNovoDispositivo({
       modeloEquipamento: dispositivo.equip_modelo,

@@ -184,3 +184,13 @@
   margin-bottom: 20px; /* Espaçamento abaixo da descrição */
   line-height: 1.2; /* Espaçamento entre as linhas */
 }
+
+.excluirDispositivo {
+  color: red;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.excluirDispositivo:hover {
+  color: darkred;
+}

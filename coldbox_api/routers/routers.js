@@ -59,9 +59,11 @@ router.post('/dados', DadosController.cadastrar); //ok
 
 //precisa enviar equip_id
 router.get('/parametro/:cli_id', ParametroController.listar); //ok
-router.post('/parametro',ParametroController.cadastrar); //ok
+router.post('/parametro', ParametroController.cadastrar); //ok
 router.patch('/parametro/:param_id', ParametroController.editar); //ok
 router.delete('/parametro/:param_id', ParametroController.apagar); //ok
+
+
 
 
 router.get('/logs/:equip_id', LogsController.listar); //ok

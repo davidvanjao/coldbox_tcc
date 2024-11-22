@@ -141,38 +141,43 @@ module.exports = {
     //traz os equipamentos da empresa
     async listarDadosEquipamentoEmpresa(request, response) {
         try {
-
-            // parâmetro recebido pela URL via params ex: /usuario/1
             const { cli_id } = request.params; 
-
-            // instruções SQL
+            console.log('Parametro cli_id:', cli_id);  // Verifique o cli_id
+    
             const sql = `SELECT a.local_id, a.equip_id, b.local_nome, b.local_descricao, c.equip_modelo, c.equip_observacao
-            FROM
-                novo_equipamento_local a,
-                novo_local b,
-                novo_equipamento c  
-            WHERE
-                a.local_id = b.local_id
-            AND a.equip_id = c.equip_id
-            AND b.cli_id = ?;`; 
-
-            // preparo do array com dados que serão atualizados
+                        FROM
+                            novo_equipamento_local a,
+                            novo_local b,
+                            novo_equipamento c  
+                        WHERE
+                            a.local_id = b.local_id
+                        AND a.equip_id = c.equip_id
+                        AND b.cli_id = ?;`;
+    
             const values = [cli_id]; 
-
-            //executa a query
-            const equipamento = await db.query(sql, values); 
-            console.log('Resultado da query:', equipamento);
-
-            //verifica se ha dados retornados
-            const nItens = equipamento[0].length;
-
+    
+            // Chamada para o banco de dados
+            const [equipamento] = await db.query(sql, values);  // A alteração aqui foi desestruturar para pegar diretamente o array
+    
+            console.log('Resultado da query:', equipamento);  // Verifique o resultado da consulta
+    
+            if (!equipamento || equipamento.length === 0) {
+                return response.status(404).json({
+                    sucesso: false,
+                    mensagem: 'Nenhum equipamento encontrado.',
+                    dados: []
+                });
+            }
+    
+            const nItens = equipamento.length;
+    
             return response.status(200).json({
                 sucesso: true, 
-                mensagem: 'Equipamento.', 
-                dados: equipamento[0], 
+                mensagem: 'Equipamento listado.', 
+                dados: equipamento,  // Dados corretos, sem a necessidade de [0]
                 nItens                 
             });
-
+    
         } catch (error) {
             console.error('Erro na função listarDadosEquipamentoEmpresa:', error.message);
             return response.status(500).json({
@@ -182,7 +187,7 @@ module.exports = {
             });
         }
     },
-
+    
     //traz a ultima comunicacao com o equipamento
     async listarDadosUltimaComunicacao(request, response) {
         try {
@@ -227,59 +232,56 @@ module.exports = {
 
     //Nova API em teste. Ela realizará o cadastro da localização e do equipamento, e depois vai realizar o vinculo
     async cadastrarEquipamentoELocal(req, res) {
+        const connection = await db.getConnection();
         try {
-            // Validação dos parâmetros recebidos no corpo da requisição
+            await connection.beginTransaction();
+    
+            // Validação dos parâmetros recebidos
             const { equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao, local_nome, local_descricao, cli_id } = req.body;
-    
-            // Verifica se todos os campos obrigatórios foram fornecidos
             if (!equip_modelo || !equip_tipo || !equip_ip || !equip_mac || !local_nome || !local_descricao || !cli_id) {
-                return res.status(400).json({
-                    sucesso: false,
-                    mensagem: 'Por favor, preencha todos os campos obrigatórios para o equipamento e a localização.'
-                });
+                throw new Error('Campos obrigatórios não preenchidos');
             }
     
-            // Verificar se o IP ou MAC do equipamento já existem (prevenindo duplicação)
+            // Verificar duplicação de IP ou MAC
             const sqlVerificarEquipamento = `SELECT * FROM novo_equipamento WHERE equip_ip = ? OR equip_mac = ?`;
-            const equipamentoExistente = await db.query(sqlVerificarEquipamento, [equip_ip, equip_mac]);
-    
-            if (equipamentoExistente[0].length > 0) {
-                return res.status(400).json({
-                    sucesso: false,
-                    mensagem: 'Já existe um equipamento cadastrado com o mesmo IP ou MAC.'
-                });
+            const [equipamentoExistente] = await connection.query(sqlVerificarEquipamento, [equip_ip, equip_mac]);
+            if (equipamentoExistente.length > 0) {
+                throw new Error('Equipamento com o mesmo IP ou MAC já cadastrado.');
             }
     
-            // Inserir a nova localização
+            // Inserir local
             const sqlLocal = `INSERT INTO novo_local (local_nome, local_descricao, cli_id) VALUES (?, ?, ?)`;
-            const valuesLocal = [local_nome, local_descricao, cli_id];
-            const resultLocal = await db.query(sqlLocal, valuesLocal);
-            const local_id = resultLocal[0].insertId; // ID da nova localização
+            const [resultLocal] = await connection.query(sqlLocal, [local_nome, local_descricao, cli_id]);
+            const local_id = resultLocal.insertId;
     
-            // Inserir o equipamento
+            // Inserir equipamento
             const sqlEquipamento = `INSERT INTO novo_equipamento (equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao) VALUES (?, ?, ?, ?, ?, ?)`;
-            const valuesEquipamento = [equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status || 'A', equip_observacao || null];
-            const resultEquipamento = await db.query(sqlEquipamento, valuesEquipamento);
-            const equip_id = resultEquipamento[0].insertId; // ID do novo equipamento
+            const [resultEquipamento] = await connection.query(sqlEquipamento, [equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status || 'A', equip_observacao || null]);
+            const equip_id = resultEquipamento.insertId;
     
-            // Inserir o vínculo entre equipamento e localização na tabela de junção
+            // Inserir vínculo
             const sqlVinculo = `INSERT INTO novo_equipamento_local (equip_id, local_id) VALUES (?, ?)`;
-            await db.query(sqlVinculo, [equip_id, local_id]);
+            await connection.query(sqlVinculo, [equip_id, local_id]);
+    
+            await connection.commit(); // Commit após todas as operações
     
             return res.status(200).json({
                 sucesso: true,
-                mensagem: 'Equipamento e localização cadastrados e vinculados com sucesso!',
+                mensagem: 'Equipamento e local cadastrados com sucesso!',
                 dados: { equip_id, local_id }
             });
-    
         } catch (error) {
+            await connection.rollback(); // Rollback em caso de erro
             return res.status(500).json({
                 sucesso: false,
-                mensagem: 'Erro ao cadastrar equipamento e localização',
+                mensagem: 'Erro ao cadastrar equipamento e local.',
                 dados: error.message
             });
+        } finally {
+            connection.release();
         }
-    },
+    
+        },
 
     //Editar o equipamento/Localização cadastrada
     async editar(request, response) {

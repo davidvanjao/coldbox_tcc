@@ -45,37 +45,63 @@ module.exports = {
         }
     },
 
-    async cadastrar(request, response) {//ok
+    async cadastrar(request, response) {
         try {
             // parâmetros recebidos no corpo da requisição
-            const { equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao } = request.body;
+            const { equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao, param_interface, param_maximo, param_minimo} = request.body;
+    
+            // instrução SQL para cadastrar o equipamento
+            const sqlEquip = `INSERT INTO novo_equipamento (equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao) VALUES (?, ?, ?, ?, ?, ?)`;
+            
+            // valores para o cadastro do equipamento
+            const valuesEquip = [equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao];  
+    
+            // execução da instrução SQL para cadastrar o equipamento
+            const execSqlEquip = await db.query(sqlEquip, valuesEquip); 
+    
+            // identifica o ID do equipamento recém-cadastrado
+            const equip_id = execSqlEquip[0].insertId;
+    
+            // instrução SQL para cadastrar o parâmetro com o equip_id recém-criado
+            const sqlParam = `INSERT INTO novo_equipamento_parametro2 (param_interface, param_maximo, param_minimo, equip_id) VALUES (?, ?, ?, ?)`;
+    
+            // valores para o cadastro do parâmetro
+            const valuesParam = [param_interface, param_maximo, param_minimo, equip_id];
+    
+            // execução da instrução SQL para cadastrar o parâmetro
+            const execSqlParam = await db.query(sqlParam, valuesParam);
+    
+            // busca os dados do parâmetro recém-cadastrado
+            const result = await db.query(`SELECT * FROM novo_equipamento_parametro2 WHERE param_id = ?`, [execSqlParam[0]?.insertId]);
 
-            // instrução SQL
-            const sql = `INSERT INTO novo_equipamento (equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao) VALUES (?, ?, ?, ?, ?, ?)`;
-
-            // definição dos dados a serem inseridos em um array
-            const values = [equip_modelo, equip_tipo, equip_ip, equip_mac, equip_status, equip_observacao];  
-
-            // execução da instrução sql passando os parâmetros
-            const execSql = await db.query(sql, values); 
-
-            //identificação do ID do registro inserido
-            const equip_id = execSql[0].insertId;           
-
+            // Verificando se algum dado foi encontrado
+            if (result.length === 0) {
+                // Tratamento caso não encontre o parâmetro
+                console.log('Nenhum parâmetro encontrado');
+                return;
+            }
+            
+            // Desestruturando o primeiro resultado se ele existir
+            const novoParametro = result[0];
+                
+            // resposta com os dados do equipamento e parâmetro
             return response.status(200).json({
-                sucesso: true, 
-                mensagem: 'Equipamento cadastrado com sucesso.', 
-                dados: equip_id
+                sucesso: true,
+                mensagem: 'Equipamento e parâmetro cadastrados com sucesso.',
+                dados: {
+                    equip_id,
+                    novoParametro
+                }
             });
         } catch (error) {
             return response.status(500).json({
-                sucesso: false, 
-                mensagem: 'Erro na requisição.', 
+                sucesso: false,
+                mensagem: 'Erro ao cadastrar equipamento e parâmetro.',
                 dados: error.message
             });
         }
     },
-
+    
     // async editar(request, response) { //ok
     //     try {
     //         // parâmetros recebidos pelo corpo da requisição
@@ -139,55 +165,53 @@ module.exports = {
     },
 
     //traz os equipamentos da empresa
-    async listarDadosEquipamentoEmpresa(request, response) {
+    async listarDadosEquipamentoEmpresa(req, res) {
+        const { cli_id } = req.params;
+        
+        // SQL para buscar os dados de equipamentos relacionados à empresa
+        const sql = `
+            SELECT 
+                e.equip_id, 
+                e.nome_equipamento, 
+                e.tipo_equipamento, 
+                e.data_entrada, 
+                el.local_id, 
+                l.nome_local
+            FROM novo_equipamento e
+            LEFT JOIN novo_equipamento_local el ON e.equip_id = el.equip_id
+            LEFT JOIN novo_local l ON el.local_id = l.local_id
+            WHERE e.cli_id = ?;
+        `;
+        
         try {
-            const { cli_id } = request.params; 
-            console.log('Parametro cli_id:', cli_id);  // Verifique o cli_id
-    
-            const sql = `SELECT a.local_id, a.equip_id, b.local_nome, b.local_descricao, c.equip_modelo, c.equip_observacao
-                        FROM
-                            novo_equipamento_local a,
-                            novo_local b,
-                            novo_equipamento c  
-                        WHERE
-                            a.local_id = b.local_id
-                        AND a.equip_id = c.equip_id
-                        AND b.cli_id = ?;`;
-    
-            const values = [cli_id]; 
-    
-            // Chamada para o banco de dados
-            const [equipamento] = await db.query(sql, values);  // A alteração aqui foi desestruturar para pegar diretamente o array
-    
-            console.log('Resultado da query:', equipamento);  // Verifique o resultado da consulta
-    
+            // Executando a query com o cli_id como valor
+            const equipamento = await db.query(sql, [cli_id]);
+            
+            // Verificando se os dados foram encontrados
             if (!equipamento || equipamento.length === 0) {
-                return response.status(404).json({
+                return res.status(404).json({
                     sucesso: false,
                     mensagem: 'Nenhum equipamento encontrado.',
                     dados: []
                 });
             }
     
-            const nItens = equipamento.length;
-    
-            return response.status(200).json({
-                sucesso: true, 
-                mensagem: 'Equipamento listado.', 
-                dados: equipamento,  // Dados corretos, sem a necessidade de [0]
-                nItens                 
+            // Retornando os dados encontrados
+            return res.status(200).json({
+                sucesso: true,
+                mensagem: 'Equipamentos encontrados com sucesso.',
+                dados: equipamento
             });
-    
         } catch (error) {
-            console.error('Erro na função listarDadosEquipamentoEmpresa:', error.message);
-            return response.status(500).json({
-                sucesso: false, 
-                mensagem: 'Erro na requisição.', 
-                dados: error.message
+            console.error(error);
+            return res.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro ao tentar listar os equipamentos.',
+                erro: error.message
             });
         }
     },
-    
+        
     //traz a ultima comunicacao com o equipamento
     async listarDadosUltimaComunicacao(request, response) {
         try {

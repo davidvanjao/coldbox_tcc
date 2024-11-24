@@ -5,6 +5,10 @@ const nodemailer = require('nodemailer'); 'D:/FotosPerfil'
 const bcrypt = require('bcrypt'); // Certifique-se de que bcrypt está instalado
 const multer = require('multer');
 const path = require('path');
+const crypto = require('crypto'); // Para gerar um token único
+const tokensRecuperacao = new Map();
+
+
 
 //Configuração do multer para salvar as imagens no servidor
 
@@ -261,61 +265,137 @@ module.exports = {
     },
     
     // Função para enviar e-mail de recuperação de senha
-    async enviarEmailRecuperacao(request, response) {
-        try {
-            const { user_email } = request.body;
-            const sql = `SELECT user_id, user_nome FROM novo_usuario WHERE user_email = ?;`;
-            const values = [user_email];
-            const result = await db.query(sql, values);
-    
-            if (result[0].length === 0) {
-                return response.status(400).json({
-                    sucesso: false,
-                    mensagem: 'Email inválido.',
-                });
-            }
-    
-            const user_id = result[0][0].user_id;
-            const user_nome = result[0][0].user_nome;
-    
-            const transporter = nodemailer.createTransport({
-                host: "sandbox.smtp.mailtrap.io",
-                port: 2525,
-                auth: {
-                    user: "dc5526bf72b600",
-                    pass: "51102710f933a6",
-                },
-            });
-    
-            // Configurações do conteúdo do e-mail
-            let message = {
-                from: 'dc5526bf72b600@sandbox.smtp.mailtrap.io',
-                to: user_email,
-                subject: "Resetar Senha.",
-                text: `Olá ${user_nome}, \nSejam bem-vindos ao Coldbox. Por favor, copie o link nessa mensagem e o cole na barra de pesquisa do navegador. \nVocê será direcionado automaticamente para a pagina de autenticação de cadastro. \nhttp://127.0.0.1:3333/ativacao/usuarios${user_id}`,
-                html: `<div>
-                <h1>Resetar a Senha</h1>
-                <h2>Olá ${user_nome},</h2>
-                <p>Sejam bem-vindos ao Coldbox. Por favor, clique no link a seguir </p>
-                <a href=http://127.0.0.1:3333/resetarSenha${user_id}>Resetar Senha</a>
-                </div>`
-            };
-    
-            // Envio do e-mail
-            await transporter.sendMail(message);
-    
-            return response.status(200).json({
-                sucesso: true,
-                mensagem: 'Email enviado com sucesso.',
-            });
-        } catch (error) {
-            return response.status(500).json({
+
+
+// Função para gerar e enviar o link de recuperação de senha
+async enviarEmailRecuperacao(request, response) {
+    try {
+        const { user_email } = request.body;
+        const sql = `SELECT user_id, user_nome FROM novo_usuario WHERE user_email = ?;`;
+        const values = [user_email];
+        const result = await db.query(sql, values);
+
+        if (result[0].length === 0) {
+            return response.status(400).json({
                 sucesso: false,
-                mensagem: 'Erro no envio do e-mail.',
-                dados: error.message
+                mensagem: 'Email inválido.',
             });
         }
-    },
+
+        const user_id = result[0][0].user_id;
+        const user_nome = result[0][0].user_nome;
+
+        // Gerar um identificador temporário (pode ser um hash simples ou aleatório)
+        const token = crypto.randomBytes(20).toString('hex');
+
+        // Definir a data de expiração (por exemplo, 1 hora a partir de agora)
+        const expiraEm = Date.now() + 3600000; // 1 hora em milissegundos
+
+        // Armazenar o token e a expiração em memória
+        tokensRecuperacao.set(token, { user_id, expiraEm });
+
+        const transporter = nodemailer.createTransport({
+            host: "sandbox.smtp.mailtrap.io",
+            port: 2525,
+            auth: {
+                user: "dc5526bf72b600",
+                pass: "51102710f933a6",
+            },
+        });
+
+        let message = {
+            from: 'dc5526bf72b600@sandbox.smtp.mailtrap.io',
+            to: user_email,
+            subject: "Resetar Senha.",
+            text: `Olá ${user_nome}, \nSeja bem-vindo ao Coldbox. Por favor, clique no link a seguir para redefinir sua senha:\nhttp://127.0.0.1:3333/resetarSenha/${token}`,
+            html: `<div>
+                    <h1>Resetar a Senha</h1>
+                    <h2>Olá ${user_nome},</h2>
+                    <p>Seja bem-vindo(a) ao Coldbox. Por favor, clique no link a seguir para redefinir sua senha:</p>
+                    <a href="http://127.0.0.1:3333/resetarSenha/${token}">Resetar Senha</a>
+                </div>`
+        };
+
+        // Envio do e-mail
+        await transporter.sendMail(message);
+
+        return response.status(200).json({
+            sucesso: true,
+            mensagem: 'Email enviado com sucesso.',
+        });
+    } catch (error) {
+        return response.status(500).json({
+            sucesso: false,
+            mensagem: 'Erro no envio do e-mail.',
+            dados: error.message
+        });
+    }
+},
+
+
+// usuarios.js - Backend (controller de usuários)
+async redefinirSenha(request, response) {
+    try {
+        const { token, novaSenha } = request.body;
+
+        if (!token || !novaSenha) {
+            return response.status(400).json({
+                sucesso: false,
+                mensagem: "Parâmetros inválidos.",
+            });
+        }
+
+        // Verificar se o token existe e se não expirou
+        const tokenData = tokensRecuperacao.get(token);
+
+        if (!tokenData) {
+            return response.status(400).json({
+                sucesso: false,
+                mensagem: 'Token inválido ou expirado.',
+            });
+        }
+
+        const { user_id, expiraEm } = tokenData;
+
+        // Verificar se o token expirou
+        if (Date.now() > expiraEm) {
+            tokensRecuperacao.delete(token); // Remover o token expirado
+            return response.status(400).json({
+                sucesso: false,
+                mensagem: 'Token expirado.',
+            });
+        }
+
+        // Hash da nova senha
+        const hashedSenha = await bcrypt.hash(novaSenha, 10);
+
+        // Atualizar a senha no banco de dados
+        const updateSql = `UPDATE novo_usuario SET user_senha = ? WHERE user_id = ?`;
+        const updateResult = await db.query(updateSql, [hashedSenha, user_id]);
+
+        if (updateResult[0].affectedRows === 0) {
+            return response.status(404).json({
+                sucesso: false,
+                mensagem: "Usuário não encontrado.",
+            });
+        }
+
+        // Após redefinir a senha, removemos o token da memória
+        tokensRecuperacao.delete(token);
+
+        return response.status(200).json({
+            sucesso: true,
+            mensagem: "Senha atualizada com sucesso.",
+        });
+    } catch (error) {
+        return response.status(500).json({
+            sucesso: false,
+            mensagem: "Erro ao redefinir senha.",
+            dados: error.message,
+        });
+    }
+},
+
 
     // Função para upload de foto de perfil
     uploadFotoPerfil: async (request, response) => {

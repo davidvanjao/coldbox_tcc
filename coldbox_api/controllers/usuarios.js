@@ -322,6 +322,7 @@ async enviarEmailRecuperacao(request, response) {
         return response.status(200).json({
             sucesso: true,
             mensagem: 'Email enviado com sucesso.',
+            idUsuario: user_id
         });
     } catch (error) {
         return response.status(500).json({
@@ -336,42 +337,42 @@ async enviarEmailRecuperacao(request, response) {
 // usuarios.js - Backend (controller de usuários)
 async redefinirSenha(request, response) {
     try {
-        const { token, novaSenha } = request.body;
+        const { user_id, user_senha } = request.body;
+        const idReal = user_id - 489572;
+        // if (!token || !novaSenha) {
+        //     return response.status(400).json({
+        //         sucesso: false,
+        //         mensagem: "Parâmetros inválidos.",
+        //     });
+        // }
 
-        if (!token || !novaSenha) {
-            return response.status(400).json({
-                sucesso: false,
-                mensagem: "Parâmetros inválidos.",
-            });
-        }
+        // // Verificar se o token existe e se não expirou
+        // const tokenData = tokensRecuperacao.get(token);
 
-        // Verificar se o token existe e se não expirou
-        const tokenData = tokensRecuperacao.get(token);
+        // if (!tokenData) {
+        //     return response.status(400).json({
+        //         sucesso: false,
+        //         mensagem: 'Token inválido ou expirado.',
+        //     });
+        // }
 
-        if (!tokenData) {
-            return response.status(400).json({
-                sucesso: false,
-                mensagem: 'Token inválido ou expirado.',
-            });
-        }
+        // const { user_id, expiraEm } = tokenData;
 
-        const { user_id, expiraEm } = tokenData;
+        // // Verificar se o token expirou
+        // if (Date.now() > expiraEm) {
+        //     tokensRecuperacao.delete(token); // Remover o token expirado
+        //     return response.status(400).json({
+        //         sucesso: false,
+        //         mensagem: 'Token expirado.',
+        //     });
+        // }
 
-        // Verificar se o token expirou
-        if (Date.now() > expiraEm) {
-            tokensRecuperacao.delete(token); // Remover o token expirado
-            return response.status(400).json({
-                sucesso: false,
-                mensagem: 'Token expirado.',
-            });
-        }
-
-        // Hash da nova senha
-        const hashedSenha = await bcrypt.hash(novaSenha, 10);
+        // // Hash da nova senha
+        // const hashedSenha = await bcrypt.hash(novaSenha, 10);
 
         // Atualizar a senha no banco de dados
         const updateSql = `UPDATE novo_usuario SET user_senha = ? WHERE user_id = ?`;
-        const updateResult = await db.query(updateSql, [hashedSenha, user_id]);
+        const updateResult = await db.query(updateSql, [user_senha, idReal]);
 
         if (updateResult[0].affectedRows === 0) {
             return response.status(404).json({
@@ -381,7 +382,7 @@ async redefinirSenha(request, response) {
         }
 
         // Após redefinir a senha, removemos o token da memória
-        tokensRecuperacao.delete(token);
+        // tokensRecuperacao.delete(token);
 
         return response.status(200).json({
             sucesso: true,

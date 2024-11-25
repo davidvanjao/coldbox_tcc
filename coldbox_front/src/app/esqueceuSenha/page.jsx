@@ -20,9 +20,10 @@ export default function ForgotPassword() {
       const response = await axios.post('http://127.0.0.1:3333/usuarios/send-reset-email', { user_email });
 
       if (response.data && response.data.sucesso) {
+        const fakeId = parseInt(response.data.idUsuario) + 489572;
         setMessage('Link de recuperação enviado! Verifique seu e-mail.');
         setTimeout(() => {
-          router.push('/resetarSenha/[user_id]');
+          router.push('/resetarSenha/' + fakeId);
         }, 2000);
     } else {
         setMessage(response.data?.mensagem || 'Erro ao enviar link de recuperação.');

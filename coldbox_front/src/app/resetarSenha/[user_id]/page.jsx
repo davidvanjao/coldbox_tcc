@@ -6,13 +6,16 @@ import styles from "./page.module.css";
 import Link from "next/link";
 import axios from "axios";
 
-export default function ResetPassword() {
+export default function ResetPassword({ params }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [userId, setUserId] = useState(""); // Estado para armazenar o user_id
+  const [userId, setUserId] = useState(params.user_id); // Estado para armazenar o user_id
   const router = useRouter();
+
+  const user_id = parseInt(params.user_id);;
+  console.log("user_id recebido da URL:", user_id);
 
   useEffect(() => {
     if (router.isReady) {
@@ -20,12 +23,9 @@ export default function ResetPassword() {
       console.log("router.isReady:", router.isReady);
       console.log("router.query:", router.query);
 
-      const user_id = router.query.user_id;
-
       // Verifica se o user_id foi extraído corretamente
       if (user_id) {
-        setUserId(user_id); // Armazena o user_id quando disponível
-        console.log("user_id recebido da URL:", user_id);
+        setUserId(user_id); // Armazena o user_id quando disponível        
       } else {
         setMessage("ID de usuário inválido. Por favor, tente novamente.");
       }
@@ -53,9 +53,9 @@ export default function ResetPassword() {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://127.0.0.1:3333/redefinirSenha", {
+      const response = await axios.post("http://127.0.0.1:3333/usuarios/redefinirSenha", {
         user_id: userId,
-        password,
+        user_senha: password,
       });
 
       if (response.data.sucesso) {

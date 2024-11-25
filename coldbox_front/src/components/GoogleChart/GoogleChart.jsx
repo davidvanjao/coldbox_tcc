@@ -50,12 +50,16 @@ const GoogleChart = ({ exportButton }) => {
   //! Função para calcular o período baseado na opção selecionada
   const calcularPeriodo = (opcao) => {
     const hoje = new Date();
+    const inicioDiaAtual = new Date(hoje);
+    inicioDiaAtual.setHours(0, 0, 0, 0); // Define o início do dia atual
+
     let dataInicio;
-    let dataFim = hoje.toISOString().split('T')[0]; // Data atual no formato ISO
+    let dataFim = hoje.toISOString().split("T")[0];
+
   
     switch (opcao) {
-      case '24h':
-        dataInicio = new Date(hoje.setDate(hoje.getDate() - 1)).toISOString().split('T')[0];
+      case "24h":
+        dataInicio = inicioDiaAtual.toISOString().split("T")[0]; // Usa o início do dia atual
         break;
       case 'semana':
         dataInicio = new Date(hoje.setDate(hoje.getDate() - 7)).toISOString().split('T')[0];
@@ -153,88 +157,89 @@ const GoogleChart = ({ exportButton }) => {
   const buscarDadosGrafico = async () => {
     const periodo = calcularPeriodo(opcaoSelecionada); // Calcula o período baseado na opção
     const eixoHorizontal = calcularEixoHorizontal(opcaoSelecionada); // Define os pontos no eixo horizontal
-  
-    try {
-      const equipamentos = await buscarEquipamentos();
-      const dadosGraficoArray = [[opcaoSelecionada === '24h' ? 'Hora' : 'Dia', ...equipamentos.map((equip) => equip.local_nome)]];
-  
-      const dadosTemp = {};
-  
-      for (const equipamento of equipamentos) {
-        const dados = await buscarDadosEquipamento(equipamento.equip_id, periodo);
-  
-        console.log(`Dados retornados para o equipamento ${equipamento.local_nome}:`, dados);
-  
-        dadosTemp[equipamento.local_nome] = {};
-  
-        if (opcaoSelecionada === '24h') {
-          // Agrupar dados em intervalos de 2 horas
-          dados.forEach((item) => {
-            const hora = Math.floor(item.hora / 2) * 2; // Ex.: 15 -> 14
-            const horaFormatada = hora.toString().padStart(2, '0') + ":00";
-            if (!dadosTemp[equipamento.local_nome][horaFormatada]) {
-              dadosTemp[equipamento.local_nome][horaFormatada] = [];
-            }
-            dadosTemp[equipamento.local_nome][horaFormatada].push(parseFloat(item.media_temperatura));
-          });
-        } else if (opcaoSelecionada === 'semana') {
-          // Agrupar dados por dia
-          dados.forEach((item) => {
-            const dataISO = item.data_hora.split(' ')[0]; // Extrai a data (YYYY-MM-DD)
-            const diaFormatado = `${dataISO.split('-')[2]}-${dataISO.split('-')[1]}`; // Formato DD-MM
-            if (!dadosTemp[equipamento.local_nome][diaFormatado]) {
-              dadosTemp[equipamento.local_nome][diaFormatado] = [];
-            }
-            dadosTemp[equipamento.local_nome][diaFormatado].push(parseFloat(item.media_temperatura));
-          });
-        }if (opcaoSelecionada === 'mes') {
-          // Agrupar dados por dia
-          dados.forEach((item) => {
-            const dataISO = item.data_hora.split(' ')[0]; // Extrai a data (YYYY-MM-DD)
-            const diaFormatado = `${dataISO.split('-')[2]}-${dataISO.split('-')[1]}`; // Formato DD-MM
-            if (!dadosTemp[equipamento.local_nome][diaFormatado]) {
-              dadosTemp[equipamento.local_nome][diaFormatado] = [];
-            }
-            dadosTemp[equipamento.local_nome][diaFormatado].push(parseFloat(item.media_temperatura));
-          });
-        } else if (opcaoSelecionada === 'ano') {
-          // Agrupar dados por mês
-          dados.forEach((item) => {
-            const dataISO = item.data_hora.split(' ')[0]; // Extrai a data (YYYY-MM-DD)
-            const mes = parseInt(dataISO.split('-')[1], 10) - 1; // Mês como índice (0-11)
-            const ano = parseInt(dataISO.split('-')[0], 10); // Ano como número
-            const chaveMes = new Date(ano, mes, 1); // Cria chave de agrupamento no formato Date
-            if (!dadosTemp[equipamento.local_nome][chaveMes]) {
-              dadosTemp[equipamento.local_nome][chaveMes] = [];
-            }
-            dadosTemp[equipamento.local_nome][chaveMes].push(parseFloat(item.media_temperatura));
-          });
-        }        
-        
-              
-      }
-  
-      // Calcular as médias
-      eixoHorizontal.forEach((ponto) => {
-        const linha = [ponto];
-        equipamentos.forEach((equipamento) => {
-          const valores = dadosTemp[equipamento.local_nome]?.[ponto] || []; // Usar 'ponto' como chave
-          const media =
-            valores.length > 0 ? (valores.reduce((a, b) => a + b, 0) / valores.length).toFixed(2) : null;
-          linha.push(media !== null ? parseFloat(media) : null);
-        });
-        dadosGraficoArray.push(linha);
-      });
 
-      
-      
-  
-      console.log('Dados formatados para o gráfico:', dadosGraficoArray);
-      setDadosGrafico(dadosGraficoArray);
+    try {
+        const equipamentos = await buscarEquipamentos();
+        const dadosGraficoArray = [
+            [opcaoSelecionada === '24h' ? 'Hora' : 'Dia', ...equipamentos.map((equip) => equip.local_nome)],
+        ];
+
+        const dadosTemp = {};
+
+        for (const equipamento of equipamentos) {
+            const dados = await buscarDadosEquipamento(equipamento.equip_id, periodo);
+
+            console.log(`Dados retornados para o equipamento ${equipamento.local_nome}:`, dados);
+
+            dadosTemp[equipamento.local_nome] = {};
+
+            if (opcaoSelecionada === '24h') {
+                // Agrupar dados em intervalos de 2 horas do dia atual
+                dados.forEach((item) => {
+                    const dataISO = item.data_hora.split(' ')[0]; // Data no formato YYYY-MM-DD
+                    if (dataISO === periodo.dataInicio) { // Garantir que os dados sejam apenas do dia atual
+                        const hora = Math.floor(item.hora / 2) * 2; // Ex.: 15 -> 14
+                        const horaFormatada = hora.toString().padStart(2, '0') + ":00";
+                        if (!dadosTemp[equipamento.local_nome][horaFormatada]) {
+                            dadosTemp[equipamento.local_nome][horaFormatada] = [];
+                        }
+                        dadosTemp[equipamento.local_nome][horaFormatada].push(parseFloat(item.media_temperatura));
+                    }
+                });
+            } else if (opcaoSelecionada === 'semana') {
+                // Agrupar dados por dia
+                dados.forEach((item) => {
+                    const dataISO = item.data_hora.split(' ')[0]; // Data no formato YYYY-MM-DD
+                    const diaFormatado = `${dataISO.split('-')[2]}-${dataISO.split('-')[1]}`; // Formato DD-MM
+                    if (!dadosTemp[equipamento.local_nome][diaFormatado]) {
+                        dadosTemp[equipamento.local_nome][diaFormatado] = [];
+                    }
+                    dadosTemp[equipamento.local_nome][diaFormatado].push(parseFloat(item.media_temperatura));
+                });
+            } else if (opcaoSelecionada === 'mes') {
+                // Agrupar dados por dia
+                dados.forEach((item) => {
+                    const dataISO = item.data_hora.split(' ')[0]; // Data no formato YYYY-MM-DD
+                    const diaFormatado = `${dataISO.split('-')[2]}-${dataISO.split('-')[1]}`; // Formato DD-MM
+                    if (!dadosTemp[equipamento.local_nome][diaFormatado]) {
+                        dadosTemp[equipamento.local_nome][diaFormatado] = [];
+                    }
+                    dadosTemp[equipamento.local_nome][diaFormatado].push(parseFloat(item.media_temperatura));
+                });
+            } else if (opcaoSelecionada === 'ano') {
+                // Agrupar dados por mês
+                dados.forEach((item) => {
+                    const dataISO = item.data_hora.split(' ')[0]; // Data no formato YYYY-MM-DD
+                    const mes = parseInt(dataISO.split('-')[1], 10) - 1; // Mês como índice (0-11)
+                    const ano = parseInt(dataISO.split('-')[0], 10); // Ano como número
+                    const chaveMes = new Date(ano, mes, 1); // Cria chave de agrupamento no formato Date
+                    if (!dadosTemp[equipamento.local_nome][chaveMes]) {
+                        dadosTemp[equipamento.local_nome][chaveMes] = [];
+                    }
+                    dadosTemp[equipamento.local_nome][chaveMes].push(parseFloat(item.media_temperatura));
+                });
+            }
+        }
+
+        // Calcular as médias para cada ponto no eixo horizontal
+        eixoHorizontal.forEach((ponto) => {
+            const linha = [ponto];
+            equipamentos.forEach((equipamento) => {
+                const valores = dadosTemp[equipamento.local_nome]?.[ponto] || []; // Usar 'ponto' como chave
+                const media =
+                    valores.length > 0 ? (valores.reduce((a, b) => a + b, 0) / valores.length).toFixed(2) : null;
+                linha.push(media !== null ? parseFloat(media) : null);
+            });
+            dadosGraficoArray.push(linha);
+        });
+
+        console.log('Dados formatados para o gráfico:', dadosGraficoArray);
+        setDadosGrafico(dadosGraficoArray);
     } catch (error) {
-      console.error('Erro ao buscar dados para o gráfico:', error);
+        console.error('Erro ao buscar dados para o gráfico:', error);
     }
-  };
+};
+
   
 
   //!Carrega o script do Google Charts
@@ -332,7 +337,7 @@ const GoogleChart = ({ exportButton }) => {
       const chart = new window.google.visualization.LineChart(
         document.getElementById('curve_chart')
       );
-      chart.draw(data); //!Desenha o gráfico com os dados e opções -- ADICIONE options
+      chart.draw(data); //!Desenha o gráfico com os dados e opções -- ADI
     };
 
     if (googleChartsCarregado) {

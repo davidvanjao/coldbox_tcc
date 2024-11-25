@@ -141,7 +141,7 @@ const ParametrosAtivos = () => {
         <span className={styles.tag}>Parâmetros Ativos</span>
       </div>
 
-      <button className={styles.addButton} onClick={() => setShowAddModal(true)}>Adicionar Parâmetro</button>
+      {/* <button className={styles.addButton} onClick={() => setShowAddModal(true)}>Adicionar Parâmetro</button> */}
 
       <div className={styles.tabelaGeral}>
         <table className={styles.table}>
@@ -169,11 +169,11 @@ const ParametrosAtivos = () => {
                     className={styles.editIcon}
                     onClick={() => handleEdit(item)}
                   />
-                  <FontAwesomeIcon
+                  {/* <FontAwesomeIcon
                     icon={faTrashAlt}
                     className={styles.deleteIcon}
                     onClick={() => apagarParametro(item.param_id)}  // Chama a função de exclusão
-                  />
+                  /> */}
                 </td>
               </tr>
             ))}

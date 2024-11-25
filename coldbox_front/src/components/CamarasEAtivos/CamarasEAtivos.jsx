@@ -1,66 +1,81 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; 
 import styles from './CamarasEAtivos.css';
-//import camarasAtivosDados from './CamarasEAtivosDados';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faExclamationTriangle, faCheckSquare, faThermometerHalf, faTint } from '@fortawesome/free-solid-svg-icons';
-import GoogleChart from '../GoogleChart/GoogleChart';
 
 const CamarasEAtivos = () => {
-  const [equipamentos, setEquipamentos] = useState([]); // Inicializa o estado com um array vazio
-  const [equipamentosSelecionados,  setEquipamentosSelecionados] = useState([]); //Estado para os equipamentos selecionados
-  const [cliId, setCliId] = useState(null); //Estado para armazenar o cli_id
+  const [equipamentos, setEquipamentos] = useState([]);
+  const [equipamentosSelecionados, setEquipamentosSelecionados] = useState([]);
+  const [cliId, setCliId] = useState(null);
 
-  //Estados para armazenar Temperatura e Umidade
+  // Estados para armazenar Temperatura, Umidade e Alertas Ativos
   const [dadosTemperatura, setDadosTemperatura] = useState({});
   const [dadosUmidade, setDadosUmidade] = useState({});
+  const [alertasAtivos, setAlertasAtivos] = useState({});
 
-  //!Função para buscar os dados de Temperatura e Umidade
+  //! Função para buscar alertas ativos e não visualizados usando a API existente
+  const fetchAlertasAtivos = async () => {
+    try {
+      if (!cliId) return;
+
+      const responseEquipamentos = await axios.get(`http://127.0.0.1:3333/equipamento/${cliId}`);
+      if (!responseEquipamentos.data.sucesso) {
+        console.error('Erro ao buscar equipamentos:', responseEquipamentos.data.mensagem);
+        return;
+      }
+
+      const equipIds = responseEquipamentos.data.dados.map(equip => equip.equip_id);
+      const alertas = {};
+
+      // Para cada equipamento, busque os alertas não visualizados
+      for (const equipId of equipIds) {
+        const response = await axios.get(`http://127.0.0.1:3333/logs/listarNotificacoesNaoVisualizadasWEB/${equipId}`);
+        if (response.data.sucesso && response.data.dados.length > 0) {
+          alertas[equipId] = true; // Marca o equipamento com alerta ativo
+        }
+      }
+
+      setAlertasAtivos(alertas);
+    } catch (error) {
+      console.error('Erro ao buscar alertas ativos:', error);
+    }
+  };
+
+  //! Função para buscar os dados de Temperatura e Umidade
   const buscarDados = async (equip_id) => {
     try {
       const response = await axios.get(`http://127.0.0.1:3333/equipamento/dadosUltimaComunicacao/${equip_id}`);
       if (response.data.sucesso) {
-        const dados = response.data.dados[0]; //Acessa o primeiro item do array de dados
-
+        const dados = response.data.dados[0];
         if (dados) {
-          //Verifica se os dados de temperatura e umidade estão presentes
           const temperatura = dados.dados_temp !== undefined ? dados.dados_temp : 'N/A';
           const umidade = dados.dados_umid !== undefined ? dados.dados_umid : 'N/A';
 
-          //Atualiza os estados de temperatura e umidade com base no equipId
           setDadosTemperatura(prevState => ({ ...prevState, [equip_id]: temperatura }));
           setDadosUmidade(prevState => ({ ...prevState, [equip_id]: umidade }));
         } else {
           console.error('Nenhum dado encontrado para o equipamento:', equip_id);
         }
       } else {
-        console.error('Erro ao buscar os dados da ultima comunicação com o equipamento:', response.data.mensagem);
+        console.error('Erro ao buscar os dados da última comunicação com o equipamento:', response.data.mensagem);
       }
     } catch (error) {
       console.error('Erro ao buscar os dados de temperatura e umidade:', error);
     }
   };
 
-
-  //!Função para buscar dados da API 'dadosEquipamentoEmpresa', trazendo o nome da camara e o modelo do equipamento
+  //! Função para buscar dados da API 'dadosEquipamentoEmpresa'
   const fetchEquipamentoDados = async (cliId) => {
     try {
-      if (!cliId) {
-        console.error('cli_id não encontrado.');
-        return;
-      }
-      
-      const response = await axios.get(`http://127.0.0.1:3333/equipamento/dadosEquipamentoEmpresa/${cliId}`); //Faz a requisição GET
+      const response = await axios.get(`http://127.0.0.1:3333/equipamento/dadosEquipamentoEmpresa/${cliId}`);
       if (response.data.sucesso) {
-        // Adicionando a propriedade 'selecionado' para cada equipamento
         const dadosComSelecao = response.data.dados.map(item => ({
           ...item,
-          selecionado: true // Por padrão, todos estarão selecionados
+          selecionado: true
         }));
-        setEquipamentos(dadosComSelecao); // Armazena os dados mais recentes da API com o estado 'selecionado'
-        setEquipamentosSelecionados(dadosComSelecao.map(item => item.equip_nome)); // Inicializa os selecionados
-
-        //Para cada equipamento - buscar os dados de temperatura e umidade da ultima comunicação
+        setEquipamentos(dadosComSelecao);
+        setEquipamentosSelecionados(dadosComSelecao.map(item => item.equip_nome));
         dadosComSelecao.forEach(item => buscarDados(item.equip_id));
       } else {
         console.error(response.data.mensagem);
@@ -69,53 +84,48 @@ const CamarasEAtivos = () => {
       console.error('Erro ao buscar dados:', error);
     }
   };
-  
-  //useEffect para buscar o cli_id do localStorage e carregar os dados
+
+  //! useEffect para buscar o cli_id do localStorage e carregar os dados
   useEffect(() => {
-    //Função para buscar o cli_id do localStorage
     const storedCliId = localStorage.getItem('cli_id');
-  
     if (storedCliId) {
       setCliId(storedCliId);
-      fetchEquipamentoDados(storedCliId); //Faz a requisição quando o cli_id estiver disponível
+      fetchEquipamentoDados(storedCliId);
     } else {
       console.error('cli_id não encontrado no localStorage');
     }
   }, []);
-  
+
+  //! Atualiza os alertas ativos periodic0amente
   useEffect(() => {
     if (cliId) {
+      fetchAlertasAtivos();
       const interval = setInterval(() => {
-        fetchEquipamentoDados(cliId); //Faz a requisição a cada 1 minuto com o cli_id correto - 60000
-      }, 10000); // 10000 milissegundos = 10 segundos Valor para testes
-  
+        fetchAlertasAtivos();
+      }, 50);
       return () => clearInterval(interval);
     }
-  }, [cliId]); //A função só será executada quando o cliId estiver disponível
-  
-  
+  }, [cliId]);
 
-  //Função para manipular a mudança das checkboxes
+  //! Função para manipular a mudança das checkboxes
   const handleCheckboxChange = (equipNome) => {
     setEquipamentos(prevState =>
       prevState.map(item =>
         item.equip_nome === equipNome
-          ? { ...item, selecionado: !item.selecionado } //Altera o estado de selecionado
+          ? { ...item, selecionado: !item.selecionado }
           : item
       )
     );
 
-    //Atualiza a lista de equipamentos selecionados
     setEquipamentosSelecionados(prevSelecionados => {
       if (prevSelecionados.includes(equipNome)) {
-        return prevSelecionados.filter(nome => nome !== equipNome); //Remove da lista de desmarcado
+        return prevSelecionados.filter(nome => nome !== equipNome);
       } else {
-        return [...prevSelecionados, equipNome]; //Adciona a lista se marcado
+        return [...prevSelecionados, equipNome];
       }
     });
   };
 
- 
   return (
     <div className='paiRetangulo'>
       <div className='painelInformacoes'>
@@ -140,27 +150,27 @@ const CamarasEAtivos = () => {
                 </th>
                 <th className='thCentro'>Alerta</th>
               </tr>
-            </thead>  
+            </thead>
             <tbody>
-            {equipamentos.map((item, index) => (
+              {equipamentos.map((item, index) => (
                 <tr key={index}>
                   <td>
                     <input
-                      type="checkbox" 
+                      type="checkbox"
                       checked={item.selecionado}
-                      onChange={() => handleCheckboxChange(item.equip_nome)} // Manipulador de eventos para a checkbox
+                      onChange={() => handleCheckboxChange(item.equip_nome)}
                     />
                   </td>
                   <td>{item.local_nome}</td>
                   <td>{item.equip_modelo}</td>
-                  <td className={item.alerta ? 'alertaTempErro' : 'alertaTempNormal'}>
+                  <td className={alertasAtivos[item.equip_id] ? 'alertaTempErro' : 'alertaTempNormal'}>
                     {dadosTemperatura[item.equip_id] || 'N/A'}C°
                   </td>
                   <td className='tdCentro'>
                     {dadosUmidade[item.equip_id] || 'N/A'}%
                   </td>
                   <td className='tdCentro'>
-                    {item.alerta ? (
+                    {alertasAtivos[item.equip_id] ? (
                       <FontAwesomeIcon icon={faExclamationTriangle} style={{ color: 'red' }} />
                     ) : (
                       <FontAwesomeIcon icon={faCheck} style={{ color: 'green' }} />
@@ -170,10 +180,8 @@ const CamarasEAtivos = () => {
               ))}
             </tbody>
           </table>
-        </div>   
+        </div>
       </div>
-            {/* Passa os equipamentos selecionados para o componente GoogleChart */}
-            {/* <GoogleChart equipamentosSelecionados={equipamentosSelecionados} /> */}
     </div>
   );
 };

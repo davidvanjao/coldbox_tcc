@@ -74,6 +74,12 @@ router.get('/logs/listarNotificacoesTotalEmAberto/:equip_id', LogsController.lis
 //traz as notificacoes que nao foram visualizadas
 router.get('/logs/listarNotificacoesNaoVisualizadas/:equip_id', LogsController.listarNotificacoesNaoVisualizadas); //ok
 
+// Rota para listar alertas ativos web
+router.get('/logs/listarNotificacoesNaoVisualizadasWEB/:equip_id', LogsController.listarNotificacoesNaoVisualizadasWEB);
+// Rota para marcar como visualizado no WEB
+router.patch('/logs/editarWeb/:alertEnviado_id', LogsController.editarWeb);
+
+
 
 
 

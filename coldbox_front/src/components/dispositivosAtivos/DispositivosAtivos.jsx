@@ -16,7 +16,8 @@ const DispositivosAtivos = () => {
     macEquipamento: '',
     observacaoEquipamento: '',
     localNome: '',
-    localDescricao: ''
+    localDescricao: '',
+    equipStatus: 'A' 
   });
 
 
@@ -55,7 +56,7 @@ const DispositivosAtivos = () => {
           equip_tipo: novoDispositivo.tipoSensor,
           equip_ip: novoDispositivo.ipEquipamento,
           equip_mac: novoDispositivo.macEquipamento,
-          equip_status: 'A',
+          equip_status: novoDispositivo.equipStatus,
           equip_observacao: novoDispositivo.observacaoEquipamento || null,
           local_nome: novoDispositivo.localNome,
           local_descricao: novoDispositivo.localDescricao,
@@ -93,7 +94,7 @@ const DispositivosAtivos = () => {
         equip_tipo: novoDispositivo.tipoSensor,
         equip_ip: novoDispositivo.ipEquipamento,
         equip_mac: novoDispositivo.macEquipamento,
-        equip_status: 'A',
+        equip_status: novoDispositivo.equipStatus,
         equip_observacao: novoDispositivo.observacaoEquipamento || null,
         local_nome: novoDispositivo.localNome,
         local_descricao: "Sem descrição",
@@ -145,6 +146,7 @@ const DispositivosAtivos = () => {
       observacaoEquipamento: dispositivo.equip_observacao,
       localNome: dispositivo.local_nome,
       localDescricao: dispositivo.local_descricao,
+      equipStatus: dispositivo.equip_status
     });
     setEquipamentoSelecionado(dispositivo.equip_id);
     setEditando(true);
@@ -297,6 +299,32 @@ const DispositivosAtivos = () => {
               value={novoDispositivo.observacaoEquipamento}
                 onChange={lidarComMudanca}
               />
+
+            <label htmlFor="equipStatus">Status</label>
+            <div className={styles.radioGroup}>
+            <label>
+              <input
+                type="radio"
+                name="equipStatus"
+                value="A"
+                checked={novoDispositivo.equipStatus === 'A'}
+                onChange={lidarComMudanca}
+                className={styles.radioInput} // Classe CSS local
+              />
+              <span className={styles.radioButton}></span> Ativo
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="equipStatus"
+                value="I"
+                checked={novoDispositivo.equipStatus === 'I'}
+                onChange={lidarComMudanca}
+                className={styles.radioInput} // Classe CSS local
+              />
+              <span className={styles.radioButton}></span> Inativo
+            </label>
+            </div>
 
             <div className={styles.modalAddDispositivo}>
               <button type="fecharModal" onClick={() => {

@@ -139,7 +139,8 @@ module.exports = {
                         novo_local c ON c.local_id = b.local_id
                     WHERE
                         a.equip_id = ?
-                        AND a.dados_data BETWEEN ? AND ? -- Filtro de período
+                        AND a.dados_data >= ? -- Data início
+                        AND a.dados_data < DATE_ADD(?, INTERVAL 1 DAY) -- Exclusão do dia seguinte
                     GROUP BY 
                         data_hora, hora, a.equip_id, c.local_nome
                     ORDER BY 

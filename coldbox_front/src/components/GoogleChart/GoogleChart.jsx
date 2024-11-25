@@ -36,9 +36,11 @@ const GoogleChart = ({ exportButton }) => {
   };
 
   //Atualiza o estado ao selecionar uma nova opção no seletor de período
-  const alterarOpcaoSelecionada  = (event) => {
-    setOpcaoSelecionada(event.target.value);
+  const alterarOpcaoSelecionada = (event) => {
+    const novaOpcao = event.target.value;
+    setOpcaoSelecionada(novaOpcao); // Atualiza a opção selecionada
   };
+  
 
   //Função para abreviar o nome dos equipamentos, pegando sempre a ultima palavra
   const abreviarNomeEquipamento = (nome) => {
@@ -177,13 +179,14 @@ const GoogleChart = ({ exportButton }) => {
                 // Agrupar dados em intervalos de 2 horas do dia atual
                 dados.forEach((item) => {
                     const dataISO = item.data_hora.split(' ')[0]; // Data no formato YYYY-MM-DD
+                    const hora = item.data_hora.split(' ')[1].split(':')[0]; // Hora no formato HH
                     if (dataISO === periodo.dataInicio) { // Garantir que os dados sejam apenas do dia atual
-                        const hora = Math.floor(item.hora / 2) * 2; // Ex.: 15 -> 14
-                        const horaFormatada = hora.toString().padStart(2, '0') + ":00";
-                        if (!dadosTemp[equipamento.local_nome][horaFormatada]) {
-                            dadosTemp[equipamento.local_nome][horaFormatada] = [];
+                        const horaFormatada = Math.floor(hora / 2) * 2; // Agrupar por intervalos de 2 horas
+                        const horaFinalFormatada = `${horaFormatada.toString().padStart(2, '0')}:00`;
+                        if (!dadosTemp[equipamento.local_nome][horaFinalFormatada]) {
+                            dadosTemp[equipamento.local_nome][horaFinalFormatada] = [];
                         }
-                        dadosTemp[equipamento.local_nome][horaFormatada].push(parseFloat(item.media_temperatura));
+                        dadosTemp[equipamento.local_nome][horaFinalFormatada].push(parseFloat(item.media_temperatura));
                     }
                 });
             } else if (opcaoSelecionada === 'semana') {
@@ -239,6 +242,8 @@ const GoogleChart = ({ exportButton }) => {
         console.error('Erro ao buscar dados para o gráfico:', error);
     }
 };
+
+
 
   
 

@@ -156,7 +156,7 @@ module.exports = {
             const { equip_id } = request.params; 
 
             // instruções SQL
-            const sql = `SELECT A.alertEnviado_id, A.alertEnviado_data, D.dados_data, C.alerta_tipo, D.dados_temp, A.alertEnviado_status, A.alertEnviado_usuario_retorno
+            const sql = `SELECT A.alertEnviado_id, A.alertEnviado_data, D.dados_data, C.alerta_tipo, D.dados_temp, A.alertEnviado_status, A.alertEnviado_usuario_retorno, A.local_nome -- ADICIONADO EQUIP_ID
             FROM 
                 novo_equipamento_alertas_enviados A,
                 novo_equipamento B,
@@ -194,7 +194,102 @@ module.exports = {
                 dados: error.message
             });
         }
-    }
+    },
 
+
+    //API PARA O ALERTAS WEB
+    async listarNotificacoesNaoVisualizadasWEB(request, response) {
+        try {
+            const { equip_id } = request.params;
+    
+            const sql = `
+                SELECT 
+                    A.alertEnviado_id, 
+                    A.alertEnviado_data, 
+                    D.dados_data, 
+                    C.alerta_tipo, 
+                    D.dados_temp, 
+                    A.alertEnviado_status, 
+                    A.alertEnviado_usuario_retorno,
+                    L.local_nome -- Nome do local
+                FROM 
+                    novo_equipamento_alertas_enviados A
+                JOIN 
+                    novo_equipamento_dados D ON A.dados_id = D.dados_id
+                JOIN 
+                    novo_alerta C ON A.alerta_id = C.alerta_id
+                JOIN 
+                    novo_equipamento_local EL ON A.equip_id = EL.equip_id -- Relaciona com novo_equipamento_local
+                JOIN 
+                    novo_local L ON EL.local_id = L.local_id -- Relaciona com novo_local
+                WHERE 
+                    A.equip_id = ? 
+                AND 
+                    A.alertEnviado_status = 'ENVIADO'
+                AND 
+                    A.alertEnviado_usuario_retorno IS NULL;
+            `;
+    
+            const values = [equip_id];
+    
+            const equipamento = await db.query(sql, values);
+    
+            const nItens = equipamento[0].length;
+    
+            return response.status(200).json({
+                sucesso: true,
+                mensagem: 'Notificações em aberto.',
+                dados: equipamento[0],
+                nItens
+            });
+        } catch (error) {
+            console.error('Erro na função listarNotificacoesNaoVisualizadas:', error.message);
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
+                dados: error.message
+            });
+        }
+    },
+
+    async editarWeb(request, response) {
+        try {
+            const { alertEnviado_status, alertEnviado_usuario_retorno } = request.body;
+            const { alertEnviado_id } = request.params;
+    
+            const sql = `
+                UPDATE novo_equipamento_alertas_enviados
+                SET alertEnviado_status = ?, alertEnviado_usuario_retorno = ?
+                WHERE alertEnviado_id = ?;
+            `;
+    
+            const values = [alertEnviado_status, alertEnviado_usuario_retorno, alertEnviado_id];
+    
+            const result = await db.query(sql, values);
+    
+            if (result[0].affectedRows > 0) {
+                return response.status(200).json({
+                    sucesso: true,
+                    mensagem: `Log ${alertEnviado_id} atualizado com sucesso!`
+                });
+            } else {
+                return response.status(404).json({
+                    sucesso: false,
+                    mensagem: 'Alerta não encontrado.'
+                });
+            }
+        } catch (error) {
+            console.error('Erro ao atualizar o alerta:', error.message);
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro na atualização do alerta.',
+                dados: error.message
+            });
+        }
+    }
+    
+    
+    
+    
 }
 

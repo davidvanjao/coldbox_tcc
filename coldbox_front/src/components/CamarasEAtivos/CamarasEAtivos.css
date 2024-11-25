@@ -134,3 +134,13 @@ input[type="checkbox"] {
   margin: auto; /* Centraliza a checkbox verticalmente e horizontalmente */
   display: block; /* Certifica-se de que a checkbox ocupe o espaço necessário */
 }
+
+
+.alertaTempErro {
+  background-color: red;
+  color: white;
+}
+.alertaTempNormal {
+  background-color: #01BE4F;
+  color: white;
+}

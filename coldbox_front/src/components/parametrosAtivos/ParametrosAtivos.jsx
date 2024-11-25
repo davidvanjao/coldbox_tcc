@@ -70,7 +70,7 @@ const ParametrosAtivos = () => {
       if (response.data.sucesso) {
         setParametros((prevParametros) =>
           prevParametros.map((param) =>
-            param.param_id === editarParam ? response.data.dados : param
+            param.param_id === editarParam ? { ...param, ...newParameter } : param
           )
         );
         resetFormulario();
@@ -82,6 +82,7 @@ const ParametrosAtivos = () => {
       console.error('Erro ao atualizar parâmetro:', error);
     }
   };
+  
 
   // Adicionar novo parâmetro
   const adicionarParametro = async () => {
@@ -148,21 +149,21 @@ const ParametrosAtivos = () => {
           <thead>
             <tr>
               <th className={styles.th}>Modelo</th>
-              <th className={styles.th}>Equipamento</th>
-              <th className={styles.th}>Temp. Min</th>
-              <th className={styles.th}>Temp. Máx</th>
-              <th className={styles.th}>Data Cadastro</th>
-              <th className={styles.th}>Ações</th>
+              <th className={`${styles.th} ${styles.equipamentoCol}`}>Equipamento</th>
+              <th className={`${styles.th} ${styles.tempCol}`}>Temp. Minima</th>
+              <th className={`${styles.th} ${styles.tempCol}`}>Temp. Máxima</th>
+              {/* <th className={styles.th}>Data Cadastro</th> */}
+              <th className={styles.th}>Editar</th>
             </tr>
           </thead>
           <tbody>
             {parametros.map((item) => (
               <tr key={item.param_id} className={item.param_id % 2 === 0 ? styles.evenRow : styles.oddRow}>
                 <td className={styles.td}>{item.equip_modelo}</td>
-                <td className={styles.td}>{item.param_interface}</td>
-                <td className={styles.td}>{item.param_minimo}</td>
-                <td className={styles.td}>{item.param_maximo}</td>
-                <td className={styles.td}>{item.param_data}</td>
+                <td className={`${styles.td} ${styles.equipamentoCol}`}>{item.param_interface}</td>
+                <td className={`${styles.td} ${styles.tempCol}`}>{item.param_minimo}</td>
+                <td className={`${styles.td} ${styles.tempCol}`}>{item.param_maximo}</td>
+                {/* <td className={styles.td}>{item.param_data}</td> */}
                 <td className={styles.td}>
                   <FontAwesomeIcon
                     icon={faPen}

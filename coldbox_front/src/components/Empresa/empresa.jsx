@@ -36,13 +36,13 @@ const Empresa = () => {
   }, []);
 
   // Função para abrir o modal de edição
-  const abrirModalEditar = () => {
+  const abrirModalEditar = (item) => {
     setDadosEdicao({
-      cli_razaoSocial: empresa.cli_razaoSocial || '',
-      cli_endereco: empresa.cli_endereco || '',
-      cli_cidade: empresa.cli_cidade || '',
-      cli_estado: empresa.cli_estado || '',
-      cli_contrato: empresa.cli_contrato || '',
+      cli_razaoSocial: item.cli_razaoSocial || '',
+      cli_endereco: item.cli_endereco || '',
+      cli_cidade: item.cli_cidade || '',
+      cli_estado: item.cli_estado || '',
+      cli_contrato: item.cli_contrato || '',
     });
     setMostrarModalEditar(true);
   };
@@ -77,11 +77,6 @@ const Empresa = () => {
     <div className={styles.containerMaior}>
       <div className={styles.containerMenor}>
         <span className={styles.titulo}>Informações da Empresa</span>
-        {/* <FontAwesomeIcon
-          icon={faPen}
-          className={styles.iconeEditar}
-          onClick={abrirModalEditar}
-        /> */}
       </div>
       <div className={styles.tabelaEmpresa}>
         <table className={styles.tableTabela}>
@@ -93,6 +88,7 @@ const Empresa = () => {
               <th className={styles.th}>Estado</th>
               <th className={styles.th}>Contrato</th>
               <th className={styles.th}>Inicio do Contrato</th>
+              <th className={styles.th}>Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -105,10 +101,10 @@ const Empresa = () => {
                 <td className={styles.td}>{item.cli_contrato}</td>
                 <td className={styles.td}>{item.cli_data}</td>
                 <td className={styles.td}>
-                  <FontAwesomeIcon 
-                    icon={faPen} 
-                    className={styles.editIcon} 
-                    onClick={() => handleEdit(item)} 
+                  <FontAwesomeIcon
+                    icon={faPen}
+                    className={styles.editIcon}
+                    onClick={() => abrirModalEditar(item)}
                   />
                 </td>
               </tr>
@@ -118,8 +114,8 @@ const Empresa = () => {
       </div>
 
       {mostrarModalEditar && (
-        <div className={styles.modal}>
-          <div className={styles.modalConteudo}>
+        <div className={styles.modalEdicao}>
+          <div className={styles.modalConteudoEmpresa}>
             <h2>Editar Informações da Empresa</h2>
             <label htmlFor="cli_razaoSocial">Razão Social</label>
             <input
@@ -166,7 +162,7 @@ const Empresa = () => {
               onChange={handleInputChange}
             />
 
-            <div className={styles.acoesModal}>
+            <div className={styles.modalActions}>
               <button onClick={fecharModal}>Cancelar</button>
               <button onClick={salvarAlteracoes}>Salvar</button>
             </div>

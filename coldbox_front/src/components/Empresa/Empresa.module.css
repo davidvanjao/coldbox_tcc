@@ -83,7 +83,7 @@
   z-index: 10;
 }
 
-.modalParametros {
+.modalEdicao {
   position: fixed;
   top: 0;
   left: 0;
@@ -96,25 +96,25 @@
   z-index: 1001;
 }
 
-.modalContentParametros {
+.modalConteudoEmpresa {
   background-color: white;
   padding: 30px;
   border-radius: 10px;
   width: 450px;
-  max-width: 100%;
+  max-width: 100%; /* Garante que o modal se ajuste em telas menores */
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* Centraliza os elementos horizontalmente */
 }
 
-.modalContentParametros h2 {
+.modalConteudoEmpresa h2 {
   margin-bottom: 20px;
   font-weight: bold;
   font-size: 18px;
   text-align: center;
 }
 
-.modalContentParametros label {
+.modalConteudoEmpresa label {
   display: block;
   width: 100%;
   margin-bottom: 5px;
@@ -122,7 +122,7 @@
   text-align: left;
 }
 
-.modalContentParametros input {
+.modalConteudoEmpresa input {
   width: 100%;
   max-width: 400px;
   padding: 10px;

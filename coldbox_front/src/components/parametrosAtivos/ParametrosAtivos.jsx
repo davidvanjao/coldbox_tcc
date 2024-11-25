@@ -9,13 +9,13 @@ const ParametrosAtivos = () => {
   const [parametros, setParametros] = useState([]);
   const [equipamentos, setEquipamentos] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);  // Modal para adicionar
+  const [showAddModal, setShowAddModal] = useState(false);
   const [editarParam, setEditarParam] = useState(null);
   const [newParameter, setNewParameter] = useState({
-    param_interface: '', // Nome do equipamento
+    param_interface: '',
     param_minimo: '',
     param_maximo: '',
-    equip_id: '',  // ID do equipamento selecionado
+    equip_id: '',
   });
 
   // Listar parâmetros
@@ -23,7 +23,11 @@ const ParametrosAtivos = () => {
     try {
       const response = await axios.get(`http://127.0.0.1:3333/parametro/${cli_id}`);
       if (response.data.sucesso) {
-        setParametros(response.data.dados);
+        const parametrosComData = response.data.dados.map((param) => ({
+          ...param,
+          param_data: param.param_data || new Date().toISOString(), // Adiciona data padrão local
+        }));
+        setParametros(parametrosComData);
       } else {
         console.error('Erro ao carregar os parâmetros.');
       }
@@ -37,7 +41,7 @@ const ParametrosAtivos = () => {
     try {
       const response = await axios.get(`http://127.0.0.1:3333/equipamento/${cli_id}`);
       if (response.data.sucesso) {
-        setEquipamentos(response.data.dados);  // Equipamentos disponíveis
+        setEquipamentos(response.data.dados);
       } else {
         console.error('Erro ao carregar os equipamentos.');
       }
@@ -48,7 +52,7 @@ const ParametrosAtivos = () => {
 
   useEffect(() => {
     listarParametro();
-    listarEquipamentos();  // Carregar os equipamentos quando o componente for montado
+    listarEquipamentos();
   }, []);
 
   // Abrir modal para edição
@@ -57,7 +61,7 @@ const ParametrosAtivos = () => {
       param_interface: item.param_interface,
       param_minimo: item.param_minimo,
       param_maximo: item.param_maximo,
-      equip_id: item.equip_id, // Adicionar o ID do equipamento no caso de edição
+      equip_id: item.equip_id,
     });
     setEditarParam(item.param_id);
     setShowEditModal(true);
@@ -70,7 +74,7 @@ const ParametrosAtivos = () => {
       if (response.data.sucesso) {
         setParametros((prevParametros) =>
           prevParametros.map((param) =>
-            param.param_id === editarParam ? response.data.dados : param
+            param.param_id === editarParam ? { ...response.data.dados, param_data: param.param_data } : param
           )
         );
         resetFormulario();
@@ -88,10 +92,13 @@ const ParametrosAtivos = () => {
     try {
       const response = await axios.post(`http://127.0.0.1:3333/parametro`, newParameter);
       if (response.data.sucesso) {
-        // Atualizar a lista de parâmetros com o novo parâmetro
-        setParametros((prevParametros) => [...prevParametros, response.data.dados]);
+        const novoParametro = {
+          ...response.data.dados,
+          param_data: new Date().toISOString(), // Adiciona data local para o novo parâmetro
+        };
+        setParametros((prevParametros) => [...prevParametros, novoParametro]);
         resetFormulario();
-        setShowAddModal(false);  // Fechar o modal
+        setShowAddModal(false);
       } else {
         console.error('Erro ao adicionar parâmetro.');
       }
@@ -105,7 +112,7 @@ const ParametrosAtivos = () => {
     try {
       const response = await axios.delete(`http://127.0.0.1:3333/parametro/${param_id}`);
       if (response.data.sucesso) {
-        setParametros((prevParametros) => prevParametros.filter(param => param.param_id !== param_id));
+        setParametros((prevParametros) => prevParametros.filter((param) => param.param_id !== param_id));
       } else {
         console.error('Erro ao apagar parâmetro.');
       }
@@ -119,7 +126,7 @@ const ParametrosAtivos = () => {
       param_interface: '',
       param_minimo: '',
       param_maximo: '',
-      equip_id: '',  // Resetar o ID do equipamento
+      equip_id: '',
     });
     setEditarParam(null);
   };
@@ -141,8 +148,6 @@ const ParametrosAtivos = () => {
         <span className={styles.tag}>Parâmetros Ativos</span>
       </div>
 
-      {/* <button className={styles.addButton} onClick={() => setShowAddModal(true)}>Adicionar Parâmetro</button> */}
-
       <div className={styles.tabelaGeral}>
         <table className={styles.table}>
           <thead>
@@ -162,18 +167,19 @@ const ParametrosAtivos = () => {
                 <td className={styles.td}>{item.param_interface}</td>
                 <td className={styles.td}>{item.param_minimo}</td>
                 <td className={styles.td}>{item.param_maximo}</td>
-                <td className={styles.td}>{item.param_data}</td>
+                <td className={styles.td}>
+                  {new Date(item.param_data).toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                  })}
+                </td>
                 <td className={styles.td}>
                   <FontAwesomeIcon
                     icon={faPen}
                     className={styles.editIcon}
                     onClick={() => handleEdit(item)}
                   />
-                  {/* <FontAwesomeIcon
-                    icon={faTrashAlt}
-                    className={styles.deleteIcon}
-                    onClick={() => apagarParametro(item.param_id)}  // Chama a função de exclusão
-                  /> */}
                 </td>
               </tr>
             ))}

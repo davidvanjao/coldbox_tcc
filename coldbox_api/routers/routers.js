@@ -80,10 +80,6 @@ router.get('/logs/listarNotificacoesNaoVisualizadasWEB/:equip_id', LogsControlle
 router.patch('/logs/editarWeb/:alertEnviado_id', LogsController.editarWeb);
 
 
-
-
-
-
 router.get('/usuarios/:cli_id', UsuariosController.listar);
 router.post('/usuarios', body('user_email').isEmail().withMessage('Por favor, forneça um email válido'),  UsuariosController.cadastrar); 
 router.patch('/usuarios/:user_id', UsuariosController.editar); 

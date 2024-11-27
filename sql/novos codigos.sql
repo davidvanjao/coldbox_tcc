@@ -5,6 +5,8 @@ select * from novo_local;
 select * from novo_nivel_acesso;
 select * from novo_usuario;
 
+delete from novo_equipamento_dados where equip_id = '6';
+
 select * from novo_equipamento_local;/*liga local com equipamento*/
 select * from novo_equipamento_dados order by dados_id desc;/*relaciona dados com equipamento*/
 select * from novo_equipamento_parametro2;/*parametros definidos para cada equipamento---NOVO*/
